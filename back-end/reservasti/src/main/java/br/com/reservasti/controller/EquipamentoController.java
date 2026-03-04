@@ -1,5 +1,6 @@
 package br.com.reservasti.controller;
 
+import br.com.reservasti.domain.equipamento.StatusEquipamento;
 import br.com.reservasti.domain.equipamento.dto.EditarEquipamentoDTO;
 import br.com.reservasti.domain.equipamento.dto.EquipamentoDTO;
 import br.com.reservasti.domain.equipamento.dto.EquipamentoReturnDTO;
@@ -57,6 +58,13 @@ public class EquipamentoController {
 
         return ResponseEntity.noContent().build();
     }
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<Void> alterarStatus(
+            @PathVariable Long id,@RequestBody StatusEquipamento novoStatus) {
 
+        service.alterarStatusEquipamento(id, novoStatus);
+
+        return ResponseEntity.noContent().build();
+    }
 }
 

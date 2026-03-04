@@ -5,7 +5,7 @@ import br.com.reservasti.domain.categoria.CategoriaRepository;
 import br.com.reservasti.domain.equipamento.dto.EditarEquipamentoDTO;
 import br.com.reservasti.domain.equipamento.dto.EquipamentoDTO;
 import br.com.reservasti.domain.equipamento.dto.EquipamentoReturnDTO;
-import br.com.reservasti.domain.equipamento.validacoes.ValidatorEquipamento;
+import br.com.reservasti.domain.equipamento.validacoes.IValidatorEquipamento;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,7 +26,7 @@ public class EquipamentoService {
     private CategoriaRepository categoriaRepository;
 
     @Autowired
-    private List<ValidatorEquipamento> validadores;
+    private List<IValidatorEquipamento> validadores;
 
     @Transactional
     public EquipamentoReturnDTO cadastrarEquipamento(EquipamentoDTO dto) {

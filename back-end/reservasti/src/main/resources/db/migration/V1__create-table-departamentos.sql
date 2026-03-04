@@ -1,0 +1,5 @@
+CREATE TABLE departamentos (
+    id BIGSERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL UNIQUE,
+    centro_de_custo VARCHAR(50) NOT NULL UNIQUE
+);

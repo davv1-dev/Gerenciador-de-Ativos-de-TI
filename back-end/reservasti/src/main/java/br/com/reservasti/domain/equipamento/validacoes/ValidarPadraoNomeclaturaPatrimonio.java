@@ -1,8 +1,10 @@
 package br.com.reservasti.domain.equipamento.validacoes;
 
 import br.com.reservasti.domain.equipamento.dto.EquipamentoDTO;
+import org.springframework.stereotype.Component;
 
-public class ValidarPadraoNomeclaturaPatrimonio implements ValidatorEquipamento{
+@Component
+public class ValidarPadraoNomeclaturaPatrimonio implements IValidatorEquipamento {
     @Override
     public void validar(EquipamentoDTO dto) {
 

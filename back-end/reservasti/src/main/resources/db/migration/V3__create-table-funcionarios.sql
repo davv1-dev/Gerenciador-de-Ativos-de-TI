@@ -14,5 +14,6 @@ CREATE TABLE funcionarios (
     complemento VARCHAR(100),
 
     usuario_id BIGINT UNIQUE,
+
     CONSTRAINT fk_funcionario_usuario FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
 );

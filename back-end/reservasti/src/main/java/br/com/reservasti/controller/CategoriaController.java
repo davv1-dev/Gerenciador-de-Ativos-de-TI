@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/categoria")
 public class CategoriaController {
 
-    @PostMapping("/cadastrar")
-    public EquipamentoReturnDTO cadastrarCategoria(@RequestBody @Valid EquipamentoDTO dto){
-
-    }
+//    @PostMapping("/cadastrar")
+//    public EquipamentoReturnDTO cadastrarCategoria(@RequestBody @Valid EquipamentoDTO dto){
+//
+//    }
 }
