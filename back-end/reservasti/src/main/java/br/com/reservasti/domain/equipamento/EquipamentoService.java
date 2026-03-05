@@ -4,7 +4,7 @@ import br.com.reservasti.domain.categoria.Categoria;
 import br.com.reservasti.domain.categoria.CategoriaRepository;
 import br.com.reservasti.domain.equipamento.dto.EditarEquipamentoDTO;
 import br.com.reservasti.domain.equipamento.dto.EquipamentoDTO;
-import br.com.reservasti.domain.equipamento.dto.EquipamentoReturnDTO;
+import br.com.reservasti.domain.equipamento.dto.EquipamentoRetornoDTO;
 import br.com.reservasti.domain.equipamento.validacoes.IValidatorEquipamento;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
@@ -29,26 +29,20 @@ public class EquipamentoService {
     private List<IValidatorEquipamento> validadores;
 
     @Transactional
-    public EquipamentoReturnDTO cadastrarEquipamento(EquipamentoDTO dto) {
+    public EquipamentoRetornoDTO cadastrarEquipamento(EquipamentoDTO dto) {
         validadores.forEach( validator -> validator.validar(dto));
 
         Categoria categoria = categoriaRepository.findById(dto.categoriaId()).orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada!"));
         Equipamento equipamento = new Equipamento(dto, categoria);
         equipamentoRepository.save(equipamento);
 
-        return new EquipamentoReturnDTO(equipamento);
+        return new EquipamentoRetornoDTO(equipamento);
     }
 
-    public Page<EquipamentoReturnDTO> listarTodosEquipamentos(Pageable paginacao) {
-
-        return equipamentoRepository.findAll(paginacao)
-                .map(EquipamentoReturnDTO::new);
-    }
-
-    public EquipamentoReturnDTO buscarPorId(Long id) {
+    public EquipamentoRetornoDTO buscarPorId(Long id) {
 
         Equipamento equipamento = equipamentoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Equipamento não encontrado!"));
-        return new EquipamentoReturnDTO(equipamento);
+        return new EquipamentoRetornoDTO(equipamento);
     }
 
     @Transactional
@@ -66,15 +60,15 @@ public class EquipamentoService {
         equipamento.setStatus(StatusEquipamento.BAIXADO);
     }
 
-    public Page<EquipamentoReturnDTO> bucarEquipamento(String nome, Long categoriaId, Pageable paginacao) {
+    public Page<EquipamentoRetornoDTO> bucarEquipamento(String nome, Long categoriaId, Pageable paginacao) {
 
         Specification<Equipamento> spec = EquipamentoSpecification.comFiltros(nome, categoriaId);
 
         return equipamentoRepository.findAll(spec, paginacao)
-                .map(EquipamentoReturnDTO::new);
+                .map(EquipamentoRetornoDTO::new);
     }
     @Transactional
-    public EquipamentoReturnDTO editarEquipamento(Long id, EditarEquipamentoDTO dto) {
+    public EquipamentoRetornoDTO editarEquipamento(Long id, EditarEquipamentoDTO dto) {
 
         Equipamento equipamento = equipamentoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Equipamento não encontrado!"));
 
@@ -82,7 +76,7 @@ public class EquipamentoService {
 
         equipamento.atualizarInformacoes(dto,categoria);
 
-        return new EquipamentoReturnDTO(equipamento);
+        return new EquipamentoRetornoDTO(equipamento);
     }
 
 }

@@ -2,7 +2,7 @@ package br.com.reservasti.domain.equipamento.dto;
 
 import br.com.reservasti.domain.equipamento.Equipamento;
 
-public record EquipamentoReturnDTO(
+public record EquipamentoRetornoDTO(
         Long id,
         String nome,
         String marca,
@@ -11,7 +11,7 @@ public record EquipamentoReturnDTO(
         String nomeCategoria
 ) {
 
-    public EquipamentoReturnDTO(Equipamento equipamento) {
+    public EquipamentoRetornoDTO(Equipamento equipamento) {
         this(
                 equipamento.getId(),
                 equipamento.getNome(),

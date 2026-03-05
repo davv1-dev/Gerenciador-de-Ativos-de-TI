@@ -12,6 +12,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +33,7 @@ public class FuncionarioService {
     @Autowired
     private ValidarConflitoDeEmail validarConflitoDeEmail;
 
+
     @Transactional
     public FuncionarioRetornoDTO cadastrarFuncionario(FuncionarioDTO novoFunc){
         validadores.forEach(v -> v.validar(novoFunc));
@@ -42,8 +44,10 @@ public class FuncionarioService {
         FuncionarioRetornoDTO retorno = new FuncionarioRetornoDTO(funcionarioNovo);
         return retorno;
     }
-    public Page<FuncionarioRetornoDTO> listarAtivos(Pageable paginacao) {
-        return funcionarioRepository.findAllByAtivoTrue(paginacao)
+    public Page<FuncionarioRetornoDTO> buscarFuncionario(Pageable paginacao,String nome,Long departamentoId) {
+        Specification<Funcionario> condicoes = FuncionarioEspecification.comFiltrosFuncionario(nome,departamentoId);
+
+        return funcionarioRepository.findAll(condicoes,paginacao)
                 .map(FuncionarioRetornoDTO::new);
     }
 
@@ -54,7 +58,7 @@ public class FuncionarioService {
     }
 
     @Transactional
-    public FuncionarioRetornoDTO atualizar(Long id, FuncionarioAtualizacaoDTO dto) {
+    public FuncionarioRetornoDTO atualizarFuncionario(Long id, FuncionarioAtualizacaoDTO dto) {
 
         validarConflitoDeEmail.validaEmailAtualizacao(dto);
         Funcionario funcionario = funcionarioRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Funcionário não encontrado!"));
@@ -70,7 +74,7 @@ public class FuncionarioService {
     }
 
     @Transactional
-    public void desativar(Long id) {
+    public void desativarFuncionario(Long id) {
         Funcionario funcionario = funcionarioRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Funcionário não encontrado!"));
 
         funcionario.inativar();

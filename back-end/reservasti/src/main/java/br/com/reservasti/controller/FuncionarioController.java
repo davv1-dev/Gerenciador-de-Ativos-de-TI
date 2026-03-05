@@ -35,11 +35,9 @@ public class FuncionarioController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<FuncionarioRetornoDTO>> listar(
-            @PageableDefault(size = 10, sort = {"nomeCompleto"}) Pageable paginacao) {
+    public ResponseEntity<Page<FuncionarioRetornoDTO>> listar(@PageableDefault(size = 10, sort = {"nomeCompleto"}) Pageable paginacao,@RequestParam(required = false) String nome,@RequestParam(required = false) Long departamentoid) {
 
-        // Podemos adicionar o Specifications aqui depois para filtrar por nome/departamento!
-        return ResponseEntity.ok(service.listarAtivos(paginacao));
+        return ResponseEntity.ok(service.buscarFuncionario(paginacao,nome,departamentoid));
     }
 
     @GetMapping("/{id}")
@@ -52,12 +50,12 @@ public class FuncionarioController {
             @PathVariable Long id,
             @RequestBody @Valid FuncionarioAtualizacaoDTO dto) {
 
-        return ResponseEntity.ok(service.atualizar(id, dto));
+        return ResponseEntity.ok(service.atualizarFuncionario(id, dto));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
-        service.desativar(id);
+        service.desativarFuncionario(id);
         return ResponseEntity.noContent().build();
     }
 }

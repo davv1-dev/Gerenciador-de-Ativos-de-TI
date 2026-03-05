@@ -12,6 +12,8 @@ public class EquipamentoSpecification {
 
             List<Predicate> condicoes = new ArrayList<>();
 
+            condicoes.add(criteriaBuilder.notEqual(root.get("status"), StatusEquipamento.BAIXADO));
+
             if (nome != null && !nome.isBlank()) {
                 condicoes.add(criteriaBuilder.like(
                         criteriaBuilder.lower(root.get("nome")),
