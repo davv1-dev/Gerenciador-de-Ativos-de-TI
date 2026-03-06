@@ -13,7 +13,7 @@ import org.hibernate.validator.constraints.br.CPF;
 public record FuncionarioDTO(
 
         @NotBlank(message = "O nome é obrigatório")
-        String nome,
+        String nomeCompleto,
 
         @NotBlank(message = "O email é obrigatório")
         @Email(message = "Formato de email inválido")
@@ -22,7 +22,7 @@ public record FuncionarioDTO(
         @NotBlank(message = "O CPF é obrigatório")
         @CPF(message = "CPF inválido")
         String cpf,
-        @Pattern(regexp = "(\\d{2}) \\d{4}-\\d{4}")
+        @Pattern(regexp = "\\d{2} \\d{5}-\\d{4}")
         String numeroDeTelefone,
 
         @NotNull(message = "O ID do departamento é obrigatório")

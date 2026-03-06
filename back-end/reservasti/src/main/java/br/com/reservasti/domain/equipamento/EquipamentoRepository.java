@@ -8,4 +8,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 public interface EquipamentoRepository extends JpaRepository<Equipamento,Long>,JpaSpecificationExecutor<Equipamento> {
     boolean existsByNumeroPatrimonio(@NotBlank(message = "O número de patrimônio (etiqueta) é obrigatório") String numeroPatri);
 
+    boolean existsByCategoriaId(Long id);
 }

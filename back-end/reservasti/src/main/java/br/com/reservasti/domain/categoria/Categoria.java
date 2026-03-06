@@ -1,6 +1,7 @@
 package br.com.reservasti.domain.categoria;
 
 import br.com.reservasti.domain.categoria.dto.CategoriaAtualizacaoDTO;
+import br.com.reservasti.domain.categoria.dto.CategoriaDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,6 +22,10 @@ public class Categoria {
 
     private String descricao;
 
+    public Categoria(CategoriaDTO dto){
+        this.nome= dto.nome();
+        this.descricao= dto.descricao();
+    }
     public void atualizarInformacoes(CategoriaAtualizacaoDTO dto) {
         if (dto.nome() != null && !dto.nome().isBlank()) {
             this.nome = dto.nome();

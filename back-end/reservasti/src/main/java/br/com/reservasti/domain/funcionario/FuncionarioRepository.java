@@ -16,4 +16,6 @@ public interface FuncionarioRepository extends JpaRepository<Funcionario,Long>, 
     boolean existsByCpf(@NotBlank(message = "O CPF é obrigatório") @CPF(message = "CPF inválido") String cpf);
 
     boolean existsByEmail(@NotBlank(message = "O email é obrigatório") @Email(message = "Formato de email inválido") String email);
+
+    boolean existsByDepartamentoId(Long id);
 }

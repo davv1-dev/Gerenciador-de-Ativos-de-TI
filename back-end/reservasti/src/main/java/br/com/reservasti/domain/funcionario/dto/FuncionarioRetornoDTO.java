@@ -8,10 +8,9 @@ public record FuncionarioRetornoDTO(
         String email,
         String cpf,
         String numeroDeTelefone,
-        String nomeDepartamento, // Dica Sênior: Retorne o nome, não o ID! Facilita a vida do Front-end.
+        String nomeDepartamento,
         Boolean ativo
 ) {
-    // Construtor mágico que converte a Entidade para este DTO
     public FuncionarioRetornoDTO(Funcionario funcionario) {
         this(
                 funcionario.getId(),

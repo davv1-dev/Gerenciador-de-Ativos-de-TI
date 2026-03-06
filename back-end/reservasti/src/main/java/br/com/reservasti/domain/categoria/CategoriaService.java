@@ -1,6 +1,8 @@
 package br.com.reservasti.domain.categoria;
 
 import br.com.reservasti.domain.categoria.dto.*;
+import br.com.reservasti.domain.categoria.validacoes.CategoriaValidacaoContext;
+import br.com.reservasti.domain.categoria.validacoes.IValidatorCategoria;
 import br.com.reservasti.domain.equipamento.EquipamentoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class CategoriaService {
 
@@ -16,13 +20,14 @@ public class CategoriaService {
     private CategoriaRepository repository;
 
     @Autowired
-    private EquipamentoRepository equipamentoRepository; // Para validar exclusão
+    private EquipamentoRepository equipamentoRepository;
+    @Autowired
+    private List<IValidatorCategoria> validadores;
 
     @Transactional
     public CategoriaRetornoDTO cadastrar(CategoriaDTO dto) {
-        if (repository.existsByNome(dto.nome())) {
-            throw new IllegalArgumentException("Já existe uma categoria com este nome.");
-        }
+        validadores.forEach(v->v.validar(new CategoriaValidacaoContext(null,dto)));
+
         Categoria categoria = new Categoria(dto);
         repository.save(categoria);
         return new CategoriaRetornoDTO(categoria);
@@ -33,15 +38,16 @@ public class CategoriaService {
     }
 
     public CategoriaRetornoDTO buscarPorId(Long id) {
-        Categoria categoria = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Categoria não encontrada."));
+        validadores.forEach(v->v.validar(new CategoriaValidacaoContext(id,null)));
+
+        Categoria categoria = repository.findById(id).get();
         return new CategoriaRetornoDTO(categoria);
     }
 
     @Transactional
     public CategoriaRetornoDTO atualizar(Long id, CategoriaAtualizacaoDTO dto) {
-        Categoria categoria = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Categoria não encontrada."));
+        validadores.forEach(v->v.validar(new CategoriaValidacaoContext(id,null)));
+        Categoria categoria = repository.findById(id).get();
 
         categoria.atualizarInformacoes(dto);
         return new CategoriaRetornoDTO(categoria);
@@ -49,13 +55,8 @@ public class CategoriaService {
 
     @Transactional
     public void excluir(Long id) {
-        Categoria categoria = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Categoria não encontrada."));
-
-        // Proteção de Integridade:
-        if (equipamentoRepository.existsByCategoriaId(id)) {
-            throw new IllegalStateException("Não é possível excluir: existem equipamentos vinculados a esta categoria.");
-        }
+        validadores.forEach(v->v.validar(new CategoriaValidacaoContext(id,null)));
+        Categoria categoria = repository.findById(id).get();
 
         repository.delete(categoria);
     }

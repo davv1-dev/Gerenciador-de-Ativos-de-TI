@@ -23,9 +23,20 @@ public class ReservaController {
         return ResponseEntity.created(uri).body(retorno);
     }
 
+    @PutMapping("/{id}/retirar")
+    public ResponseEntity<Void> retirar(@PathVariable Long id){
+        service.retirarEquipamento(id);
+        return ResponseEntity.ok().build();
+    }
+
     @PutMapping("/{id}/devolver")
     public ResponseEntity<Void> devolver(@PathVariable Long id) {
         service.devolverEquipamento(id);
         return ResponseEntity.noContent().build();
+    }
+    @PatchMapping("/{id}/cancelar")
+    public ResponseEntity<Void> cancelarReserva(@PathVariable Long id) {
+        service.cancelarReserva(id);
+        return ResponseEntity.noContent().build(); // Retorna o nosso amado 204 No Content
     }
 }

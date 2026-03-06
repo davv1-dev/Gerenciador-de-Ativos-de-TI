@@ -1,6 +1,7 @@
 package br.com.reservasti.domain.departamento;
 
 import br.com.reservasti.domain.departamento.dto.*;
+import br.com.reservasti.domain.departamento.validacoes.IValidatorDepartamento;
 import br.com.reservasti.domain.funcionario.FuncionarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class DepartamentoService {
 
@@ -16,34 +19,32 @@ public class DepartamentoService {
     private DepartamentoRepository repository;
 
     @Autowired
-    private FuncionarioRepository funcionarioRepository; // Para validar exclusão
+    private FuncionarioRepository funcionarioRepository;
+
+    @Autowired
+    private List<IValidatorDepartamento> validadores;
 
     @Transactional
-    public DepartamentoRetornoDTO cadastrar(DepartamentoDTO dto) {
-        if (repository.existsByNome(dto.nome())) {
-            throw new IllegalArgumentException("Nome de departamento já cadastrado.");
-        }
-        if (repository.existsByCentroDeCusto(dto.centroDeCusto())) {
-            throw new IllegalArgumentException("Centro de custo já cadastrado.");
-        }
+    public DepartamentoRetornoDTO cadastrarDepartamento(DepartamentoDTO dto) {
+        validadores.forEach(v->v.validar(dto));
 
         Departamento departamento = new Departamento(dto);
         repository.save(departamento);
         return new DepartamentoRetornoDTO(departamento);
     }
 
-    public Page<DepartamentoRetornoDTO> listar(Pageable paginacao) {
+    public Page<DepartamentoRetornoDTO> listarDepartamentos(Pageable paginacao) {
         return repository.findAll(paginacao).map(DepartamentoRetornoDTO::new);
     }
 
-    public DepartamentoRetornoDTO buscarPorId(Long id) {
+    public DepartamentoRetornoDTO buscarPorIdDepartamento(Long id) {
         Departamento departamento = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Departamento não encontrado."));
         return new DepartamentoRetornoDTO(departamento);
     }
 
     @Transactional
-    public DepartamentoRetornoDTO atualizar(Long id, DepartamentoAtualizacaoDTO dto) {
+    public DepartamentoRetornoDTO atualizarDepartamento(Long id, DepartamentoAtualizacaoDTO dto) {
         Departamento departamento = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Departamento não encontrado."));
 
@@ -52,11 +53,10 @@ public class DepartamentoService {
     }
 
     @Transactional
-    public void excluir(Long id) {
+    public void excluirDepartamento(Long id) {
         Departamento departamento = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Departamento não encontrado."));
 
-        // Proteção de Integridade:
         if (funcionarioRepository.existsByDepartamentoId(id)) {
             throw new IllegalStateException("Não é possível excluir: existem funcionários neste departamento.");
         }

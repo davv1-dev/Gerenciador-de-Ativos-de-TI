@@ -3,7 +3,9 @@ package br.com.reservasti.domain.reserva.validacoes;
 import br.com.reservasti.domain.reserva.ReservaRepository;
 import br.com.reservasti.domain.reserva.dto.ReservaDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ValidarSeExisteConflitoReserva implements IValidatorReserva {
     @Autowired
     private ReservaRepository reservaRepository;

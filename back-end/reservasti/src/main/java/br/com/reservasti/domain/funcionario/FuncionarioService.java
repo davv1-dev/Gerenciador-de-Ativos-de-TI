@@ -7,6 +7,7 @@ import br.com.reservasti.domain.funcionario.dto.FuncionarioDTO;
 import br.com.reservasti.domain.funcionario.dto.FuncionarioRetornoDTO;
 import br.com.reservasti.domain.funcionario.validacoes.IValidatorFuncionario;
 import br.com.reservasti.domain.funcionario.validacoes.ValidarConflitoDeEmail;
+import br.com.reservasti.domain.usuario.Usuario;
 import br.com.reservasti.domain.usuario.UsuarioService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -46,11 +46,12 @@ public class EquipamentoService {
     }
 
     @Transactional
-    public void alterarStatusEquipamento(Long id, StatusEquipamento novoStatus) {
+    public void alterarStatusEquipamento(Long id, StatusEquipamento status) {
         Equipamento equipamento = equipamentoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Equipamento não encontrado!"));
 
-        equipamento.setStatus(novoStatus);
+        equipamento.setStatus(status);
+        equipamentoRepository.save(equipamento);
     }
     @Transactional
     public void desativarEquipamento(Long id) {

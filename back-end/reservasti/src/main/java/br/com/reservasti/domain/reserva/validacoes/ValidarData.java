@@ -1,7 +1,9 @@
 package br.com.reservasti.domain.reserva.validacoes;
 
 import br.com.reservasti.domain.reserva.dto.ReservaDTO;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ValidarData implements IValidatorReserva {
     @Override
     public void validar(ReservaDTO dto) {

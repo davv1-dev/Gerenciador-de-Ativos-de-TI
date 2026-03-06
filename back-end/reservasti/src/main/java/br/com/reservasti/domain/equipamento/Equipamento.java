@@ -4,13 +4,17 @@ import br.com.reservasti.domain.categoria.Categoria;
 import br.com.reservasti.domain.equipamento.dto.EditarEquipamentoDTO;
 import br.com.reservasti.domain.equipamento.dto.EquipamentoDTO;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "equipamentos")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Equipamento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

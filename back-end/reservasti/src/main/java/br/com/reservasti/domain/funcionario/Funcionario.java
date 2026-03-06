@@ -9,10 +9,12 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "funcionarios")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Funcionario {
@@ -30,13 +32,9 @@ public class Funcionario {
     @Embedded
     private Endereco endereco;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @MapsId
-    @JoinColumn(name = "usuario_id")
-    private Usuario usuario;
     public Funcionario(Long id, FuncionarioDTO funcionarioDTO, Departamento departamento) {
         this.id = id;
-        this.nomeCompleto = funcionarioDTO.nome();
+        this.nomeCompleto = funcionarioDTO.nomeCompleto();
         this.email = funcionarioDTO.email();
         this.cpf = funcionarioDTO.cpf();
         this.numeroDeTelefone= funcionarioDTO.numeroDeTelefone();

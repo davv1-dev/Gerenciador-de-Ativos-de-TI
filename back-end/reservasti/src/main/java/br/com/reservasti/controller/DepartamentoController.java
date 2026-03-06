@@ -27,7 +27,7 @@ public class DepartamentoController {
     public ResponseEntity<DepartamentoRetornoDTO> cadastrar(
             @RequestBody @Valid DepartamentoDTO dto,
             UriComponentsBuilder uriBuilder) {
-        DepartamentoRetornoDTO retorno = service.cadastrar(dto);
+        DepartamentoRetornoDTO retorno = service.cadastrarDepartamento(dto);
         var uri = uriBuilder.path("/departamentos/{id}").buildAndExpand(retorno.id()).toUri();
         return ResponseEntity.created(uri).body(retorno);
     }
@@ -35,24 +35,24 @@ public class DepartamentoController {
     @GetMapping
     public ResponseEntity<Page<DepartamentoRetornoDTO>> listar(
             @PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao) {
-        return ResponseEntity.ok(service.listar(paginacao));
+        return ResponseEntity.ok(service.listarDepartamentos(paginacao));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<DepartamentoRetornoDTO> detalhar(@PathVariable Long id) {
-        return ResponseEntity.ok(service.buscarPorId(id));
+        return ResponseEntity.ok(service.buscarPorIdDepartamento(id));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<DepartamentoRetornoDTO> atualizar(
             @PathVariable Long id,
             @RequestBody @Valid DepartamentoAtualizacaoDTO dto) {
-        return ResponseEntity.ok(service.atualizar(id, dto));
+        return ResponseEntity.ok(service.atualizarDepartamento(id, dto));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
-        service.excluir(id);
+        service.excluirDepartamento(id);
         return ResponseEntity.noContent().build();
     }
 }
