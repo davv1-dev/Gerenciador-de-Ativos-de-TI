@@ -7,6 +7,10 @@ import br.com.reservasti.domain.funcionario.FuncionarioRepository;
 import br.com.reservasti.domain.helpdesk.dto.AberturaChamadoDTO;
 import br.com.reservasti.domain.helpdesk.dto.DetalhamentoChamadoDTO;
 import br.com.reservasti.domain.helpdesk.dto.ResumoChamadoDTO;
+import br.com.reservasti.domain.helpdesk.validacoes.ChamadoContext;
+import br.com.reservasti.domain.helpdesk.validacoes.IValidatorChamado;
+import br.com.reservasti.infra.exceptions.IdNaoEncontradoException;
+import br.com.reservasti.infra.exceptions.ValidacaoException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,24 +29,26 @@ public class ChamadoService {
     private FuncionarioRepository funcionarioRepository;
     @Autowired
     private EquipamentoRepository equipamentoRepository;
+    @Autowired
+    private List<IValidatorChamado> validadores;
 
     @Transactional
     public DetalhamentoChamadoDTO abrirChamado(AberturaChamadoDTO dto) {
 
         Funcionario solicitante = funcionarioRepository.findById(dto.solicitanteId())
-                .orElseThrow(() -> new RuntimeException("Solicitante não encontrado"));
+                .orElseThrow(() -> new IdNaoEncontradoException("Solicitante não encontrado"));
 
         Chamado chamado = new Chamado(dto, solicitante);
 
         if (dto.equipamentoId() != null) {
             Equipamento equipamento = equipamentoRepository.findById(dto.equipamentoId())
-                    .orElseThrow(() -> new RuntimeException("Equipamento não encontrado"));
+                    .orElseThrow(() -> new IdNaoEncontradoException("Equipamento não encontrado"));
             chamado.setEquipamento(equipamento);
         }
 
         if (dto.tecnicoId() != null) {
             Funcionario tecnico = funcionarioRepository.findById(dto.tecnicoId())
-                    .orElseThrow(() -> new RuntimeException("Técnico não encontrado"));
+                    .orElseThrow(() -> new IdNaoEncontradoException("Técnico não encontrado"));
 
             alocarParaTecnico(chamado, tecnico);
         } else {
@@ -58,11 +64,9 @@ public class ChamadoService {
     public DetalhamentoChamadoDTO resolverChamado(Long chamadoId) {
 
         Chamado chamadoAtual = chamadoRepository.findById(chamadoId)
-                .orElseThrow(() -> new RuntimeException("Chamado não encontrado"));
+                .orElseThrow(() -> new IdNaoEncontradoException("Chamado não encontrado"));
 
-        if (chamadoAtual.getStatus() != StatusChamado.EM_ATENDIMENTO) {
-            throw new IllegalStateException("Apenas chamados 'EM_ATENDIMENTO' podem ser resolvidos.");
-        }
+        validadores.forEach(v-> v.validar(new ChamadoContext(chamadoId,null)));
 
         chamadoAtual.setStatus(StatusChamado.RESOLVIDO);
         chamadoAtual.setDataResolucao(LocalDateTime.now());
@@ -94,14 +98,12 @@ public class ChamadoService {
     public DetalhamentoChamadoDTO assumirChamado(Long chamadoId, Long idTecnico) {
 
         Chamado chamado = chamadoRepository.findById(chamadoId)
-                .orElseThrow(() -> new RuntimeException("Chamado não encontrado"));
+                .orElseThrow(() -> new IdNaoEncontradoException("Chamado não encontrado"));
 
-        if (chamado.getStatus() != StatusChamado.NA_FILA) {
-            throw new IllegalStateException("Este chamado já foi assumido por outro técnico ou não está na Fila Global.");
-        }
+        validadores.forEach(v->v.validar(new ChamadoContext(chamadoId,null)));
 
         Funcionario tecnico = funcionarioRepository.findById(idTecnico)
-                .orElseThrow(() -> new RuntimeException("Técnico não encontrado"));
+                .orElseThrow(() -> new IdNaoEncontradoException("Técnico não encontrado"));
 
         alocarParaTecnico(chamado, tecnico);
 
@@ -112,11 +114,9 @@ public class ChamadoService {
     public DetalhamentoChamadoDTO cancelarChamado(Long chamadoId) {
 
         Chamado chamado = chamadoRepository.findById(chamadoId)
-                .orElseThrow(() -> new RuntimeException("Chamado não encontrado"));
+                .orElseThrow(() -> new IdNaoEncontradoException("Chamado não encontrado"));
 
-        if (chamado.getStatus() == StatusChamado.RESOLVIDO || chamado.getStatus() == StatusChamado.CANCELADO) {
-            throw new IllegalStateException("Este chamado já está encerrado e não pode ser cancelado.");
-        }
+        validadores.forEach(v->v.validar(new ChamadoContext(chamadoId,null)));
 
         StatusChamado statusAnterior = chamado.getStatus();
         Funcionario tecnicoAlocado = chamado.getTecnico();

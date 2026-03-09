@@ -5,5 +5,5 @@ import org.springframework.stereotype.Component;
 
 @Component
 public interface IValidatorFuncionario {
-    void validar(FuncionarioDTO dto);
+    void validar(FuncionarioContext context);
 }

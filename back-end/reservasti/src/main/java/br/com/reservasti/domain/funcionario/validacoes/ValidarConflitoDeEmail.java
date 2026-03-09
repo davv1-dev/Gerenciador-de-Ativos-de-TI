@@ -1,8 +1,7 @@
 package br.com.reservasti.domain.funcionario.validacoes;
 
 import br.com.reservasti.domain.funcionario.FuncionarioRepository;
-import br.com.reservasti.domain.funcionario.dto.FuncionarioAtualizacaoDTO;
-import br.com.reservasti.domain.funcionario.dto.FuncionarioDTO;
+import br.com.reservasti.infra.exceptions.ConcorrenciaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,14 +11,14 @@ public class ValidarConflitoDeEmail implements IValidatorFuncionario{
     private FuncionarioRepository repository;
 
     @Override
-    public void validar(FuncionarioDTO dto) {
-        if(repository.existsByEmail(dto.email())){
-            throw new RuntimeException("Email ja cadastrado");
+    public void validar(FuncionarioContext context) {
+        if(repository.existsByEmail(context.dto().email())){
+            throw new ConcorrenciaException("Email ja cadastrado");
         }
-    }
-    public void validaEmailAtualizacao(FuncionarioAtualizacaoDTO dadosnovos){
-        if (repository.existsByCpf(dadosnovos.email())){
-            throw new RuntimeException("Email ja cadastrastrado");
+        if (context.dtoDadosN()!=null){
+            if (repository.existsByCpf(context.dtoDadosN().email())){
+                throw new ConcorrenciaException("Email ja cadastrastrado");
+            }
         }
     }
 }

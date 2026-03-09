@@ -9,6 +9,7 @@ import br.com.reservasti.domain.relatorio.dto.*;
 import br.com.reservasti.domain.reserva.Reserva;
 import br.com.reservasti.domain.reserva.ReservaRepository;
 import br.com.reservasti.domain.reserva.StatusReserva;
+import br.com.reservasti.infra.exceptions.IdNaoEncontradoException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ public class RelatorioService {
     @Transactional(readOnly = true)
     public RelatorioDepartamentoDTO gerarRelatorioPorDepartamento(Long departamentoId) {
         Departamento depto = departamentoRepository.findById(departamentoId)
-                .orElseThrow(() -> new RuntimeException("Departamento não encontrado"));
+                .orElseThrow(() -> new IdNaoEncontradoException("Departamento não encontrado"));
 
         long total = equipamentoRepository.countByDepartamentoId(departamentoId);
         long disponiveis = equipamentoRepository.countByDepartamentoIdAndStatus(departamentoId, StatusEquipamento.DISPONIVEL);

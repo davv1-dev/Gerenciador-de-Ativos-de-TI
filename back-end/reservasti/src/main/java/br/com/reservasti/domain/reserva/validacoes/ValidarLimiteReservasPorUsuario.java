@@ -3,7 +3,7 @@ package br.com.reservasti.domain.reserva.validacoes;
 import br.com.reservasti.domain.reserva.ReservaRepository;
 import br.com.reservasti.domain.reserva.StatusReserva;
 import br.com.reservasti.domain.reserva.dto.ReservaDTO;
-import br.com.reservasti.infra.ValidationExeception;
+import br.com.reservasti.infra.exceptions.ValidacaoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +25,7 @@ public class ValidarLimiteReservasPorUsuario implements IValidatorReserva{
         );
 
         if (quantidadeEquipamentosReservados >= 2) {
-            throw new ValidationExeception("Limite atingido! O funcionário já possui 2 equipamentos reservados ou em uso.");
+            throw new ValidacaoException("Limite atingido! O funcionário já possui 2 equipamentos reservados ou em uso.");
         }
     }
 }

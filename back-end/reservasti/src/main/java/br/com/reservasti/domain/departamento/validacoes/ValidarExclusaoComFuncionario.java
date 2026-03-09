@@ -1,6 +1,7 @@
 package br.com.reservasti.domain.departamento.validacoes;
 
 import br.com.reservasti.domain.funcionario.FuncionarioRepository;
+import br.com.reservasti.infra.exceptions.ValidacaoException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class ValidarExclusaoComFuncionario implements IValidatorDepartamento{
@@ -10,7 +11,7 @@ public class ValidarExclusaoComFuncionario implements IValidatorDepartamento{
     @Override
     public void validar(DepartamentoValidacaoContext context) {
         if (funcionarioRepository.existsByDepartamentoId(context.id())) {
-            throw new IllegalStateException("Não é possível excluir: existem funcionários neste departamento.");
+            throw new ValidacaoException("Não é possível excluir: existem funcionários neste departamento.");
         }
     }
 }

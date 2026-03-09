@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface ReservaRepository extends JpaRepository<Reserva, Long> {
 
-
+    boolean existsByFuncionarioIdAndStatus(Long idFuncionario,StatusReserva status);
     @Query("""
             SELECT COUNT(r) > 0 FROM Reserva r 
             WHERE r.equipamento.id = :equipamentoId 

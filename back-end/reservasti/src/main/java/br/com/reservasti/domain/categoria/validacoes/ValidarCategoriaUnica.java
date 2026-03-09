@@ -1,7 +1,7 @@
 package br.com.reservasti.domain.categoria.validacoes;
 
 import br.com.reservasti.domain.categoria.CategoriaRepository;
-import br.com.reservasti.domain.categoria.dto.CategoriaDTO;
+import br.com.reservasti.infra.exceptions.ConcorrenciaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +13,7 @@ public class ValidarCategoriaUnica implements IValidatorCategoria{
     @Override
     public void validar(CategoriaValidacaoContext context) {
         if (repository.existsByNome(context.dto().nome())) {
-            throw new IllegalArgumentException("Já existe uma categoria com este nome.");
+            throw new ConcorrenciaException("Já existe uma categoria com este nome.");
         }
     }
 }

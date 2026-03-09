@@ -9,7 +9,7 @@ import br.com.reservasti.domain.equipamento.dto.EditarEquipamentoDTO;
 import br.com.reservasti.domain.equipamento.dto.EquipamentoDTO;
 import br.com.reservasti.domain.equipamento.dto.EquipamentoRetornoDTO;
 import br.com.reservasti.domain.equipamento.validacoes.IValidatorEquipamento;
-import jakarta.persistence.EntityNotFoundException;
+import br.com.reservasti.infra.exceptions.IdNaoEncontradoException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -37,7 +37,7 @@ public class EquipamentoService {
     public EquipamentoRetornoDTO cadastrarEquipamento(EquipamentoDTO dto) {
         validadores.forEach( validator -> validator.validar(dto));
 
-        Categoria categoria = categoriaRepository.findById(dto.categoriaId()).orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada!"));
+        Categoria categoria = categoriaRepository.findById(dto.categoriaId()).orElseThrow(() -> new IdNaoEncontradoException("Categoria não encontrada!"));
         Equipamento equipamento = new Equipamento(dto, categoria);
         equipamentoRepository.save(equipamento);
 
@@ -46,14 +46,14 @@ public class EquipamentoService {
 
     public EquipamentoRetornoDTO buscarPorId(Long id) {
 
-        Equipamento equipamento = equipamentoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Equipamento não encontrado!"));
+        Equipamento equipamento = equipamentoRepository.findById(id).orElseThrow(() -> new IdNaoEncontradoException("Equipamento não encontrado!"));
         return new EquipamentoRetornoDTO(equipamento);
     }
 
     @Transactional
     public void alterarStatusEquipamento(Long id, StatusEquipamento status) {
         Equipamento equipamento = equipamentoRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Equipamento não encontrado!"));
+                .orElseThrow(() -> new IdNaoEncontradoException("Equipamento não encontrado!"));
 
         equipamento.setStatus(status);
         equipamentoRepository.save(equipamento);
@@ -61,7 +61,7 @@ public class EquipamentoService {
     @Transactional
     public void desativarEquipamento(Long id) {
         Equipamento equipamento = equipamentoRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Equipamento não encontrado!"));
+                .orElseThrow(() -> new IdNaoEncontradoException("Equipamento não encontrado!"));
 
         equipamento.setStatus(StatusEquipamento.BAIXADO);
     }
@@ -76,9 +76,9 @@ public class EquipamentoService {
     @Transactional
     public EquipamentoRetornoDTO editarEquipamento(Long id, EditarEquipamentoDTO dto) {
 
-        Equipamento equipamento = equipamentoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Equipamento não encontrado!"));
+        Equipamento equipamento = equipamentoRepository.findById(id).orElseThrow(() -> new IdNaoEncontradoException("Equipamento não encontrado!"));
 
-        Categoria categoria = categoriaRepository.findById(dto.categoriaId()).orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada!"));
+        Categoria categoria = categoriaRepository.findById(dto.categoriaId()).orElseThrow(() -> new IdNaoEncontradoException("Categoria não encontrada!"));
 
         equipamento.atualizarInformacoes(dto,categoria);
 
@@ -87,10 +87,10 @@ public class EquipamentoService {
     @Transactional
     public void alocarEquipamentoAoDepartamento(AlocarEquipamentoDTO dto) {
         Equipamento equipamento = equipamentoRepository.findById(dto.idEquipamento())
-                .orElseThrow(() -> new RuntimeException("Equipamento não encontrado"));
+                .orElseThrow(() -> new IdNaoEncontradoException("Equipamento não encontrado"));
 
         Departamento departamento = departamentoRepository.findById(dto.idDepartamento())
-                .orElseThrow(() -> new RuntimeException("Departamento não encontrado"));
+                .orElseThrow(() -> new IdNaoEncontradoException("Departamento não encontrado"));
 
         equipamento.alocarAoDepartamento(departamento);
 

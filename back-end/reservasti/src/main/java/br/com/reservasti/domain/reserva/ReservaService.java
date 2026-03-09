@@ -8,8 +8,7 @@ import br.com.reservasti.domain.funcionario.FuncionarioRepository;
 import br.com.reservasti.domain.reserva.dto.ReservaDTO;
 import br.com.reservasti.domain.reserva.dto.ReservaRetornoDTO;
 import br.com.reservasti.domain.reserva.validacoes.IValidatorReserva;
-import br.com.reservasti.infra.IdNaoEncontradoExeception;
-import jakarta.persistence.EntityNotFoundException;
+import br.com.reservasti.infra.exceptions.IdNaoEncontradoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,10 +33,10 @@ public class ReservaService {
         validadores.forEach(v-> v.validar(dto));
 
         Funcionario funcionario = funcionarioRepository.findById(dto.funcionarioId())
-                .orElseThrow(() -> new EntityNotFoundException("Funcionário não encontrado."));
+                .orElseThrow(() -> new IdNaoEncontradoException("Funcionário não encontrado."));
 
         Equipamento equipamento = equipamentoRepository.findById(dto.equipamentoId())
-                .orElseThrow(() -> new EntityNotFoundException("Equipamento não encontrado."));
+                .orElseThrow(() -> new IdNaoEncontradoException("Equipamento não encontrado."));
 
         Reserva reserva = new Reserva(funcionario, equipamento, dto.dataPrevistaRetirada(), dto.dataPrevistaDevolucao());
         reservaRepository.save(reserva);
@@ -46,7 +45,7 @@ public class ReservaService {
     }
     @Transactional
     public void retirarEquipamento(Long id){
-       Equipamento equipamento = equipamentoRepository.findById(id).orElseThrow(()-> new IdNaoEncontradoExeception("Equipamento não encontrado"));
+       Equipamento equipamento = equipamentoRepository.findById(id).orElseThrow(()-> new IdNaoEncontradoException("Equipamento não encontrado"));
         equipamento.setStatus(StatusEquipamento.EM_USO);
         equipamentoRepository.save(equipamento);
     }
@@ -54,7 +53,7 @@ public class ReservaService {
     @Transactional
     public void devolverEquipamento(Long reservaId) {
         Reserva reserva = reservaRepository.findById(reservaId)
-                .orElseThrow(() -> new EntityNotFoundException("Reserva não encontrada."));
+                .orElseThrow(() -> new IdNaoEncontradoException("Reserva não encontrada."));
 
         if (reserva.getStatus() == StatusReserva.CONCLUIDA) {
             throw new IllegalStateException("Esta reserva já foi concluída.");
@@ -67,7 +66,7 @@ public class ReservaService {
     @Transactional
     public void cancelarReserva(Long idReserva) {
         Reserva reserva = reservaRepository.findById(idReserva)
-                .orElseThrow(() -> new RuntimeException("Reserva não encontrada com o ID: " + idReserva));
+                .orElseThrow(() -> new IdNaoEncontradoException("Reserva não encontrada com o ID: " + idReserva));
 
         if (reserva.getStatus() == StatusReserva.CANCELADA || reserva.getStatus() == StatusReserva.CONCLUIDA) {
             throw new IllegalStateException("Esta reserva não pode ser cancelada no status atual: " + reserva.getStatus());

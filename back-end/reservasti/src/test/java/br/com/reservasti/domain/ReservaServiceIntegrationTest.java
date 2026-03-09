@@ -15,7 +15,7 @@ import br.com.reservasti.domain.reserva.dto.ReservaDTO;
 import br.com.reservasti.domain.reserva.dto.ReservaRetornoDTO;
 import br.com.reservasti.domain.usuario.Usuario;
 import br.com.reservasti.domain.usuario.UsuarioRepository;
-import br.com.reservasti.infra.ValidationExeception;
+import br.com.reservasti.infra.exceptions.ValidacaoException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -207,7 +207,7 @@ class ReservaServiceIntegrationTest {
         reservaService.solicitarReserva(dto1);
         reservaService.solicitarReserva(dto2);
 
-        Exception exception = assertThrows(ValidationExeception.class, () -> {
+        Exception exception = assertThrows(ValidacaoException.class, () -> {
             reservaService.solicitarReserva(dto3);
         });
 

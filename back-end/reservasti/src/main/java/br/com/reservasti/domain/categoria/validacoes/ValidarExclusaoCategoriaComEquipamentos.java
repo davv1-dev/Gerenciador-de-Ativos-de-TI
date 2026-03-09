@@ -1,6 +1,7 @@
 package br.com.reservasti.domain.categoria.validacoes;
 
 import br.com.reservasti.domain.equipamento.EquipamentoRepository;
+import br.com.reservasti.infra.exceptions.ValidacaoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +13,7 @@ public class ValidarExclusaoCategoriaComEquipamentos implements IValidatorCatego
     @Override
     public void validar(CategoriaValidacaoContext context) {
         if (equipamentoRepository.existsByCategoriaId(context.id())) {
-            throw new IllegalStateException("Não é possível excluir: existem equipamentos vinculados a esta categoria.");
+            throw new ValidacaoException("Não é possível excluir: existem equipamentos vinculados a esta categoria.");
         }
     }
 }
