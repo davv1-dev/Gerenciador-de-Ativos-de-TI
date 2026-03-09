@@ -1,6 +1,7 @@
 package br.com.reservasti.controller;
 
 import br.com.reservasti.domain.equipamento.StatusEquipamento;
+import br.com.reservasti.domain.equipamento.dto.AlocarEquipamentoDTO;
 import br.com.reservasti.domain.equipamento.dto.EditarEquipamentoDTO;
 import br.com.reservasti.domain.equipamento.dto.EquipamentoDTO;
 import br.com.reservasti.domain.equipamento.dto.EquipamentoRetornoDTO;
@@ -63,6 +64,14 @@ public class EquipamentoController {
             @PathVariable Long id,@RequestBody StatusEquipamento novoStatus) {
 
         service.alterarStatusEquipamento(id, novoStatus);
+
+        return ResponseEntity.noContent().build();
+    }
+    @PatchMapping("/alocar-departamento")
+    public ResponseEntity<Void> alocarAoDepartamento(
+            @RequestBody @Valid AlocarEquipamentoDTO dto) {
+
+        service.alocarEquipamentoAoDepartamento(dto);
 
         return ResponseEntity.noContent().build();
     }

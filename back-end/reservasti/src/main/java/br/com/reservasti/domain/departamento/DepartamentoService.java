@@ -1,6 +1,7 @@
 package br.com.reservasti.domain.departamento;
 
 import br.com.reservasti.domain.departamento.dto.*;
+import br.com.reservasti.domain.departamento.validacoes.DepartamentoValidacaoContext;
 import br.com.reservasti.domain.departamento.validacoes.IValidatorDepartamento;
 import br.com.reservasti.domain.funcionario.FuncionarioRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -26,7 +27,7 @@ public class DepartamentoService {
 
     @Transactional
     public DepartamentoRetornoDTO cadastrarDepartamento(DepartamentoDTO dto) {
-        validadores.forEach(v->v.validar(dto));
+        validadores.forEach(v->v.validar(new DepartamentoValidacaoContext(null,dto)));
 
         Departamento departamento = new Departamento(dto);
         repository.save(departamento);
@@ -54,6 +55,7 @@ public class DepartamentoService {
 
     @Transactional
     public void excluirDepartamento(Long id) {
+        validadores.forEach(v->v.validar(new DepartamentoValidacaoContext(id,null)));
         Departamento departamento = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Departamento não encontrado."));
 

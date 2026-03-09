@@ -11,8 +11,8 @@ public class ValidarCentroDeCusto implements IValidatorDepartamento{
     private DepartamentoRepository departamentoRepository;
 
     @Override
-    public void validar(DepartamentoDTO dto) {
-        if (departamentoRepository.existsByCentroDeCusto(dto.centroDeCusto())) {
+    public void validar(DepartamentoValidacaoContext context) {
+        if (departamentoRepository.existsByCentroDeCusto(context.dto().centroDeCusto())) {
             throw new IllegalArgumentException("Centro de custo já cadastrado.");
         }
     }

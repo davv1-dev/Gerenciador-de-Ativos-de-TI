@@ -1,6 +1,7 @@
 package br.com.reservasti.domain.equipamento;
 
 import br.com.reservasti.domain.categoria.Categoria;
+import br.com.reservasti.domain.departamento.Departamento;
 import br.com.reservasti.domain.equipamento.dto.EditarEquipamentoDTO;
 import br.com.reservasti.domain.equipamento.dto.EquipamentoDTO;
 import jakarta.persistence.*;
@@ -35,6 +36,10 @@ public class Equipamento {
     @JoinColumn(name = "categoria_id",nullable = false)
     private Categoria categoria;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "departamento_id")
+    private Departamento departamento;
+
     public Equipamento(EquipamentoDTO dto, Categoria categoria) {
         this.nome = dto.nome();
         this.marca = dto.marca();
@@ -57,6 +62,14 @@ public class Equipamento {
             this.categoria = categorianova;
         }
 
+    }
+    public void alocarAoDepartamento(Departamento departamento) {
+        this.departamento = departamento;
+        this.status = StatusEquipamento.EM_USO;
+    }
+    public void desalocarDoDepartamento() {
+        this.departamento = null;
+        this.status = StatusEquipamento.DISPONIVEL;
     }
 }
 

@@ -11,8 +11,8 @@ public class ValidarNomeExistente implements IValidatorDepartamento{
     private DepartamentoRepository departamentoRepository;
 
     @Override
-    public void validar(DepartamentoDTO dto) {
-        if (departamentoRepository.existsByNome(dto.nome())) {
+    public void validar(DepartamentoValidacaoContext context) {
+        if (departamentoRepository.existsByNome(context.dto().nome())) {
             throw new IllegalArgumentException("Nome de departamento já cadastrado.");
         }
     }

@@ -4,7 +4,6 @@ import br.com.reservasti.domain.departamento.Departamento;
 import br.com.reservasti.domain.endereco.Endereco;
 import br.com.reservasti.domain.funcionario.dto.FuncionarioAtualizacaoDTO;
 import br.com.reservasti.domain.funcionario.dto.FuncionarioDTO;
-import br.com.reservasti.domain.usuario.Usuario;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

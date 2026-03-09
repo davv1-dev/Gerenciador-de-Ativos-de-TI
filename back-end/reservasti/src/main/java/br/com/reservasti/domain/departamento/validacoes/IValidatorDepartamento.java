@@ -5,5 +5,5 @@ import org.springframework.stereotype.Component;
 
 @Component
 public interface IValidatorDepartamento {
-    void validar(DepartamentoDTO dto);
+    void validar(DepartamentoValidacaoContext context);
 }

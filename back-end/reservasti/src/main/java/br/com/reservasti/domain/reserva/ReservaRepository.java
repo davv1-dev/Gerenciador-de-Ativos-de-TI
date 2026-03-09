@@ -1,5 +1,6 @@
 package br.com.reservasti.domain.reserva;
 
+import br.com.reservasti.domain.relatorio.dto.PrevisaoDemandaDTO;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -23,4 +24,19 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
     );
 
     long countByFuncionarioIdAndStatusIn(@NotNull Long aLong, List<StatusReserva> statusAtivos);
+    @Query("SELECT r FROM Reserva r WHERE r.status IN :status AND r.dataPrevistaDevolucao < :hoje")
+    List<Reserva> findReservasAtrasadas(
+            @Param("status") List<StatusReserva> status,
+            @Param("hoje") LocalDate hoje
+    );
+
+    @Query("SELECT new br.com.reservasti.domain.relatorio.dto.PrevisaoDemandaDTO(e.categoria.nome, COUNT(r)) " +
+            "FROM Reserva r JOIN r.equipamento e " +
+            "WHERE r.status IN ('AGENDADA', 'ATIVA', 'EM_USO') " +
+            "AND r.dataPrevistaRetirada <= :fim AND r.dataPrevistaDevolucao >= :inicio " +
+            "GROUP BY e.categoria.nome")
+    List<PrevisaoDemandaDTO> findDemandaPorPeriodo(
+            @Param("inicio") LocalDate inicio,
+            @Param("fim") LocalDate fim
+    );
 }

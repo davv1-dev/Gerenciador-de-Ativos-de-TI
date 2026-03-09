@@ -2,6 +2,9 @@ package br.com.reservasti.domain.equipamento;
 
 import br.com.reservasti.domain.categoria.Categoria;
 import br.com.reservasti.domain.categoria.CategoriaRepository;
+import br.com.reservasti.domain.departamento.Departamento;
+import br.com.reservasti.domain.departamento.DepartamentoRepository;
+import br.com.reservasti.domain.equipamento.dto.AlocarEquipamentoDTO;
 import br.com.reservasti.domain.equipamento.dto.EditarEquipamentoDTO;
 import br.com.reservasti.domain.equipamento.dto.EquipamentoDTO;
 import br.com.reservasti.domain.equipamento.dto.EquipamentoRetornoDTO;
@@ -24,6 +27,8 @@ public class EquipamentoService {
 
     @Autowired
     private CategoriaRepository categoriaRepository;
+    @Autowired
+    private DepartamentoRepository departamentoRepository;
 
     @Autowired
     private List<IValidatorEquipamento> validadores;
@@ -78,6 +83,17 @@ public class EquipamentoService {
         equipamento.atualizarInformacoes(dto,categoria);
 
         return new EquipamentoRetornoDTO(equipamento);
+    }
+    @Transactional
+    public void alocarEquipamentoAoDepartamento(AlocarEquipamentoDTO dto) {
+        Equipamento equipamento = equipamentoRepository.findById(dto.idEquipamento())
+                .orElseThrow(() -> new RuntimeException("Equipamento não encontrado"));
+
+        Departamento departamento = departamentoRepository.findById(dto.idDepartamento())
+                .orElseThrow(() -> new RuntimeException("Departamento não encontrado"));
+
+        equipamento.alocarAoDepartamento(departamento);
+
     }
 
 }
