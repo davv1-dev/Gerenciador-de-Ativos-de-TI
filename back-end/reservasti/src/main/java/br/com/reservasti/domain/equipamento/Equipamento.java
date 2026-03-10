@@ -20,6 +20,9 @@ public class Equipamento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Version
+    private Long versao;
+
     @Column(nullable = false)
     private String nome;
     private String marca;

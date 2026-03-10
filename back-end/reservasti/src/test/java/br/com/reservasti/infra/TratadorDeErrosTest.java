@@ -10,6 +10,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -80,7 +81,7 @@ class TratadorDeErrosTest {
     @DisplayName("Deve retornar HTTP 500, ocultar o stacktrace e devolver o protocolo ao lançar Exception Genérica")
     void testTratadorErroInterno500() throws Exception {
 
-        Mockito.when(chamadoService.listarFilaGlobal())
+        Mockito.when(chamadoService.listarFilaGlobal(Pageable.unpaged()))
                 .thenThrow(new RuntimeException("Banco de dados fora do ar / NullPointer inesperado"));
 
         mockMvc.perform(get("/chamados/fila-global"))

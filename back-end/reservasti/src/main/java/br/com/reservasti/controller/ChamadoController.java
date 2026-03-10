@@ -5,6 +5,10 @@ import br.com.reservasti.domain.helpdesk.dto.AberturaChamadoDTO;
 import br.com.reservasti.domain.helpdesk.dto.DetalhamentoChamadoDTO;
 import br.com.reservasti.domain.helpdesk.dto.ResumoChamadoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -35,12 +39,12 @@ public class ChamadoController {
         return ResponseEntity.ok(chamadoResolvido);
     }
     @GetMapping("/fila-global")
-    public ResponseEntity<List<ResumoChamadoDTO>> listarFilaGlobal() {
-        return ResponseEntity.ok(chamadoService.listarFilaGlobal());
+    public ResponseEntity<Page<ResumoChamadoDTO>> listarFilaGlobal(@PageableDefault(size = 10, sort = "dataAbertura", direction = Sort.Direction.ASC) Pageable pageable){
+        return ResponseEntity.ok(chamadoService.listarFilaGlobal(pageable));
     }
     @GetMapping("/fila-pessoal/{tecnicoId}")
-    public ResponseEntity<List<ResumoChamadoDTO>> listarFilaPessoal(@PathVariable Long tecnicoId) {
-        return ResponseEntity.ok(chamadoService.listarFilaPessoal(tecnicoId));
+    public ResponseEntity<Page<ResumoChamadoDTO>> listarFilaPessoal(@PathVariable Long tecnicoId,@PageableDefault(size = 10, sort = "dataAbertura", direction = Sort.Direction.ASC) Pageable pageable) {
+        return ResponseEntity.ok(chamadoService.listarFilaPessoal(tecnicoId,pageable));
     }
     //Lembrar de mudar esse e o metodo de cima quando eu adicionar o springsecurity
     @PatchMapping("/{idChamado}/assumir")

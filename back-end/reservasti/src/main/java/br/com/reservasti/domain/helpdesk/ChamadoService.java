@@ -11,6 +11,8 @@ import br.com.reservasti.domain.helpdesk.validacoes.ChamadoContext;
 import br.com.reservasti.domain.helpdesk.validacoes.IValidatorChamado;
 import br.com.reservasti.domain.notificacao.NotificacaoService;
 import br.com.reservasti.infra.exceptions.IdNaoEncontradoException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,21 +92,17 @@ public class ChamadoService {
     }
 
     @Transactional(readOnly = true)
-    public List<ResumoChamadoDTO> listarFilaGlobal() {
-        return chamadoRepository.findAllByStatusOrderByDataAberturaAsc(StatusChamado.NA_FILA)
-                .stream()
-                .map(ResumoChamadoDTO::new)
-                .collect(Collectors.toList());
+    public Page<ResumoChamadoDTO> listarFilaGlobal(Pageable page) {
+        return chamadoRepository.findAllByStatusOrderByDataAberturaAsc(StatusChamado.NA_FILA,page)
+                .map(ResumoChamadoDTO::new);
     }
 
     @Transactional(readOnly = true)
-    public List<ResumoChamadoDTO> listarFilaPessoal(Long tecnicoId) {
+    public Page<ResumoChamadoDTO> listarFilaPessoal(Long tecnicoId,Pageable page) {
         List<StatusChamado> statusAtivos = List.of(StatusChamado.EM_ATENDIMENTO, StatusChamado.FILA_DO_TECNICO);
 
-        return chamadoRepository.findAllByTecnicoIdAndStatusInOrderByDataAberturaAsc(tecnicoId, statusAtivos)
-                .stream()
-                .map(ResumoChamadoDTO::new)
-                .collect(Collectors.toList());
+        return chamadoRepository.findAllByTecnicoIdAndStatusInOrderByDataAberturaAsc(tecnicoId, statusAtivos,page)
+                .map(ResumoChamadoDTO::new);
     }
 
     @Transactional
@@ -113,12 +111,23 @@ public class ChamadoService {
         Chamado chamado = chamadoRepository.findById(chamadoId)
                 .orElseThrow(() -> new IdNaoEncontradoException("Chamado não encontrado"));
 
-        validadores.forEach(v->v.validar(new ChamadoContext(chamadoId,null)));
+        validadores.forEach(v -> v.validar(new ChamadoContext(chamadoId, null)));
 
         Funcionario tecnico = funcionarioRepository.findById(idTecnico)
                 .orElseThrow(() -> new IdNaoEncontradoException("Técnico não encontrado"));
 
         alocarParaTecnico(chamado, tecnico);
+
+        chamadoRepository.saveAndFlush(chamado);
+
+        List<Chamado> chamadosRestantes = chamadoRepository.findByStatusOrderByDataAberturaAsc(StatusChamado.NA_FILA);
+
+        for (int i = 0; i < chamadosRestantes.size(); i++) {
+            Chamado c = chamadosRestantes.get(i);
+            Long novaPosicao = (long) (i + 1);
+
+            notificacaoService.notificarPosicaoFila(c.getSolicitante().getId(), novaPosicao);
+        }
 
         return new DetalhamentoChamadoDTO(chamado);
     }

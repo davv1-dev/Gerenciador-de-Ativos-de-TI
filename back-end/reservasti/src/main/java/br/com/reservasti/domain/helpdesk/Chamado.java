@@ -24,6 +24,9 @@ public class Chamado {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Version
+    private Long versao;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "equipamento_id")
     private Equipamento equipamento;

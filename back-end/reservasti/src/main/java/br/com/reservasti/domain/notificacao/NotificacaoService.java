@@ -14,6 +14,8 @@ public class NotificacaoService {
 
     private final Map<Long, SseEmitter> emissoresTecnicos = new ConcurrentHashMap<>();
 
+    private final Map<Long, SseEmitter> emissoresSolicitantes = new ConcurrentHashMap<>();
+
     public SseEmitter conectarTecnico(Long tecnicoId) {
         SseEmitter emitter = new SseEmitter(30 * 60 * 1000L);
 
@@ -52,5 +54,28 @@ public class NotificacaoService {
                 emissoresTecnicos.remove(tecnicoId);
             }
         });
+    }
+    public SseEmitter conectarSolicitante(Long solicitanteId) {
+        SseEmitter emitter = new SseEmitter(0L);
+        // timeout infinito
+        emissoresSolicitantes.put(solicitanteId, emitter);
+
+        emitter.onCompletion(() -> emissoresTecnicos.remove(solicitanteId));
+        emitter.onTimeout(() -> emissoresTecnicos.remove(solicitanteId));
+        emitter.onError((e) -> emissoresTecnicos.remove(solicitanteId));
+
+        return emitter;
+    }
+    public void notificarPosicaoFila(Long solicitanteId, Long novaPosicao) {
+        SseEmitter emitter = emissoresSolicitantes.get(solicitanteId);
+        if (emitter != null) {
+            try {
+                emitter.send(SseEmitter.event()
+                        .name("ATUALIZACAO_FILA")
+                        .data("{\"posicaoFila\": " + novaPosicao + "}", MediaType.APPLICATION_JSON));
+            } catch (Exception e) {
+                emissoresSolicitantes.remove(solicitanteId);
+            }
+        }
     }
 }

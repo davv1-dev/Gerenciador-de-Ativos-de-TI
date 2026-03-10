@@ -3,8 +3,10 @@ package br.com.reservasti.infra;
 import br.com.reservasti.infra.exceptions.ConcorrenciaException;
 import br.com.reservasti.infra.exceptions.IdNaoEncontradoException;
 import br.com.reservasti.infra.exceptions.ValidacaoException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -80,6 +82,20 @@ public class TratadorDeErros{
         );
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(erro);
+    }
+
+    @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
+    public ResponseEntity<String> tratarErroDeConcorrencia(ObjectOptimisticLockingFailureException ex) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body("Conflito de concorrência: Outro técnico já assumiu ou alterou este chamado. Por favor, atualize a página.");
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<String> tratarErroDeChaveUnica(DataIntegrityViolationException ex) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body("Erro: Já existe um registro cadastrado com esta informação única (ex: e-mail, CPF ou nome).");
     }
 
     private record ErroPadraoDTO(
