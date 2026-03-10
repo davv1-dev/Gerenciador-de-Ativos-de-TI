@@ -9,7 +9,7 @@ public class UsuarioService {
     private UsuarioRepository repository;
 
     public Long salvarUsuario(String login,String senha){
-        Usuario novoUsu = new Usuario(login,senha,TipoUsuario.ADMIN);
+        Usuario novoUsu = new Usuario(login,senha,TipoUsuario.TECNICO);
         repository.save(novoUsu);
         return novoUsu.getId();
     }

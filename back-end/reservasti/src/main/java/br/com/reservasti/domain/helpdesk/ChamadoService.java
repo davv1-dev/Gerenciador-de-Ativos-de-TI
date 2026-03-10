@@ -9,8 +9,8 @@ import br.com.reservasti.domain.helpdesk.dto.DetalhamentoChamadoDTO;
 import br.com.reservasti.domain.helpdesk.dto.ResumoChamadoDTO;
 import br.com.reservasti.domain.helpdesk.validacoes.ChamadoContext;
 import br.com.reservasti.domain.helpdesk.validacoes.IValidatorChamado;
+import br.com.reservasti.domain.notificacao.NotificacaoService;
 import br.com.reservasti.infra.exceptions.IdNaoEncontradoException;
-import br.com.reservasti.infra.exceptions.ValidacaoException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +31,9 @@ public class ChamadoService {
     private EquipamentoRepository equipamentoRepository;
     @Autowired
     private List<IValidatorChamado> validadores;
+    @Autowired
+    private NotificacaoService notificacaoService;
+
 
     @Transactional
     public DetalhamentoChamadoDTO abrirChamado(AberturaChamadoDTO dto) {
@@ -53,11 +56,21 @@ public class ChamadoService {
             alocarParaTecnico(chamado, tecnico);
         } else {
             chamado.setStatus(StatusChamado.NA_FILA);
+
         }
 
         chamadoRepository.save(chamado);
 
-        return new DetalhamentoChamadoDTO(chamado);
+        DetalhamentoChamadoDTO chamadoSalvoDTO = new DetalhamentoChamadoDTO(chamado);
+
+        if (dto.tecnicoId() != null) {
+
+            notificacaoService.notificarTecnico(dto.tecnicoId(), chamadoSalvoDTO);
+        }else{
+            notificacaoService.notificarTodosTecnicos(chamadoSalvoDTO);
+        }
+
+        return chamadoSalvoDTO;
     }
 
     @Transactional
@@ -131,7 +144,6 @@ public class ChamadoService {
         return new DetalhamentoChamadoDTO(chamado);
     }
 
-
     private void puxarProximoDaFilaParaTecnico(Funcionario tecnico) {
         Optional<Chamado> proximoDaFilaPessoal = chamadoRepository
                 .findFirstByTecnicoIdAndStatusOrderByDataAberturaAsc(tecnico.getId(), StatusChamado.FILA_DO_TECNICO);
@@ -165,4 +177,5 @@ public class ChamadoService {
             chamado.setStatus(StatusChamado.EM_ATENDIMENTO);
         }
     }
+
 }

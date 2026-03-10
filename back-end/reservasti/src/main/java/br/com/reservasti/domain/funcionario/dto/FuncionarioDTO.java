@@ -20,7 +20,6 @@ public record FuncionarioDTO(
         String email,
 
         @NotBlank(message = "O CPF é obrigatório")
-        @CPF(message = "CPF inválido")
         String cpf,
         @Pattern(regexp = "\\d{2} \\d{5}-\\d{4}")
         String numeroDeTelefone,

@@ -42,6 +42,7 @@ public class Chamado {
     @Column(columnDefinition = "TEXT")
     private String descricaoDetalhada;
 
+    @Column(name = "localizacao_exata")
     private String localizacao;
 
     @Enumerated(EnumType.STRING)
