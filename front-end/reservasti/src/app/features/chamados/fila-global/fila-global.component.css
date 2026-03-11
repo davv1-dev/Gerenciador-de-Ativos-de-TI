@@ -1,0 +1,65 @@
+.container-fila {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.cabecalho h2 {
+  font-size: 28px;
+  margin-bottom: 5px;
+}
+
+.cabecalho p {
+  color: var(--texto-secundario);
+  margin-bottom: 30px;
+}
+
+.lista-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* Respiro entre os cards */
+}
+
+/* O Segredo do Card Suave */
+.card-chamado {
+  background-color: var(--bg-cartao);
+  border-radius: var(--raio-borda);
+  padding: 24px;
+  box-shadow: var(--sombra-suave);
+  transition: var(--transicao);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-chamado:hover {
+  transform: translateY(-5px); /* Dá uma leve "flutuada" ao passar o mouse */
+  box-shadow: var(--sombra-hover);
+}
+
+.info-principal h3 {
+  margin: 5px 0 0 0;
+  font-size: 18px;
+}
+
+.id-chamado {
+  color: var(--texto-secundario);
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.btn-assumir {
+  background-color: var(--cor-primaria);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  padding: 10px 24px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: var(--transicao);
+}
+
+.btn-assumir:hover {
+  background-color: var(--cor-primaria-hover);
+  transform: scale(1.05);
+}

@@ -1,0 +1,122 @@
+/* Centraliza o card no meio da tela perfeitamente */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* Ocupa 100% da altura da tela */
+  background-color: var(--bg-fundo);
+}
+
+.login-card {
+  background-color: var(--bg-cartao);
+  width: 100%;
+  max-width: 420px;
+  padding: 40px;
+  border-radius: var(--raio-borda);
+  box-shadow: var(--sombra-suave);
+  transition: var(--transicao);
+}
+
+.login-card:hover {
+  box-shadow: var(--sombra-hover);
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.login-header h2 {
+  color: var(--cor-primaria);
+  margin-bottom: 8px;
+  font-size: 26px;
+}
+
+.login-header p {
+  color: var(--texto-secundario);
+  font-size: 14px;
+}
+
+/* Estilização dos Inputs */
+.input-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-group label {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: var(--texto-principal);
+}
+
+.input-group input {
+  padding: 14px 16px;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  font-size: 15px;
+  color: var(--texto-principal);
+  background-color: #F8FAFC;
+  transition: var(--transicao);
+  outline: none;
+}
+
+.input-group input:focus {
+  border-color: var(--cor-primaria);
+  background-color: #FFFFFF;
+  box-shadow: 0 0 0 3px rgba(67, 24, 255, 0.1);
+}
+
+/* Layout das opções extras */
+.acoes-extras {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  margin-bottom: 25px;
+}
+
+.esqueci-senha {
+  color: var(--cor-primaria);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.esqueci-senha:hover {
+  text-decoration: underline;
+}
+
+/* Botão Principal Padrão */
+.btn-entrar {
+  width: 100%;
+  background-color: var(--cor-primaria);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: var(--transicao);
+  box-shadow: 0 4px 14px rgba(67, 24, 255, 0.2);
+}
+
+.btn-entrar:hover {
+  background-color: var(--cor-primaria-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(67, 24, 255, 0.3);
+}
+
+.login-footer {
+  text-align: center;
+  margin-top: 25px;
+  font-size: 14px;
+  color: var(--texto-secundario);
+}
+
+.login-footer a {
+  color: var(--cor-primaria);
+  font-weight: bold;
+  text-decoration: none;
+}

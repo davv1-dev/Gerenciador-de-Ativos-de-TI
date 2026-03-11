@@ -1,0 +1,83 @@
+<div class="cadastro-container">
+  <h2>Cadastrar Novo Funcionário</h2>
+
+  <form [formGroup]="funcionarioForm" (ngSubmit)="salvar()">
+
+    <fieldset>
+      <legend>Dados Pessoais</legend>
+
+      <div>
+        <label>Nome Completo *</label>
+        <input type="text" formControlName="nomeCompleto" placeholder="Ex: João da Silva">
+      </div>
+
+      <div>
+        <label>Email *</label>
+        <input type="email" formControlName="email">
+      </div>
+
+      <div>
+        <label>CPF *</label>
+        <input type="text" formControlName="cpf">
+      </div>
+
+      <div>
+        <label>Telefone (Ex: 11 99999-9999)</label>
+        <input type="text" formControlName="numeroDeTelefone">
+      </div>
+
+      <div>
+        <label>Departamento *</label>
+        <select formControlName="departamentoId">
+          <option [ngValue]="null" disabled>Selecione o departamento...</option>
+          <option *ngFor="let dep of listaDepartamentos" [value]="dep.id">
+            {{ dep.nome }}
+          </option>
+        </select>
+      </div>
+    </fieldset>
+
+    <fieldset formGroupName="endereco">
+      <legend>Endereço</legend>
+
+      <div>
+        <label>CEP * (Apenas números)</label>
+        <input type="text" formControlName="cep" maxlength="8">
+      </div>
+
+      <div>
+        <label>Logradouro *</label>
+        <input type="text" formControlName="logradouro">
+      </div>
+
+      <div>
+        <label>Número</label>
+        <input type="number" formControlName="numero">
+      </div>
+
+      <div>
+        <label>Complemento</label>
+        <input type="text" formControlName="complemento">
+      </div>
+
+      <div>
+        <label>Bairro *</label>
+        <input type="text" formControlName="bairro">
+      </div>
+
+      <div>
+        <label>Cidade *</label>
+        <input type="text" formControlName="cidade">
+      </div>
+
+      <div>
+        <label>UF *</label>
+        <input type="text" formControlName="uf" maxlength="2">
+      </div>
+    </fieldset>
+
+    <button type="submit" [disabled]="funcionarioForm.invalid || carregando">
+      {{ carregando ? 'Salvando...' : 'Salvar Funcionário' }}
+    </button>
+  </form>
+</div>

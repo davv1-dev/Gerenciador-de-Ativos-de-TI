@@ -1,0 +1,59 @@
+<div class="dashboard-container">
+
+  <header class="boas-vindas">
+    <h1>Olá, {{ nomeUsuario }}! 👋</h1>
+    <p>O que você precisa hoje?</p>
+  </header>
+
+  <section class="acoes-rapidas">
+    <div class="card-acao" (click)="navegarParaNovaReserva()">
+      <div class="icone">💻</div>
+      <h3>Reservar Equipamento</h3>
+      <p>Solicite notebooks, projetores ou periféricos.</p>
+    </div>
+
+    <div class="card-acao" (click)="navegarParaNovoChamado()">
+      <div class="icone">🛠️</div>
+      <h3>Preciso de Ajuda (TI)</h3>
+      <p>Relate um problema com seu equipamento ou sistema.</p>
+    </div>
+  </section>
+
+  <section class="minhas-reservas">
+    <h2>Minhas Reservas Ativas</h2>
+
+    <div *ngIf="carregando" class="loading">Carregando suas reservas...</div>
+
+    <div *ngIf="!carregando && minhasReservas.length === 0" class="empty-state">
+      <p>Você não tem nenhuma reserva ativa no momento.</p>
+    </div>
+
+    <div class="table-responsive" *ngIf="!carregando && minhasReservas.length > 0">
+      <table>
+        <thead>
+          <tr>
+            <th>Equipamento</th>
+            <th>Retirada Prevista</th>
+            <th>Devolução Prevista</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let reserva of minhasReservas">
+            <td><strong>{{ reserva.nomeEquipamento }}</strong></td>
+
+            <td>{{ reserva.dataPrevistaRetirada | date:'dd/MM/yyyy' }}</td>
+            <td>{{ reserva.dataPrevistaDevolucao | date:'dd/MM/yyyy' }}</td>
+
+            <td>
+              <span class="badge" [ngClass]="reserva.status.toLowerCase()">
+                {{ reserva.status.replace('_', ' ') }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</div>

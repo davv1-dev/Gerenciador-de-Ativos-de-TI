@@ -1,1 +1,22 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --bg-fundo: #F4F7FE;
+  --bg-cartao: #FFFFFF;
+  --cor-primaria: #4318FF;
+  --cor-primaria-hover: #3311DB;
+  --texto-principal: #2B3674;
+  --texto-secundario: #A3AED0;
+
+  --sombra-suave: 0px 18px 40px rgba(112, 144, 176, 0.12);
+  --sombra-hover: 0px 20px 45px rgba(112, 144, 176, 0.20);
+  --raio-borda: 16px;
+
+  --transicao: all 0.3s ease-in-out;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bg-fundo);
+  color: var(--texto-principal);
+  -webkit-font-smoothing: antialiased;
+}

@@ -1,0 +1,22 @@
+<div class="container-fila">
+  <div class="cabecalho">
+    <h2>Fila de Atendimento Global</h2>
+    <p>Chamados aguardando suporte, ordenados do mais antigo para o mais novo.</p>
+  </div>
+
+  <div *ngIf="carregando" class="loading">Carregando chamados...</div>
+
+  <div *ngIf="!carregando && chamadosPage" class="lista-cards">
+    <div class="card-chamado" *ngFor="let chamado of chamadosPage.content">
+      <div class="info-principal">
+        <span class="id-chamado">#{{ chamado.id }}</span>
+        <h3>{{ chamado.nomeSolicitante }}</h3>
+      </div>
+      <div class="info-secundaria">
+        <span class="status badge">{{ chamado.status }}</span>
+        <span class="data">{{ chamado.dataAbertura | date:'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+      <button class="btn-assumir">Assumir</button>
+    </div>
+  </div>
+</div>
