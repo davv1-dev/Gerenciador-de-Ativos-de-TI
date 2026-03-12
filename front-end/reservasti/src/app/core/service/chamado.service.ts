@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Page, ResumoChamadoDTO } from '../models/chamado';
+import { Page, ResumoChamadoDTO,AberturaChamadoDTO,DetalhamentoChamadoDTO} from '../models/chamado';
 
 @Injectable({
   providedIn: 'root'
@@ -50,6 +50,10 @@ export class ChamadoService {
     });
   }
 
+  abrirChamado(dto: AberturaChamadoDTO): Observable<DetalhamentoChamadoDTO> {
+    return this.http.post<DetalhamentoChamadoDTO>(this.apiUrl, dto);
+    }
+
   escutarFilaGlobalAoVivo(tecnicoId: number): Observable<ResumoChamadoDTO> {
     return new Observable((subscriber) => {
 
@@ -68,5 +72,8 @@ export class ChamadoService {
 
       return () => eventSource.close();
     });
+  }
+  listarMeusChamados(solicitanteId: number): Observable<Page<ResumoChamadoDTO>> {
+    return this.http.get<Page<ResumoChamadoDTO>>(`${this.apiUrl}/solicitante/${solicitanteId}`);
   }
 }

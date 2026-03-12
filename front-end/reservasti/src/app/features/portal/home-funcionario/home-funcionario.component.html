@@ -22,13 +22,13 @@
   <section class="minhas-reservas">
     <h2>Minhas Reservas Ativas</h2>
 
-    <div *ngIf="carregando" class="loading">Carregando suas reservas...</div>
+    <div *ngIf="carregandoReservas" class="loading">Carregando suas reservas...</div>
 
-    <div *ngIf="!carregando && minhasReservas.length === 0" class="empty-state">
+    <div *ngIf="!carregandoReservas && minhasReservas.length === 0" class="empty-state">
       <p>Você não tem nenhuma reserva ativa no momento.</p>
     </div>
 
-    <div class="table-responsive" *ngIf="!carregando && minhasReservas.length > 0">
+    <div class="table-responsive" *ngIf="!carregandoReservas && minhasReservas.length > 0">
       <table>
         <thead>
           <tr>
@@ -45,6 +45,75 @@
             <td>{{ reserva.dataPrevistaRetirada | date:'dd/MM/yyyy' }}</td>
             <td>{{ reserva.dataPrevistaDevolucao | date:'dd/MM/yyyy' }}</td>
 
+            <td>
+              <span class="badge" [ngClass]="reserva.status.toLowerCase()">
+                {{ reserva.status.replace('_', ' ') }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+  <section class="minhas-reservas">
+    <h2>Meus Chamados de Suporte</h2>
+
+    <div *ngIf="carregandoChamados" class="loading">Buscando seus chamados...</div>
+
+    <div *ngIf="!carregandoChamados && meusChamados.length === 0" class="empty-state">
+      <p>Você não possui chamados abertos ou no histórico.</p>
+    </div>
+
+    <div class="table-responsive" *ngIf="!carregandoChamados && meusChamados.length > 0">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Tipo de Problema</th>
+            <th>Data de Abertura</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let chamado of meusChamados">
+            <td><strong>#{{ chamado.id }}</strong></td>
+            <td>{{ chamado.tipoProblema.replace('_', ' ') }}</td>
+            <td>{{ chamado.dataAbertura | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td>
+              <span class="badge" [ngClass]="chamado.status.toLowerCase()">
+                {{ chamado.status.replace('_', ' ') }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="minhas-reservas">
+    <h2>Histórico de Equipamentos</h2>
+
+    <div *ngIf="carregandoHistorico" class="loading">Buscando seu histórico...</div>
+
+    <div *ngIf="!carregandoHistorico && historicoReservas.length === 0" class="empty-state">
+      <p>Nenhum histórico de devolução ou cancelamento encontrado.</p>
+    </div>
+
+    <div class="table-responsive" *ngIf="!carregandoHistorico && historicoReservas.length > 0">
+      <table>
+        <thead>
+          <tr>
+            <th>Equipamento</th>
+            <th>Retirada Prevista</th>
+            <th>Devolução Prevista</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let reserva of historicoReservas">
+            <td><strong>{{ reserva.nomeEquipamento }}</strong></td>
+            <td>{{ reserva.dataPrevistaRetirada | date:'dd/MM/yyyy' }}</td>
+            <td>{{ reserva.dataPrevistaDevolucao | date:'dd/MM/yyyy' }}</td>
             <td>
               <span class="badge" [ngClass]="reserva.status.toLowerCase()">
                 {{ reserva.status.replace('_', ' ') }}

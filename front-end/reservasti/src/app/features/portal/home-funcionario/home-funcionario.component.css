@@ -1,130 +1,226 @@
-.dashboard-container {
-  max-width: 1000px;
-  margin: 40px auto;
-  padding: 0 20px;
-  font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
-  color: #1f2937;
+:host {
+  /* Define uma cor de fundo muito sutil para o body no seu app.component.css,
+     como #f0f4f8, para que os cards brancos "saltem" */
 }
 
-/* Boas Vindas */
-.boas-vindas {
-  margin-bottom: 30px;
+.dashboard-container {
+  max-width: 1100px; /* Aumentado ligeiramente para um visual mais 'widescreen' */
+  margin: 60px auto; /* Mais espaçamento no topo */
+  padding: 0 30px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #1a202c; /* Cinza ligeiramente mais escuro para melhor legibilidade */
 }
+
+/* ==========================================================================
+   Boas Vindas (Header) - Mais drama e personalidade
+   ========================================================================== */
+.boas-vindas {
+  margin-bottom: 50px;
+  text-align: left; /* Alinhamento centralizado pode trazer personalidade tbm, tente center */
+}
+
 .boas-vindas h1 {
   margin: 0;
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: 2.8rem; /* Aumentado para 'gritar' mais o nome do usuário */
+  font-weight: 800; /* Extra bold */
+  letter-spacing: -1.5px; /* Aperta um pouco as letras, visual moderno */
   color: #111827;
-}
-.boas-vindas p {
-  margin: 5px 0 0 0;
-  color: #6b7280;
-  font-size: 1.1rem;
+  line-height: 1.1;
 }
 
-/* Cards de Ação */
+.boas-vindas p {
+  margin: 10px 0 0 0;
+  color: #4b5563; /* Cinza médio suave */
+  font-size: 1.25rem;
+  font-weight: 400;
+  letter-spacing: -0.2px;
+}
+
+/* ==========================================================================
+   Cards de Ação (Ações Rápidas) - Organic Modernism
+   ========================================================================== */
 .acoes-rapidas {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-  margin-bottom: 40px;
+  /* Garante que os cards não fiquem muito esticados em telas médias */
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 30px; /* Mais espaço entre eles */
+  margin-bottom: 60px;
 }
 
 .card-acao {
   background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 24px;
+  /* Sombra 'premium' e muito suave para volume */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+  border-radius: 20px; /* Bordas muito mais arredondadas e amigáveis */
+  padding: 35px; /* Mais 'respiro' interno */
   cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.03);
+  position: relative; /* Para o efeito de borda de acento */
+  overflow: hidden; /* Garante que nada saia das bordas arredondadas */
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1); /* Animação suave e sofisticada */
+
+  /* Removemos a borda padrão para um visual limpo */
+  border: none;
 }
 
+/* Efeito de destaque discreto no hover */
 .card-acao:hover {
-  transform: translateY(-4px);
-  border-color: #2563eb;
-  box-shadow: 0 10px 15px rgba(37, 99, 235, 0.1);
+  transform: translateY(-8px) scale(1.01); /* Sobe mais e 'cresce' sutilmente */
+  box-shadow: 0 20px 40px rgba(37, 99, 235, 0.08); /* Sombra azulada sutil no hover */
+}
+
+/* Adicionando um acento de cor discreto no canto (personalidade) */
+.card-acao::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 0; /* Começa com altura zero */
+  background-color: #2563eb;
+  border-radius: 0 4px 4px 0;
+  transition: height 0.3s ease;
+}
+
+.card-acao:hover::after {
+  height: 100%; /* Borda azul cresce na lateral no hover */
 }
 
 .card-acao .icone {
-  font-size: 2.5rem;
-  margin-bottom: 15px;
+  font-size: 3.2rem;
+  margin-bottom: 25px;
+  display: inline-block;
+  /* Um fundo de cor muito sutil atrás do ícone pode dar personalidade tbm */
 }
 
 .card-acao h3 {
-  margin: 0 0 8px 0;
-  color: #1f2937;
-  font-weight: 600;
+  margin: 0 0 10px 0;
+  color: #111827;
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
 }
 
 .card-acao p {
   margin: 0;
   color: #6b7280;
-  font-size: 0.9rem;
-  line-height: 1.4;
+  font-size: 0.95rem;
+  line-height: 1.6;
 }
 
-/* Tabela de Reservas */
+/* ==========================================================================
+   Tabela de Reservas - Transformando a tabela em Card
+   ========================================================================== */
+.minhas-reservas {
+  background: #ffffff;
+  padding: 35px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04); /* Mesma sombra dos cards */
+  margin-bottom: 40px;
+}
+
 .minhas-reservas h2 {
-  font-size: 1.3rem;
-  border-bottom: 2px solid #f3f4f6;
-  padding-bottom: 10px;
-  margin-bottom: 20px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: #111827;
+  margin-top: 0;
+  margin-bottom: 25px;
+  border: none; /* Removemos a linha feia de separação */
+  position: relative;
+}
+
+/* Criamos um indicador de título mais elegante que o border-bottom */
+.minhas-reservas h2::after {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 4px;
+  background-color: #2563eb;
+  border-radius: 4px;
+  margin-top: 8px;
 }
 
 .table-responsive {
+  /* Removemos as bordas do container responsive */
+  border: none;
   overflow-x: auto;
-  background: #ffffff;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
 }
 
 table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate; /* Permite cantos arredondados discretos nas linhas */
+  border-spacing: 0; /* Mas grudadas */
   text-align: left;
 }
 
 th {
-  background-color: #f9fafb;
+  background-color: transparent; /* Removemos o cinza do th */
   color: #4b5563;
   font-weight: 600;
-  padding: 12px 16px;
-  border-bottom: 1px solid #e5e7eb;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  padding: 15px 16px;
+  border-bottom: 2px solid #f3f4f6; /* Apenas uma linha fina */
 }
 
 td {
-  padding: 16px;
-  border-bottom: 1px solid #e5e7eb;
-  color: #374151;
+  padding: 20px 16px; /* Mais espaço para os itens respirarem */
+  border-bottom: 1px solid #f3f4f6;
+  color: #1a202c;
   vertical-align: middle;
+  transition: background-color 0.2s; /* Para o efeito de hover */
 }
 
+/* UX de Sênior: Hover leve na linha inteira */
+tr:hover td {
+  background-color: #f9fafb;
+}
+
+/* Removemos a linha da última TD para não ter dupla borda no final do card */
 tr:last-child td {
   border-bottom: none;
 }
 
-/* Badges de Status */
-.badge {
-  padding: 6px 12px;
-  border-radius: 999px;
-  font-size: 0.75rem;
+/* Estilizando o texto forte dentro da TD (ex: nome do equipamento) */
+td strong {
   font-weight: 600;
-  text-transform: uppercase;
+  color: #111827;
 }
 
-/* Dinâmica de Cores baseada na classe gerada pelo Angular */
-.badge.aguardando_retirada { background: #fef3c7; color: #d97706; }
-.badge.em_uso { background: #d1fae5; color: #059669; }
-.badge.devolvido { background: #f3f4f6; color: #6b7280; }
-.badge.cancelada { background: #fee2e2; color: #dc2626; }
+/* ==========================================================================
+   Badges de Status - Cores Pastéis Premium
+   ========================================================================== */
+.badge {
+  padding: 6px 14px; /* Ligeiramente maior */
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: inline-block; /* Garante alinhamento */
+}
 
-/* Empty State & Loading */
+/* Cores pastéis mais sofisticadas e suaves, com mais saturação no texto */
+.badge.aguardando_retirada { background: #fef3c7; color: #b45309; } /* Ambar premium */
+.badge.em_uso { background: #d1fae5; color: #047857; }             /* Esmeralda suave */
+.badge.devolvido { background: #e5e7eb; color: #4b5563; }          /* Cinza frio */
+.badge.cancelada { background: #fee2e2; color: #b91c1c; }          /* Vermelho suave */
+
+/* ==========================================================================
+   Empty State & Loading - Design Integrado
+   ========================================================================== */
 .empty-state, .loading {
   text-align: center;
-  padding: 40px;
+  padding: 60px; /* Mais espaço */
   color: #6b7280;
-  background: #f9fafb;
-  border-radius: 8px;
-  border: 1px dashed #d1d5db;
+  /* Usamos o fundo padrão, pois eles já estão dentro de um card branco */
+  background: #fcfcfc;
+  border-radius: 12px;
+  border: 2px dashed #e5e7eb; /* Borda mais suave */
+  font-weight: 500;
 }
+/* Badges exclusivas para Chamados */
+.badge.aberto { background: #fee2e2; color: #b91c1c; }           /* Vermelho suave (Alerta) */
+.badge.em_andamento { background: #dbeafe; color: #1d4ed8; }     /* Azul suave (Trabalhando) */
+.badge.concluido { background: #d1fae5; color: #047857; }        /* Verde Esmeralda (Resolvido) */

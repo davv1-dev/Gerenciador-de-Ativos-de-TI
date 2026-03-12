@@ -5,5 +5,5 @@ import org.springframework.stereotype.Component;
 
 @Component
 public interface IValidatorReserva {
-    void validar(ReservaDTO dto);
+    void validar(ReservaContext context);
 }

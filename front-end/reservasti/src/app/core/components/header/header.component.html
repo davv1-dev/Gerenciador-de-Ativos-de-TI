@@ -1,0 +1,36 @@
+<header class="header-global">
+  <div class="header-container">
+
+    <div class="logo-area">
+      <div class="logo-icone"></div>
+      <span class="logo-texto">Reservas<span class="destaque">TI</span></span>
+    </div>
+
+    <nav class="nav-menu">
+
+      <a routerLink="/home"
+         [class.ativo]="router.url === '/home'"
+         class="nav-link">
+        Home
+      </a>
+
+      <a routerLink="/novareserva"
+         [class.ativo]="router.url.includes('/novareserva')"
+         class="nav-link">
+        Catálogo
+      </a>
+
+      <a routerLink="/meus-chamados"
+         [class.ativo]="router.url.includes('/meus-chamados')"
+         class="nav-link">
+        Chamados
+      </a>
+
+    </nav>
+
+    <div class="perfil-area">
+      <div class="avatar">US</div>
+    </div>
+
+  </div>
+</header>

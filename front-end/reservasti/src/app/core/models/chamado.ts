@@ -25,3 +25,11 @@ export interface DetalhamentoChamadoDTO {
   dataAbertura: string;
   posicaoFila?: number;
 }
+export interface AberturaChamadoDTO {
+  equipamentoId?: number | null;
+  solicitanteId: number;
+  tipoProblema: string;
+  descricaoDetalhada: string;
+  localizacao: string;
+  tecnicoId?: number | null;
+}

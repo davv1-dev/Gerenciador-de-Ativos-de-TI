@@ -1,7 +1,9 @@
+import { Page, ResumoChamadoDTO } from './../../../core/models/chamado';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ReservaService } from '../../../core/service/reserva.service';
 import { ReservaRetornoDTO } from '../../../core/models/reserva';
+import { ChamadoService } from 'src/app/core/service/chamado.service';
 
 @Component({
   selector: 'app-home-funcionario',
@@ -12,11 +14,17 @@ export class HomeFuncionarioComponent implements OnInit {
 
   nomeUsuario = 'Colaborador';
   minhasReservas: ReservaRetornoDTO[] = [];
-  carregando = true;
+  historicoReservas: ReservaRetornoDTO[] = [];
+  meusChamados: ResumoChamadoDTO[] = [];
+  carregandoReservas = true;
+  carregandoHistorico = true;
+  carregandoChamados = true;
+
 
   constructor(
     private reservaService: ReservaService,
-    private router: Router
+    private router: Router,
+    private chamadoService: ChamadoService
   ) {}
 
   ngOnInit(): void {
@@ -24,23 +32,45 @@ export class HomeFuncionarioComponent implements OnInit {
   }
 
   carregarDashboard(): void {
-    // 🚧 Mock: ID 1 forçado até termos o sistema de Login
-    const funcionarioIdMock = 1;
+    const funcionarioIdMock = 6;
 
     this.reservaService.listarMinhasReservasAtivas(funcionarioIdMock).subscribe({
-      next: (dados) => {
-        this.minhasReservas = dados;
-        this.carregando = false;
+      next: (pagina: Page<ReservaRetornoDTO>) => {
+        this.minhasReservas = pagina.content;
+        this.carregandoReservas = false;
       },
       error: (erro) => {
         console.error('Erro ao buscar reservas, backend pode estar desligado/ausente', erro);
-        this.carregando = false;
+        this.carregandoReservas = false;
       }
     });
+
+    this.reservaService.listarHistoricoReservas(funcionarioIdMock).subscribe({
+      next: (pagina: Page<ReservaRetornoDTO>) => {
+        this.historicoReservas = pagina.content;
+        this.carregandoHistorico = false;
+      },
+      error: (erro) => {
+        console.error('Erro histórico reservas', erro);
+        this.carregandoHistorico = false;
+      }
+    });
+
+    this.chamadoService.listarMeusChamados(funcionarioIdMock).subscribe({
+      next: (pagina: Page<ResumoChamadoDTO>) => {
+        this.meusChamados = pagina.content;
+        this.carregandoChamados = false;
+      },
+      error: (erro) => {
+        console.error('Erro chamados', erro);
+        this.carregandoChamados = false;
+      }
+    });
+
   }
 
   navegarParaNovaReserva(): void {
-    this.router.navigate(['/reservas/nova']);
+    this.router.navigate(['/novareserva']);
   }
 
   navegarParaNovoChamado(): void {

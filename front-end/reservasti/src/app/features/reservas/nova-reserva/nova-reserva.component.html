@@ -1,0 +1,106 @@
+<div class="dashboard-container">
+
+  <div class="boas-vindas">
+    <h1>Nova Reserva</h1>
+    <p *ngIf="!equipamentoSelecionado">Busque e escolha o equipamento que você precisa no nosso catálogo.</p>
+    <p *ngIf="equipamentoSelecionado">Defina as datas para a retirada de <strong>{{ equipamentoSelecionado.nome }}</strong>.</p>
+  </div>
+
+  <div *ngIf="!equipamentoSelecionado" class="catalogo-section">
+
+    <div class="filtros-container card-base">
+      <div class="input-group">
+        <label>Buscar Equipamento</label>
+        <div class="search-box">
+          <input
+            type="text"
+            [(ngModel)]="termoBusca"
+            (keyup.enter)="buscarEquipamentos()"
+            placeholder="Ex: Notebook Dell, Mouse..."
+            class="input-moderno">
+
+          <select [(ngModel)]="categoriaSelecionada" class="input-moderno select-categoria">
+            <option [ngValue]="null">Todas as Categorias</option>
+            <option *ngFor="let cat of categorias" [ngValue]="cat.id">
+              {{ cat.nome }}
+            </option>
+          </select>
+
+          <button (click)="buscarEquipamentos()" class="btn-secundario">Filtrar</button>
+        </div>
+      </div>
+      </div>
+
+    <div *ngIf="carregandoCatalogo" class="loading">Buscando catálogo...</div>
+    <div *ngIf="!carregandoCatalogo && equipamentos.length === 0" class="empty-state">
+      <p>Nenhum equipamento encontrado com esses filtros.</p>
+    </div>
+
+    <div class="catalogo-grid" *ngIf="!carregandoCatalogo && equipamentos.length > 0">
+
+      <div class="card-equipamento" *ngFor="let equip of equipamentos">
+        <div class="equip-header">
+          <span class="badge" [ngClass]="equip.status.toLowerCase()">
+            {{ equip.status.replace('_', ' ') }}
+          </span>
+        </div>
+
+        <div class="equip-body">
+          <h3>{{ equip.nome }}</h3>
+          <p class="detalhe">{{ equip.marca }} {{ equip.nome }}</p>
+          <p class="patrimonio">Patrimônio: {{ equip.numeroPatrimonio }}</p>
+        </div>
+
+        <div class="equip-footer">
+          <button
+            class="btn-primario"
+            [disabled]="equip.status !== 'DISPONIVEL'"
+            (click)="selecionarEquipamento(equip)">
+            {{ equip.status === 'DISPONIVEL' ? 'Selecionar' : 'Indisponível' }}
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div *ngIf="equipamentoSelecionado" class="formulario-section">
+
+    <div class="card-base form-container">
+
+      <div class="resumo-selecao">
+        <div>
+          <h3>Equipamento Selecionado</h3>
+          <p>{{ equipamentoSelecionado.nome }} ({{ equipamentoSelecionado.marca }})</p>
+        </div>
+        <button class="btn-texto" (click)="limparSelecao()">Trocar Equipamento</button>
+      </div>
+
+      <hr class="divisor">
+
+      <form [formGroup]="reservaForm" (ngSubmit)="confirmarReserva()">
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Data Prevista de Retirada</label>
+            <input type="date" formControlName="dataPrevistaRetirada" class="input-moderno">
+          </div>
+
+          <div class="form-group">
+            <label>Data Prevista de Devolução</label>
+            <input type="date" formControlName="dataPrevistaDevolucao" class="input-moderno">
+          </div>
+        </div>
+
+        <div class="acoes-finais">
+          <button type="button" class="btn-secundario" routerLink="/home-funcionario">Cancelar</button>
+          <button type="submit" class="btn-primario" [disabled]="reservaForm.invalid || enviando">
+            {{ enviando ? 'Processando...' : 'Confirmar Reserva' }}
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+</div>
