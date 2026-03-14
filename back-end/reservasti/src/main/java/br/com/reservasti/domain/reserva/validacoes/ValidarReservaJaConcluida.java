@@ -5,8 +5,10 @@ import br.com.reservasti.domain.reserva.ReservaRepository;
 import br.com.reservasti.domain.reserva.StatusReserva;
 import br.com.reservasti.infra.exceptions.ValidacaoException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-public class ValidarReservaConcluida implements IValidatorReservaAbertura {
+@Component
+public class ValidarReservaJaConcluida implements IValidatorReservaDevolucao {
     @Autowired
     private ReservaRepository reservaRepository;
     @Override

@@ -7,5 +7,6 @@ public enum TipoProblema {
     PROBLEMA_DE_REDE,
     INSTALACAO_SOFTWARE,
     DUVIDA_USO,
+    ACESSO,
     OUTROS
 }

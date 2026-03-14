@@ -5,6 +5,9 @@ import br.com.reservasti.domain.reserva.dto.ReservaDTO;
 import br.com.reservasti.domain.reserva.dto.ReservaRetornoDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -24,8 +27,8 @@ public class ReservaController {
     }
 
     @PutMapping("/{id}/retirar")
-    public ResponseEntity<Void> retirar(@PathVariable Long id){
-        service.retirarEquipamento(id);
+    public ResponseEntity<Void> retirar(@PathVariable Long id,@RequestBody Long idReserva){
+        service.retirarEquipamento(id,idReserva);
         return ResponseEntity.ok().build();
     }
 
@@ -37,6 +40,22 @@ public class ReservaController {
     @PatchMapping("/{id}/cancelar")
     public ResponseEntity<Void> cancelarReserva(@PathVariable Long id) {
         service.cancelarReserva(id);
-        return ResponseEntity.noContent().build(); // Retorna o nosso amado 204 No Content
+        return ResponseEntity.noContent().build(); 
+    }
+    @GetMapping("/funcionario/{funcionarioId}/ativas")
+    public ResponseEntity<Page<ReservaRetornoDTO>> listarAtivasDoFuncionario(@PathVariable Long funcionarioId, @PageableDefault(size = 10, sort = {"dataPrevistaRetirada"}) Pageable paginacao) {
+
+        Page<ReservaRetornoDTO> pagina = service.listarMinhasReservasAtivas(funcionarioId, paginacao);
+
+        return ResponseEntity.ok(pagina);
+    }
+    @GetMapping("/funcionario/{funcionarioId}/historico")
+    public ResponseEntity<Page<ReservaRetornoDTO>> listarHistoricoDoFuncionario(
+            @PathVariable Long funcionarioId,
+            @PageableDefault(size = 10, sort = {"dataPrevistaDevolucao"}) Pageable paginacao) {
+
+        Page<ReservaRetornoDTO> pagina = service.listarHistoricoReservas(funcionarioId, paginacao);
+
+        return ResponseEntity.ok(pagina);
     }
 }

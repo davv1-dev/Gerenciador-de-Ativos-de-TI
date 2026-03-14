@@ -21,12 +21,12 @@ import java.util.List;
 public class ChamadoController {
 
     @Autowired
-    private ChamadoService chamadoService;
+    private ChamadoService service;
 
     @PostMapping
     public ResponseEntity<DetalhamentoChamadoDTO> abrirChamado(@RequestBody @Valid AberturaChamadoDTO dto,UriComponentsBuilder uriBuilder) {
 
-        DetalhamentoChamadoDTO chamadoCriado = chamadoService.abrirChamado(dto);
+        DetalhamentoChamadoDTO chamadoCriado = service.abrirChamado(dto);
 
         URI endereco = uriBuilder.path("/chamados/{id}").buildAndExpand(chamadoCriado.id()).toUri();
 
@@ -34,30 +34,45 @@ public class ChamadoController {
     }
     @PatchMapping("/{id}/resolver")
     public ResponseEntity<DetalhamentoChamadoDTO> resolverChamado(@PathVariable Long id) {
-        DetalhamentoChamadoDTO chamadoResolvido = chamadoService.resolverChamado(id);
+        DetalhamentoChamadoDTO chamadoResolvido = service.resolverChamado(id);
 
         return ResponseEntity.ok(chamadoResolvido);
     }
     @GetMapping("/fila-global")
     public ResponseEntity<Page<ResumoChamadoDTO>> listarFilaGlobal(@PageableDefault(size = 10, sort = "dataAbertura", direction = Sort.Direction.ASC) Pageable pageable){
-        return ResponseEntity.ok(chamadoService.listarFilaGlobal(pageable));
+        return ResponseEntity.ok(service.listarFilaGlobal(pageable));
     }
     @GetMapping("/fila-pessoal/{tecnicoId}")
     public ResponseEntity<Page<ResumoChamadoDTO>> listarFilaPessoal(@PathVariable Long tecnicoId,@PageableDefault(size = 10, sort = "dataAbertura", direction = Sort.Direction.ASC) Pageable pageable) {
-        return ResponseEntity.ok(chamadoService.listarFilaPessoal(tecnicoId,pageable));
+        return ResponseEntity.ok(service.listarFilaPessoal(tecnicoId,pageable));
     }
     //Lembrar de mudar esse e o metodo de cima quando eu adicionar o springsecurity
     @PatchMapping("/{idChamado}/assumir")
     public ResponseEntity<DetalhamentoChamadoDTO> assumirChamado(@PathVariable Long idChamado,@RequestBody @Valid Long idTecnico) {
 
-        DetalhamentoChamadoDTO chamadoAssumido = chamadoService.assumirChamado(idChamado, idTecnico);
+        DetalhamentoChamadoDTO chamadoAssumido = service.assumirChamado(idChamado, idTecnico);
         return ResponseEntity.ok(chamadoAssumido);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<DetalhamentoChamadoDTO> cancelarChamado(@PathVariable Long id) {
 
-        DetalhamentoChamadoDTO chamadoCancelado = chamadoService.cancelarChamado(id);
+        DetalhamentoChamadoDTO chamadoCancelado = service.cancelarChamado(id);
         return ResponseEntity.ok(chamadoCancelado);
+    }
+    //mudar esse aqui tbm quando adicionar o spring security
+    @GetMapping("/solicitante/{solicitanteId}")
+    public ResponseEntity<Page<ResumoChamadoDTO>> listarMeusChamados(@PathVariable Long solicitanteId,@PageableDefault(size = 10, sort = {"dataAbertura"}) Pageable paginacao) {
+
+        Page<ResumoChamadoDTO> pagina = service.listarChamadosPorFuncionario(solicitanteId, paginacao);
+
+        return ResponseEntity.ok(pagina);
+    }
+    @GetMapping("/historico/{tecnicoId}")
+    public ResponseEntity<Page<ResumoChamadoDTO>> listarHistoricoTecnico(@PathVariable Long tecnicoId,@RequestParam(defaultValue = "hoje") String periodo,@PageableDefault(size = 5, sort = "dataAbertura", direction = Sort.Direction.DESC) Pageable pageable) {
+
+        Page<ResumoChamadoDTO> historico = service.listarHistoricoTecnico(tecnicoId, periodo, pageable);
+
+        return ResponseEntity.ok(historico);
     }
 }

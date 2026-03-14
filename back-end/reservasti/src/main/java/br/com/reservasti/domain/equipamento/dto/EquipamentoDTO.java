@@ -1,7 +1,10 @@
 package br.com.reservasti.domain.equipamento.dto;
 
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+
+import java.time.LocalDate;
 
 public record EquipamentoDTO(
 
@@ -18,6 +21,11 @@ public record EquipamentoDTO(
         String numeroPatrimonio,
 
         @NotNull(message = "A categoria é obrigatória")
-        Long categoriaId
+        Long categoriaId,
+
+        @FutureOrPresent(message = "A data de fim da garantia deve ser no presente ou futuro")
+        LocalDate dataFimGarantia
+
+
 ) {
 }

@@ -58,4 +58,27 @@ public class FuncionarioController {
         service.desativarFuncionario(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/pendentes")
+    public ResponseEntity<Page<FuncionarioRetornoDTO>> listarPendentes(@PageableDefault(size = 10, sort = {"dataSolicitacao"}) Pageable paginacao) {
+        return ResponseEntity.ok(service.buscarSolicitacoesPendentes(paginacao));
+    }
+
+    @PatchMapping("/{id}/aprovar")
+    public ResponseEntity<Void> aprovar(@PathVariable Long id) {
+        service.aprovarAcesso(id);
+        return ResponseEntity.noContent().build(); // Retorna 204 (Sucesso, sem corpo)
+    }
+
+    @PatchMapping("/{id}/negar")
+    public ResponseEntity<Void> negar(@PathVariable Long id) {
+        service.negarAcesso(id);
+        return ResponseEntity.noContent().build();
+    }
+    @GetMapping("/solicitacoes/historico")
+    public ResponseEntity<Page<FuncionarioRetornoDTO>> listarHistoricoSolicitacoes(
+            @PageableDefault(size = 10, sort = {"nomeCompleto"}) Pageable paginacao) {
+        return ResponseEntity.ok(service.buscarHistoricoSolicitacoes(paginacao));
+    }
+
 }

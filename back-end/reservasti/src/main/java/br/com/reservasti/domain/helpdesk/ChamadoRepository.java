@@ -13,10 +13,6 @@ public interface ChamadoRepository extends JpaRepository<Chamado,Long> {
 
     boolean existsByTecnicoIdAndStatus(Long tecnicoId, StatusChamado status);
 
-    Optional<Chamado> findFirstByTecnicoIdAndStatusOrderByDataAberturaAsc(Long tecnicoId, StatusChamado status);
-
-    Optional<Chamado> findFirstByStatusOrderByDataAberturaAsc(StatusChamado status);
-
     Page<Chamado> findAllByStatusOrderByDataAberturaAsc(StatusChamado status, Pageable pageable);
 
     Page<Chamado> findAllByTecnicoIdAndStatusInOrderByDataAberturaAsc(Long tecnicoId, List<StatusChamado> statusList, Pageable pageable);
@@ -25,4 +21,9 @@ public interface ChamadoRepository extends JpaRepository<Chamado,Long> {
     Long contarChamadosNaFrente(@Param("dataAbertura") LocalDateTime dataAbertura);
 
     List<Chamado> findByStatusOrderByDataAberturaAsc(StatusChamado statusChamado);
+
+    Page<Chamado> findBySolicitanteId(Long solicitanteId, Pageable paginacao);
+
+    Page<Chamado> findByTecnico_IdAndStatusAndDataResolucaoAfter(Long tecnicoId, StatusChamado statusChamado, LocalDateTime dataLimite, Pageable pageable);
+
 }

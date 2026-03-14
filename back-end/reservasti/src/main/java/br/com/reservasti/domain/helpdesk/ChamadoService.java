@@ -10,6 +10,7 @@ import br.com.reservasti.domain.helpdesk.dto.ResumoChamadoDTO;
 import br.com.reservasti.domain.helpdesk.validacoes.ChamadoContext;
 import br.com.reservasti.domain.helpdesk.validacoes.IValidatorChamado;
 import br.com.reservasti.domain.notificacao.NotificacaoService;
+import br.com.reservasti.infra.exceptions.ConcorrenciaException;
 import br.com.reservasti.infra.exceptions.IdNaoEncontradoException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,8 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ChamadoService {
@@ -66,7 +65,6 @@ public class ChamadoService {
         DetalhamentoChamadoDTO chamadoSalvoDTO = new DetalhamentoChamadoDTO(chamado);
 
         if (dto.tecnicoId() != null) {
-
             notificacaoService.notificarTecnico(dto.tecnicoId(), chamadoSalvoDTO);
         }else{
             notificacaoService.notificarTodosTecnicos(chamadoSalvoDTO);
@@ -86,8 +84,6 @@ public class ChamadoService {
         chamadoAtual.setStatus(StatusChamado.RESOLVIDO);
         chamadoAtual.setDataResolucao(LocalDateTime.now());
 
-        puxarProximoDaFilaParaTecnico(chamadoAtual.getTecnico());
-
         return new DetalhamentoChamadoDTO(chamadoAtual);
     }
 
@@ -99,7 +95,7 @@ public class ChamadoService {
 
     @Transactional(readOnly = true)
     public Page<ResumoChamadoDTO> listarFilaPessoal(Long tecnicoId,Pageable page) {
-        List<StatusChamado> statusAtivos = List.of(StatusChamado.EM_ATENDIMENTO, StatusChamado.FILA_DO_TECNICO);
+        List<StatusChamado> statusAtivos = List.of(StatusChamado.EM_ATENDIMENTO);
 
         return chamadoRepository.findAllByTecnicoIdAndStatusInOrderByDataAberturaAsc(tecnicoId, statusAtivos,page)
                 .map(ResumoChamadoDTO::new);
@@ -111,14 +107,10 @@ public class ChamadoService {
         Chamado chamado = chamadoRepository.findById(chamadoId)
                 .orElseThrow(() -> new IdNaoEncontradoException("Chamado não encontrado"));
 
-        validadores.forEach(v -> v.validar(new ChamadoContext(chamadoId, null)));
-
         Funcionario tecnico = funcionarioRepository.findById(idTecnico)
                 .orElseThrow(() -> new IdNaoEncontradoException("Técnico não encontrado"));
 
         alocarParaTecnico(chamado, tecnico);
-
-        chamadoRepository.saveAndFlush(chamado);
 
         List<Chamado> chamadosRestantes = chamadoRepository.findByStatusOrderByDataAberturaAsc(StatusChamado.NA_FILA);
 
@@ -140,51 +132,45 @@ public class ChamadoService {
 
         validadores.forEach(v->v.validar(new ChamadoContext(chamadoId,null)));
 
-        StatusChamado statusAnterior = chamado.getStatus();
-        Funcionario tecnicoAlocado = chamado.getTecnico();
-
         chamado.setStatus(StatusChamado.CANCELADO);
         chamado.setDataResolucao(LocalDateTime.now());
 
-        if (statusAnterior == StatusChamado.EM_ATENDIMENTO && tecnicoAlocado != null) {
-            puxarProximoDaFilaParaTecnico(tecnicoAlocado);
-        }
-
         return new DetalhamentoChamadoDTO(chamado);
     }
+    public Page<ResumoChamadoDTO> listarChamadosPorFuncionario(Long solicitanteId, Pageable paginacao) {
 
-    private void puxarProximoDaFilaParaTecnico(Funcionario tecnico) {
-        Optional<Chamado> proximoDaFilaPessoal = chamadoRepository
-                .findFirstByTecnicoIdAndStatusOrderByDataAberturaAsc(tecnico.getId(), StatusChamado.FILA_DO_TECNICO);
-
-        if (proximoDaFilaPessoal.isPresent()) {
-            Chamado proximo = proximoDaFilaPessoal.get();
-            proximo.setStatus(StatusChamado.EM_ATENDIMENTO);
-            return;
+        if (!funcionarioRepository.existsById(solicitanteId)) {
+            throw new IllegalArgumentException("Funcionário solicitante não encontrado.");
         }
 
-        Optional<Chamado> proximoDaFilaGlobal = chamadoRepository
-                .findFirstByStatusOrderByDataAberturaAsc(StatusChamado.NA_FILA);
+        Page<Chamado> chamadosPage = chamadoRepository.findBySolicitanteId(solicitanteId, paginacao);
 
-        if (proximoDaFilaGlobal.isPresent()) {
-            Chamado proximo = proximoDaFilaGlobal.get();
-            proximo.setTecnico(tecnico);
-            proximo.setStatus(StatusChamado.EM_ATENDIMENTO);
-        }
+        return chamadosPage.map(ResumoChamadoDTO::new);
     }
+    public Page<ResumoChamadoDTO> listarHistoricoTecnico(Long tecnicoId, String periodo, Pageable pageable) {
+        LocalDateTime agora = LocalDateTime.now();
+
+        LocalDateTime dataLimite = switch (periodo.toLowerCase()) {
+            case "7dias" -> agora.minusDays(7);
+            case "30dias" -> agora.minusDays(30);
+            case "todos" -> LocalDateTime.of(2000, 1, 1, 0, 0);
+            default -> agora.with(java.time.LocalTime.MIN);
+        };
+
+        return chamadoRepository.findByTecnico_IdAndStatusAndDataResolucaoAfter(tecnicoId,StatusChamado.RESOLVIDO,dataLimite,pageable)
+                .map(ResumoChamadoDTO::new);
+    }
+
     private void alocarParaTecnico(Chamado chamado, Funcionario tecnico) {
+
         chamado.setTecnico(tecnico);
 
-        boolean isTecnicoOcupado = chamadoRepository.existsByTecnicoIdAndStatus(
-                tecnico.getId(),
-                StatusChamado.EM_ATENDIMENTO
-        );
+        boolean isTecnicoOcupado = chamadoRepository.existsByTecnicoIdAndStatus(tecnico.getId(),StatusChamado.EM_ATENDIMENTO);
 
         if (isTecnicoOcupado) {
-            chamado.setStatus(StatusChamado.FILA_DO_TECNICO);
-        } else {
+            throw new ConcorrenciaException("Tecnico ja possui um Chamado em Atendimento");
+        }else{
             chamado.setStatus(StatusChamado.EM_ATENDIMENTO);
         }
     }
-
 }

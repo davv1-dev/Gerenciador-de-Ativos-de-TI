@@ -6,5 +6,4 @@ public enum StatusChamado {
     AGUARDANDO_PECA,
     RESOLVIDO,
     CANCELADO,
-    FILA_DO_TECNICO
 }

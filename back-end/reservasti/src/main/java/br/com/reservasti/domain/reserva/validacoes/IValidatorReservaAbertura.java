@@ -1,9 +1,8 @@
 package br.com.reservasti.domain.reserva.validacoes;
 
-import br.com.reservasti.domain.reserva.dto.ReservaDTO;
 import org.springframework.stereotype.Component;
 
 @Component
-public interface IValidatorReserva {
+public interface IValidatorReservaAbertura {
     void validar(ReservaContext context);
 }

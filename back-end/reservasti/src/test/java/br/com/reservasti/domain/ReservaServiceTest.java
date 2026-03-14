@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
-import br.com.reservasti.domain.reserva.validacoes.IValidatorReserva;
+import br.com.reservasti.domain.reserva.validacoes.IValidatorReservaAbertura;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Spy;
 import java.util.ArrayList;
@@ -45,10 +45,10 @@ class ReservaServiceTest {
     private EquipamentoRepository equipamentoRepository;
 
     @Mock
-    private IValidatorReserva validadorMock;
+    private IValidatorReservaAbertura validadorMock;
 
     @Spy
-    private List<IValidatorReserva> validadores = new ArrayList<>();
+    private List<IValidatorReservaAbertura> validadores = new ArrayList<>();
 
     @BeforeEach
     void setUp() {

@@ -4,10 +4,7 @@ import br.com.reservasti.domain.categoria.Categoria;
 import br.com.reservasti.domain.categoria.CategoriaRepository;
 import br.com.reservasti.domain.departamento.Departamento;
 import br.com.reservasti.domain.departamento.DepartamentoRepository;
-import br.com.reservasti.domain.equipamento.dto.AlocarEquipamentoDTO;
-import br.com.reservasti.domain.equipamento.dto.EditarEquipamentoDTO;
-import br.com.reservasti.domain.equipamento.dto.EquipamentoDTO;
-import br.com.reservasti.domain.equipamento.dto.EquipamentoRetornoDTO;
+import br.com.reservasti.domain.equipamento.dto.*;
 import br.com.reservasti.domain.equipamento.validacoes.IValidatorEquipamento;
 import br.com.reservasti.infra.exceptions.IdNaoEncontradoException;
 import org.springframework.data.domain.Page;
@@ -17,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -94,6 +93,38 @@ public class EquipamentoService {
 
         equipamento.alocarAoDepartamento(departamento);
 
+    }
+    public ResultadoSimulacaoDTO simularExpansao(SimulacaoEquipamentosDTO dto) {
+        List<EquipamentoResultadoSimulacaoDTO> detalhes = new ArrayList<>();
+        boolean tudoViavel = true;
+
+        for (EquipamentoSimulacaoDTO item : dto.itens()) {
+            String nomeCategoria = categoriaRepository.findById(item.categoriaId())
+                    .map(Categoria::getNome)
+                    .orElse("Categoria Desconhecida");
+
+            long disponivel = equipamentoRepository.countByCategoriaIdAndDepartamentoIsNullAndStatus(
+                    item.categoriaId(), StatusEquipamento.DISPONIVEL);
+
+            int faltante = item.quantidadeNecessaria() - (int) disponivel;
+            if (faltante < 0) faltante = 0; // Se sobrou, faltante é zero
+
+            boolean itemViavel = disponivel >= item.quantidadeNecessaria();
+            if (!itemViavel) {
+                tudoViavel = false; // Se um falhar, a expansão geral fica bloqueada (ou com alerta)
+            }
+
+            detalhes.add(new EquipamentoResultadoSimulacaoDTO(
+                    item.categoriaId(),
+                    nomeCategoria,
+                    item.quantidadeNecessaria(),
+                    (int)disponivel,
+                    faltante,
+                    itemViavel
+            ));
+        }
+
+        return new ResultadoSimulacaoDTO(tudoViavel, detalhes);
     }
 
 }

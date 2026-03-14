@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "equipamentos")
 @Getter
@@ -43,6 +45,9 @@ public class Equipamento {
     @JoinColumn(name = "departamento_id")
     private Departamento departamento;
 
+    @Column(name = "data_fim_garantia")
+    private LocalDate dataFimGarantia;
+
     public Equipamento(EquipamentoDTO dto, Categoria categoria) {
         this.nome = dto.nome();
         this.marca = dto.marca();
@@ -50,6 +55,7 @@ public class Equipamento {
         this.numeroPatrimonio = dto.numeroPatrimonio();
         this.status = StatusEquipamento.DISPONIVEL;
         this.categoria = categoria;
+        this.dataFimGarantia = dto.dataFimGarantia();
     }
     public void atualizarInformacoes(EditarEquipamentoDTO dados,Categoria categorianova) {
         if (dados.nome() != null) {

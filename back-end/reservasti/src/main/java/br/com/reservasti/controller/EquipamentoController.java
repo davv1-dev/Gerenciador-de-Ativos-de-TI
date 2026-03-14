@@ -1,10 +1,7 @@
 package br.com.reservasti.controller;
 
 import br.com.reservasti.domain.equipamento.StatusEquipamento;
-import br.com.reservasti.domain.equipamento.dto.AlocarEquipamentoDTO;
-import br.com.reservasti.domain.equipamento.dto.EditarEquipamentoDTO;
-import br.com.reservasti.domain.equipamento.dto.EquipamentoDTO;
-import br.com.reservasti.domain.equipamento.dto.EquipamentoRetornoDTO;
+import br.com.reservasti.domain.equipamento.dto.*;
 import br.com.reservasti.domain.equipamento.EquipamentoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +71,14 @@ public class EquipamentoController {
         service.alocarEquipamentoAoDepartamento(dto);
 
         return ResponseEntity.noContent().build();
+    }
+    @PostMapping("/simular-expansao")
+    public ResponseEntity<ResultadoSimulacaoDTO> simularExpansao(
+            @RequestBody @Valid SimulacaoEquipamentosDTO dto) {
+
+        ResultadoSimulacaoDTO resultado = service.simularExpansao(dto);
+
+        return ResponseEntity.ok(resultado);
     }
 }
 

@@ -5,11 +5,14 @@ import br.com.reservasti.domain.departamento.DepartamentoRepository;
 import br.com.reservasti.domain.equipamento.Equipamento;
 import br.com.reservasti.domain.equipamento.EquipamentoRepository;
 import br.com.reservasti.domain.equipamento.StatusEquipamento;
+import br.com.reservasti.domain.equipamento.dto.EquipamentoRetornoDTO;
 import br.com.reservasti.domain.relatorio.dto.*;
 import br.com.reservasti.domain.reserva.Reserva;
 import br.com.reservasti.domain.reserva.ReservaRepository;
 import br.com.reservasti.domain.reserva.StatusReserva;
 import br.com.reservasti.infra.exceptions.IdNaoEncontradoException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,5 +90,13 @@ public class RelatorioService {
             return new RelatorioInativosDTO(e.getNumeroPatrimonio(),e.getNome(), departamento,dataCorte
             );
         }).collect(Collectors.toList());
+    }
+    @Transactional(readOnly = true)
+    public Page<EquipamentoRetornoDTO> relatorioGarantiasProximasDoVencimento(Pageable paginacao) {
+        LocalDate dataMinima = LocalDate.of(2000, 1, 1);
+        LocalDate daquiA30Dias = LocalDate.now().plusDays(30);
+
+        return equipamentoRepository.findAllByDataFimGarantiaBetween(dataMinima, daquiA30Dias, paginacao)
+                .map(EquipamentoRetornoDTO::new);
     }
 }

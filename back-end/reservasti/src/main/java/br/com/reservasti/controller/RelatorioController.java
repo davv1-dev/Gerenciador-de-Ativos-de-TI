@@ -1,8 +1,13 @@
 package br.com.reservasti.controller;
 
+import br.com.reservasti.domain.equipamento.dto.EquipamentoRetornoDTO;
 import br.com.reservasti.domain.relatorio.RelatorioService;
 import br.com.reservasti.domain.relatorio.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,5 +51,12 @@ public class RelatorioController {
     public ResponseEntity<List<RelatorioInativosDTO>> relatorioOciosidade(
             @RequestParam(defaultValue = "90") int dias) {
         return ResponseEntity.ok(relatorioService.gerarRelatorioOciosidade(dias));
+    }
+    @GetMapping("/relatorios/garantias-vencendo")
+    public ResponseEntity<Page<EquipamentoRetornoDTO>> relatorioGarantiasVencendo(
+            @PageableDefault(size = 10, sort = "dataFimGarantia", direction = Sort.Direction.ASC) Pageable paginacao) {
+
+        var relatorioPaginado = relatorioService.relatorioGarantiasProximasDoVencimento(paginacao);
+        return ResponseEntity.ok(relatorioPaginado);
     }
 }

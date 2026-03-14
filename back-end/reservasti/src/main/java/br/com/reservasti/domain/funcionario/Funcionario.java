@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "funcionarios")
 @Getter
@@ -24,10 +26,16 @@ public class Funcionario {
     private String cpf;
     private String numeroDeTelefone;
     private Boolean ativo;
+    @Column(name = "ultima_atividade")
+    private LocalDateTime ultimaAtividade;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "departamento_id")
     private Departamento departamento;
+
+    @Enumerated(EnumType.STRING)
+    private StatusAcesso statusAcesso;
+
     @Embedded
     private Endereco endereco;
 
@@ -37,8 +45,9 @@ public class Funcionario {
         this.email = funcionarioDTO.email();
         this.cpf = funcionarioDTO.cpf();
         this.numeroDeTelefone= funcionarioDTO.numeroDeTelefone();
-        this.ativo=true;
+        this.ativo=false;
         this.departamento = departamento;
+        this.statusAcesso = StatusAcesso.PENDENTE;
         this.endereco = new Endereco(funcionarioDTO.endereco());
     }
     public void atualizarInformacoes(FuncionarioAtualizacaoDTO dto, Departamento novoDepartamento) {
@@ -51,4 +60,12 @@ public class Funcionario {
         this.ativo=false;
     }
 
+    public void aprovarAcesso() {
+        this.statusAcesso = StatusAcesso.APROVADO;
+        this.ativo=true;
+    }
+
+    public void negarAcesso() {
+        this.statusAcesso = StatusAcesso.NEGADO;
+    }
 }
