@@ -1,0 +1,221 @@
+<div class="page-container">
+  <header class="page-header">
+    <div class="header-titles">
+      <h2>Relatórios e Inteligência</h2>
+      <p>Acompanhe o status do inventário, falhas, atrasos e preveja a demanda futura.</p>
+    </div>
+  </header>
+
+  <div class="tabs-container">
+    <button class="tab-btn" [class.active]="abaAtual === 'geral'" (click)="alternarAba('geral')">Visão Geral</button>
+    <button class="tab-btn" [class.active]="abaAtual === 'departamentos'" (click)="alternarAba('departamentos')">Por Departamento</button>
+    <button class="tab-btn" [class.active]="abaAtual === 'riscos'" (click)="alternarAba('riscos')">Riscos e Falhas</button>
+    <button class="tab-btn" [class.active]="abaAtual === 'inteligencia'" (click)="alternarAba('inteligencia')">Inteligência</button>
+    <button class="tab-btn" [class.active]="abaAtual === 'garantias'" (click)="alternarAba('garantias')">Garantias</button>
+  </div>
+
+  <div class="content-card">
+
+    <div *ngIf="abaAtual === 'geral'" class="fade-in">
+      <div class="form-section">
+        <h3>Panorama do Inventário</h3>
+        <p class="subtitle">Visão macro de todos os equipamentos da empresa.</p>
+
+        <div class="loading-state" *ngIf="carregando">Carregando métricas...</div>
+
+        <div class="kpi-grid" *ngIf="relatorioGeral && !carregando">
+          <div class="kpi-card">
+            <div class="kpi-icon blue">📦</div>
+            <div class="kpi-info">
+              <span>Total Cadastrados</span>
+              <h4>{{ relatorioGeral.totalEquipamentosCadastrados }}</h4>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon green">✅</div>
+            <div class="kpi-info">
+              <span>Disponíveis no Estoque</span>
+              <h4>{{ relatorioGeral.totalDisponiveisNoEstoque }}</h4>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon purple">💼</div>
+            <div class="kpi-info">
+              <span>Em Uso / Reservados</span>
+              <h4>{{ relatorioGeral.totalEmUsoOuReservados }}</h4>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon red">🔧</div>
+            <div class="kpi-info">
+              <span>Em Manutenção</span>
+              <h4>{{ relatorioGeral.totalEmManutencao }}</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="abaAtual === 'departamentos'" class="fade-in">
+      <div class="form-section">
+        <h3>Métricas por Departamento</h3>
+
+        <form [formGroup]="formDept" (ngSubmit)="gerarRelatorioDept()" class="busca-container form-row" style="align-items: flex-end;">
+          <div class="form-group" style="flex: 3;">
+            <label>Selecione o Departamento</label>
+            <select formControlName="departamentoId">
+              <option value="" disabled selected>Escolha um departamento...</option>
+              <option *ngFor="let dep of departamentos" [value]="dep.id">{{ dep.nome }} ({{ dep.centroDeCusto }})</option>
+            </select>
+          </div>
+          <div class="form-group" style="flex: 1;">
+            <button type="submit" class="btn-primary" [disabled]="formDept.invalid || carregando">
+              {{ carregando ? 'Gerando...' : 'Gerar Relatório' }}
+            </button>
+          </div>
+        </form>
+
+        <div class="kpi-grid mt-20" *ngIf="relatorioDept && !carregando">
+          <div class="kpi-card">
+            <div class="kpi-info"><span>Total Atribuído</span><h4>{{ relatorioDept.totalEquipamentos }}</h4></div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-info"><span>Em Uso</span><h4>{{ relatorioDept.emUso }}</h4></div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-info"><span>Disponíveis (Livres)</span><h4>{{ relatorioDept.disponiveis }}</h4></div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-info"><span>Manutenção</span><h4>{{ relatorioDept.emManutencao }}</h4></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="abaAtual === 'riscos'" class="fade-in">
+
+      <div class="form-section mb-30">
+        <h3>Devoluções em Atraso</h3>
+        <div class="empty-state" *ngIf="!carregando && listaAtrasos.length === 0">Nenhum equipamento em atraso. Ótimo trabalho!</div>
+        <div class="lista-itens" *ngIf="listaAtrasos.length > 0">
+          <div class="item-card" *ngFor="let atraso of listaAtrasos">
+            <div class="item-info">
+              <span class="item-badge bg-red">{{ atraso.diasAtraso }} dias de atraso</span>
+              <h4>{{ atraso.nomeFuncionario }}</h4>
+              <p>Depto: {{ atraso.departamento }} • Patrimônio: {{ atraso.patrimonioEquipamento }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="form-section mt-30">
+        <h3>Top Falhas por Marca e Modelo</h3>
+        <p class="subtitle">Equipamentos que mais apresentam defeitos recorrentes.</p>
+        <div class="empty-state" *ngIf="!carregando && listaFalhas.length === 0">Sem registros de falhas relevantes.</div>
+        <div class="lista-itens" *ngIf="listaFalhas.length > 0">
+          <div class="item-card" *ngFor="let falha of listaFalhas">
+            <div class="item-info">
+              <span class="item-badge bg-yellow">{{ falha.totalEmManutencao }} em manutenção</span>
+              <h4>{{ falha.marca }} - {{ falha.modelo }}</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div *ngIf="abaAtual === 'inteligencia'" class="fade-in">
+
+      <div class="form-section mb-30">
+        <h3>Previsão de Demanda</h3>
+        <p class="subtitle">Saiba quais categorias serão mais requisitadas num período futuro.</p>
+
+        <form [formGroup]="formDemanda" (ngSubmit)="gerarPrevisaoDemanda()" class="busca-container form-row" style="align-items: flex-end;">
+          <div class="form-group"><label>Data Início</label><input type="date" formControlName="inicio"></div>
+          <div class="form-group"><label>Data Fim</label><input type="date" formControlName="fim"></div>
+          <div class="form-group"><button type="submit" class="btn-primary">Ver Previsão</button></div>
+        </form>
+
+        <div class="lista-itens mt-20" *ngIf="listaDemanda.length > 0">
+          <div class="item-card" *ngFor="let dem of listaDemanda">
+            <div class="item-info"><h4>{{ dem.nomeCategoria }}</h4></div>
+            <div style="font-weight: bold; color: #2563eb;">{{ dem.quantidadeReservada }} reservas previstas</div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="form-section mt-30">
+        <h3>Equipamentos Ociosos</h3>
+        <p class="subtitle">Identifique ativos parados para realocação ou descarte.</p>
+
+        <form [formGroup]="formInativos" (ngSubmit)="gerarRelatorioInativos()" class="busca-container form-row" style="align-items: flex-end;">
+          <div class="form-group">
+            <label>Dias sem movimentação</label>
+            <input type="number" formControlName="dias" placeholder="Ex: 90">
+          </div>
+          <div class="form-group" style="flex: 2;"><button type="submit" class="btn-primary">Encontrar Ociosos</button></div>
+        </form>
+
+        <div class="lista-itens mt-20" *ngIf="listaInativos.length > 0">
+          <div class="item-card" *ngFor="let inativo of listaInativos">
+            <div class="item-info">
+              <span class="item-badge">{{ inativo.patrimonio }}</span>
+              <h4>{{ inativo.nomeEquipamento }}</h4>
+              <p>Última mov.: {{ inativo.dataUltimaMovimentacao | date:'dd/MM/yyyy' }} • {{ inativo.departamento }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="abaAtual === 'garantias'" class="fade-in">
+      <div class="form-section mb-30">
+        <h3>Controle de Garantias</h3>
+        <p class="subtitle">Acompanhe os equipamentos com garantia próxima do vencimento (30 dias) ou já vencidas.</p>
+
+        <div class="loading-state" *ngIf="carregando">Buscando status das garantias...</div>
+
+        <div *ngIf="!carregando">
+          <div class="busca-container" *ngIf="totalGarantias > 0">
+            <p style="color: #b45309; margin: 0; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 1.5rem;">⚠️</span>
+              Atenção: {{ totalGarantias }} equipamento(s) requerem atenção quanto à garantia.
+            </p>
+          </div>
+
+          <div class="empty-state" *ngIf="listaGarantias.length === 0">
+            Nenhum risco de garantia no horizonte. Todos os equipamentos estão em dia!
+          </div>
+
+          <div class="lista-itens" *ngIf="listaGarantias.length > 0">
+            <div class="item-card" *ngFor="let gar of listaGarantias">
+              <div class="item-info">
+                <span class="item-badge bg-yellow">Vence em: {{ gar.dataSolicitacao | date:'dd/MM/yyyy' }}</span>
+                <h4>{{ gar.nome }}</h4>
+                <p>Patrimônio: {{ gar.numeroPatrimonio }}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-actions space-between mt-20" *ngIf="totalGarantias > 10">
+            <button class="btn-secondary" [disabled]="paginaGarantia === 0" (click)="mudarPaginaGarantia(paginaGarantia - 1)">
+              Anterior
+            </button>
+            <span style="color: #64748b; align-self: center; font-weight: 500;">
+              Página {{ paginaGarantia + 1 }}
+            </span>
+            <button class="btn-secondary" [disabled]="listaGarantias.length < 10" (click)="mudarPaginaGarantia(paginaGarantia + 1)">
+              Próxima
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+</div>

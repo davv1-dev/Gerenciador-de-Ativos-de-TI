@@ -1,0 +1,51 @@
+<div class="page-container fade-in">
+
+  <header class="page-header">
+    <h2>Chamado Atual</h2>
+    <p>Modo Foco: Resolva este chamado antes de assumir o próximo.</p>
+  </header>
+
+  <div class="empty-state" *ngIf="carregando">
+    <p>⏳ Verificando sua mesa de trabalho...</p>
+  </div>
+
+  <div class="painel-foco" *ngIf="!carregando && chamadoAtual">
+
+    <div class="foco-header">
+      <span class="badge-status">Em Andamento</span>
+      <span class="tempo">Aberto em: {{ chamadoAtual.dataAbertura | date:'dd/MM HH:mm' }}</span>
+    </div>
+
+    <div class="foco-body">
+      <span class="chamado-id">Chamado #{{ chamadoAtual.id }}</span>
+      <h1 class="problema">{{ chamadoAtual.tipoProblema || 'Suporte Técnico Geral' }}</h1>
+
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="label">👤 Solicitante:</span>
+          <span class="valor">{{ chamadoAtual.nomeSolicitante }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">📍 Localização:</span>
+          <span class="valor">{{ chamadoAtual.localizacao || 'Não informada' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="foco-footer">
+      <button class="btn-resolver-gigante"
+              (click)="resolver()"
+              [disabled]="processando">
+        {{ processando ? 'Finalizando...' : 'Resolver' }}
+      </button>
+    </div>
+
+  </div>
+
+  <div class="empty-state success" *ngIf="!carregando && !chamadoAtual">
+    <h3>Você está livre!</h3>
+    <p>Nenhum chamado em andamento na sua mesa. Puxe um novo na Fila Global.</p>
+    <a routerLink="/fila" class="btn-secundario">Ir para Fila Global</a>
+  </div>
+
+</div>

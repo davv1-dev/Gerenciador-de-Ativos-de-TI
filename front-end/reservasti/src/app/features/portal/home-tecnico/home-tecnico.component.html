@@ -1,0 +1,133 @@
+<div class="page-container">
+
+  <header class="page-header">
+    <div class="header-titles">
+      <h2>Painel do Técnico</h2>
+      <p>Resumo das suas operações e atalhos rápidos.</p>
+    </div>
+  </header>
+
+  <section class="dashboard-grid">
+
+    <button class="action-card" (click)="irParaFilaGlobal()">
+      <div class="icon-wrapper icon-blue">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+      </div>
+      <div class="card-content">
+        <h3>Fila Global</h3>
+        <p>Todos os chamados em aberto na empresa.</p>
+      </div>
+    </button>
+
+    <button class="action-card" (click)="irParaMinhaFila()">
+      <div class="icon-wrapper icon-green">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+        </svg>
+      </div>
+      <div class="card-content">
+        <h3>Minha Fila</h3>
+        <p>Chamados pendentes atribuídos a você.</p>
+      </div>
+    </button>
+
+    <button class="action-card" (click)="irParaChamadoAtual()">
+      <div class="icon-wrapper icon-orange">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+        </svg>
+      </div>
+      <div class="card-content">
+        <h3>Chamado Atual</h3>
+        <p>Volte à área de trabalho do chamado atual.</p>
+      </div>
+    </button>
+
+    <button class="action-card" (click)="irParaNovaReserva()">
+      <div class="icon-wrapper icon-purple">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+      </div>
+      <div class="card-content">
+        <h3>Catálogo / Reserva</h3>
+        <p>Solicitar equipamentos e acessórios.</p>
+      </div>
+    </button>
+
+  </section>
+
+  <section class="historico-section">
+
+    <div class="historico-header">
+      <h3>Histórico de Atendimentos</h3>
+
+      <div class="filtros-grupo">
+        <button [class.ativo]="filtroAtivo === 'hoje'" (click)="aplicarFiltro('hoje')" [disabled]="carregando">Hoje</button>
+        <button [class.ativo]="filtroAtivo === '7dias'" (click)="aplicarFiltro('7dias')" [disabled]="carregando">7 Dias</button>
+        <button [class.ativo]="filtroAtivo === '30dias'" (click)="aplicarFiltro('30dias')" [disabled]="carregando">30 Dias</button>
+        <button [class.ativo]="filtroAtivo === 'todos'" (click)="aplicarFiltro('todos')" [disabled]="carregando">Todo o Histórico</button>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="carregando">
+      <p>⏳ Buscando seus chamados resolvidos...</p>
+    </div>
+
+    <div class="historico-lista" *ngIf="!carregando">
+
+      <div class="historico-item"
+           *ngFor="let chamado of historicoChamados; let i = index"
+           [style.animation-delay.s]="i * 0.1">
+        <div class="item-info">
+          <span class="chamado-id">#{{ chamado.id }}</span>
+          <div class="chamado-detalhes">
+            <h4>{{ chamado.tipoProblema || 'Chamado Geral' }}</h4>
+            <p>{{ chamado.nomeSolicitante }}</p>
+          </div>
+        </div>
+
+        <div class="item-meta">
+          <span class="data">{{ chamado.dataAbertura | date:'dd/MM HH:mm' }}</span>
+          <span class="badge-status resolvido">Resolvido</span>
+        </div>
+      </div>
+
+      <div class="empty-state" *ngIf="historicoChamados.length === 0">
+        <p>Nenhum chamado finalizado neste período. Tudo tranquilo por aqui! ☕</p>
+      </div>
+
+    </div>
+    <div class="paginacao-moderna" *ngIf="historicoChamados.length > 0 && totalPaginas > 1">
+
+      <button class="btn-circular"
+              (click)="mudarPagina(paginaAtual - 1)"
+              [disabled]="isPrimeiraPagina"
+              title="Página Anterior">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+
+      <div class="indicador-paginas">
+        <span class="pagina-destaque">{{ paginaAtual + 1 }}</span>
+        <span class="pagina-total">de {{ totalPaginas }}</span>
+      </div>
+
+      <button class="btn-circular"
+              (click)="mudarPagina(paginaAtual + 1)"
+              [disabled]="isUltimaPagina"
+              title="Próxima Página">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+
+    </div>
+
+  </section>
+
+</div>

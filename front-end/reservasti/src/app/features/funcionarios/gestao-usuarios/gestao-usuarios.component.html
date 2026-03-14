@@ -1,0 +1,116 @@
+<div class="page-container">
+
+  <header class="page-header">
+    <div class="header-titles">
+      <h2>Gestão de Usuários</h2>
+      <p>Gerencie os funcionários, controle acessos e edite informações.</p>
+    </div>
+    <button class="btn-primary" (click)="novoUsuario()">+ Novo Usuário</button>
+  </header>
+
+  <div class="tabs-container">
+    <button class="tab-btn" [class.ativo]="abaAtiva === 'usuarios'" (click)="mudarAba('usuarios')">
+      Usuários Ativos
+    </button>
+    <button class="tab-btn" [class.ativo]="abaAtiva === 'pendentes'" (click)="mudarAba('pendentes')">
+      Pendentes
+      <span class="badge" *ngIf="solicitacoesPendentes.length > 0">{{ solicitacoesPendentes.length }}</span>
+    </button>
+    <button class="tab-btn" [class.ativo]="abaAtiva === 'historico'" (click)="mudarAba('historico')">
+      Histórico de Solicitações
+    </button>
+  </div>
+
+  <div class="card-tabela">
+
+    <div *ngIf="abaAtiva === 'usuarios'">
+      <div class="toolbar">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" placeholder="Buscar por nome..." [(ngModel)]="termoBusca" (keyup.enter)="buscar()">
+        </div>
+        <button class="btn-outline" (click)="buscar()">Buscar</button>
+      </div>
+
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nome Completo</th>
+              <th class="acoes-col">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="carregandoUsuarios">
+              <td colspan="3" class="text-center loading-td">Carregando usuários...</td>
+            </tr>
+            <tr *ngIf="!carregandoUsuarios && funcionarios.length === 0">
+              <td colspan="3" class="text-center empty-td">Nenhum usuário encontrado.</td>
+            </tr>
+            <tr *ngFor="let func of funcionarios" [hidden]="carregandoUsuarios">
+              <td>#{{ func.id }}</td>
+              <td class="fw-bold">{{ func.nomeCompleto }}</td>
+              <td class="acoes-col">
+                <button class="btn-icon edit" (click)="editarUsuario(func.id)" title="Editar">✏️</button>
+                <button class="btn-icon delete" (click)="desativarUsuario(func.id, func.nomeCompleto)" title="Desativar">🗑️</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="paginacao" *ngIf="totalElementos > tamanhoPagina">
+        <button [disabled]="paginaAtual === 0" (click)="mudarPagina(paginaAtual - 1)">Anterior</button>
+        <span>Página {{ paginaAtual + 1 }}</span>
+        <button [disabled]="funcionarios.length < tamanhoPagina" (click)="mudarPagina(paginaAtual + 1)">Próximo</button>
+      </div>
+    </div>
+
+    <div *ngIf="abaAtiva === 'pendentes'" class="lista-solicitacoes">
+      <div class="empty-td text-center" *ngIf="!carregandoPendentes && solicitacoesPendentes.length === 0">
+        Nenhuma solicitação de acesso pendente no momento. 🛡️
+      </div>
+
+      <div class="historico-item" *ngFor="let sol of solicitacoesPendentes">
+        <div class="item-info">
+          <div class="avatar-min pendente">⏳</div>
+          <div class="chamado-detalhes">
+            <h4>{{ sol.nomeCompleto }}</h4>
+            <p>Aguardando liberação de acesso</p>
+          </div>
+        </div>
+        <div class="acoes-aprovacao">
+          <button class="btn-recusar" (click)="negarAcesso(sol.id)">Negar</button>
+          <button class="btn-aprovar" (click)="aprovarAcesso(sol.id)">Aprovar</button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="abaAtiva === 'historico'" class="lista-solicitacoes">
+      <div class="empty-td text-center" *ngIf="!carregandoHistorico && historicoSolicitacoes.length === 0">
+        Nenhum histórico registrado.
+      </div>
+
+      <div class="historico-item" *ngFor="let hist of historicoSolicitacoes" style="background: #f8fafc;">
+        <div class="item-info">
+          <div class="avatar-min"
+               [style.background]="hist.statusAcesso === 'APROVADO' ? '#dcfce7' : '#fee2e2'"
+               [style.color]="hist.statusAcesso === 'APROVADO' ? '#15803d' : '#dc2626'">
+            {{ hist.statusAcesso === 'APROVADO' ? '✓' : '✗' }}
+          </div>
+          <div class="chamado-detalhes">
+            <h4>{{ hist.nomeCompleto }}</h4>
+            <p>ID: #{{ hist.id }}</p>
+          </div>
+        </div>
+        <div>
+          <span [style.color]="hist.statusAcesso === 'APROVADO' ? '#15803d' : '#dc2626'" style="font-weight: 700;">
+            {{ hist.statusAcesso }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

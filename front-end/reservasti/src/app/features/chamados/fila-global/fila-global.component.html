@@ -16,7 +16,11 @@
         <span class="status badge">{{ chamado.status }}</span>
         <span class="data">{{ chamado.dataAbertura | date:'dd/MM/yyyy HH:mm' }}</span>
       </div>
-      <button class="btn-assumir">Assumir</button>
+      <button class="btn-assumir"
+              (click)="assumir(chamado.id)"
+              [disabled]="processandoId === chamado.id">
+        {{ processandoId === chamado.id ? 'Assumindo...' : 'Assumir' }}
+      </button>
     </div>
   </div>
 </div>

@@ -1,0 +1,14 @@
+<div class="modal-backdrop" *ngIf="dialogData">
+  <div class="modal-box">
+
+    <div class="modal-icon">❓</div>
+    <h3 class="modal-title">{{ dialogData.titulo }}</h3>
+    <p class="modal-message">{{ dialogData.mensagem }}</p>
+
+    <div class="modal-actions">
+      <button class="btn-cancelar" (click)="responder(false)">Não, cancelar</button>
+      <button class="btn-confirmar" (click)="responder(true)">Sim, tenho certeza</button>
+    </div>
+
+  </div>
+</div>

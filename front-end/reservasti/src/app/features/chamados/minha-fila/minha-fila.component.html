@@ -1,0 +1,42 @@
+<div class="container-fila">
+
+  <div class="cabecalho">
+    <h2>Minha Fila</h2>
+    <p>Chamados direcionados exclusivamente para você. ({{ minhaFilaPage?.totalElements || 0 }} pendentes)</p>
+  </div>
+
+  <div *ngIf="carregando" class="loading">
+    Carregando seus chamados...
+  </div>
+
+  <div class="empty-state" *ngIf="!carregando && (!minhaFilaPage || minhaFilaPage.totalElements === 0)">
+    <div style="font-size: 3rem; text-align: center; margin-bottom: 15px;"></div>
+    <h3 style="text-align: center;">Sua fila está vazia!</h3>
+    <p style="text-align: center;">Excelente trabalho. Aproveite para tomar um café ou ajude na Fila Global.</p>
+  </div>
+
+  <div *ngIf="!carregando && minhaFilaPage?.content" class="lista-cards">
+
+    <div class="card-chamado" *ngFor="let chamado of minhaFilaPage!.content">
+
+      <div class="info-principal">
+        <span class="id-chamado">#{{ chamado.id }}</span>
+        <h3>{{ chamado.nomeSolicitante }}</h3>
+      </div>
+
+      <div class="info-secundaria">
+        <span class="status badge">{{ chamado.status || 'Em Aberto' }}</span>
+        <span class="data">{{ chamado.dataAbertura | date:'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+
+      <button class="btn-assumir"
+              (click)="atenderChamado(chamado.id)"
+              [disabled]="processandoId === chamado.id">
+        {{ processandoId === chamado.id ? 'Abrindo...' : 'Atender' }}
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,142 @@
+
+  <div class="page-container">
+  <header class="page-header">
+    <div class="header-titles">
+      <h2>Gestão de Alocação e Capacidade</h2>
+      <p>Vincule equipamentos ou planeje o crescimento dos departamentos.</p>
+    </div>
+  </header>
+
+  <div class="content-card">
+
+    <div class="tabs-nav">
+      <button class="tab-btn" [class.active]="abaAtiva === 'alocacao'" (click)="mudarAba('alocacao')">
+        Alocação Direta
+      </button>
+      <button class="tab-btn" [class.active]="abaAtiva === 'expansao'" (click)="mudarAba('expansao')">
+        Planejar Expansão
+      </button>
+    </div>
+
+    <div *ngIf="abaAtiva === 'alocacao'" class="fade-in">
+      <div class="step-section">
+        <h3>1. Selecione o Departamento</h3>
+        <div class="departamentos-grid" *ngIf="departamentos.length > 0; else listaVazia">
+          <div class="departamento-card" *ngFor="let dep of departamentos"
+               [class.selecionado]="departamentoSelecionado?.id === dep.id"
+               (click)="selecionarDepartamento(dep)">
+            <div class="dep-icone">🏢</div>
+            <div class="dep-info">
+              <h4>{{ dep.nome }}</h4>
+              <span>CC: {{ dep.centroDeCusto }}</span>
+            </div>
+          </div>
+        </div>
+        <ng-template #listaVazia>
+          <div class="empty-state">Nenhum departamento encontrado.</div>
+        </ng-template>
+      </div>
+
+      <div class="step-section fade-in" *ngIf="departamentoSelecionado">
+        <hr class="divider">
+        <h3>2. Qual equipamento para <strong>{{ departamentoSelecionado.nome }}</strong>?</h3>
+        <form [formGroup]="formBuscaEquipamento" (ngSubmit)="buscarEquipamento()" class="busca-container form-row">
+          <div class="form-group flex-3">
+            <input type="text" formControlName="nomeOuPatrimonio" placeholder="Buscar por nome ou patrimônio...">
+          </div>
+          <div class="form-group flex-1">
+            <button type="submit" class="btn-primary" [disabled]="buscando">Pesquisar</button>
+          </div>
+        </form>
+
+        <div class="lista-equipamentos" *ngIf="equipamentosBusca.length > 0">
+          <div class="equipamento-item" *ngFor="let eqp of equipamentosBusca"
+               [class.selecionado]="equipamentoSelecionado?.id === eqp.id"
+               (click)="selecionarEquipamentoParaAlocar(eqp)">
+            <div class="eqp-info">
+              <span class="eqp-patrimonio">{{ eqp.numeroPatrimonio }}</span>
+              <h4>{{ eqp.nome }}</h4>
+              <p>{{ eqp.marca }}</p>
+            </div>
+            <div class="radio-custom">
+              <div class="radio-inner" *ngIf="equipamentoSelecionado?.id === eqp.id"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions sticky-action fade-in" *ngIf="departamentoSelecionado && equipamentoSelecionado">
+        <div class="resumo-alocacao">
+          Alocar <strong>{{ equipamentoSelecionado.numeroPatrimonio }}</strong> para <strong>{{ departamentoSelecionado.nome }}</strong>?
+        </div>
+        <button class="btn-primary btn-lg" (click)="confirmarAlocacao()" [disabled]="alocando">
+          {{ alocando ? 'Salvando...' : 'Confirmar Alocação' }}
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="abaAtiva === 'expansao'" class="fade-in">
+
+      <div *ngIf="!resultadoSimulacao">
+        <div class="step-section">
+          <h3>Qual a necessidade de maquinário para esta expansão?</h3>
+          <p class="text-muted" style="margin-bottom: 20px;">Indique a quantidade de itens necessários nas categorias abaixo:</p>
+
+          <div class="categorias-lista">
+            <div class="categoria-row" *ngFor="let item of itensParaSimular">
+              <div class="cat-nome">{{ item.nomeCategoria }}</div>
+              <div class="cat-controles">
+                <button class="btn-circulo" (click)="diminuirQuantidade(item)">-</button>
+                <span class="quantidade-display">{{ item.quantidade }}</span>
+                <button class="btn-circulo" (click)="aumentarQuantidade(item)">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions" style="margin-top: 30px; text-align: right;">
+          <button class="btn-primary btn-lg" (click)="simularViabilidade()" [disabled]="simulando">
+            {{ simulando ? 'Calculando...' : 'Verificar Viabilidade no Estoque' }}
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="resultadoSimulacao" class="resultado-panel fade-in">
+
+        <div class="alerta-global" [class.sucesso]="resultadoSimulacao.expansaoTotalmenteViavel" [class.erro]="!resultadoSimulacao.expansaoTotalmenteViavel">
+          <div class="alerta-icone">{{ resultadoSimulacao.expansaoTotalmenteViavel ? '✅' : '⚠️' }}</div>
+          <div class="alerta-texto">
+            <h4>{{ resultadoSimulacao.expansaoTotalmenteViavel ? 'Expansão 100% Viável' : 'Estoque Insuficiente' }}</h4>
+            <p>{{ resultadoSimulacao.expansaoTotalmenteViavel
+                ? 'Temos todos os equipamentos necessários livres no inventário.'
+                : 'Atenção: Será necessário acionar o setor de compras para alguns itens.' }}</p>
+          </div>
+        </div>
+
+        <h3 style="margin-top: 30px; margin-bottom: 15px;">Detalhamento por Categoria</h3>
+        <div class="detalhe-grid">
+          <div class="detalhe-card" *ngFor="let det of resultadoSimulacao.detalhes" [class.card-erro]="!det.viavel">
+            <div class="det-header">
+              <strong>{{ det.nomeCategoria }}</strong>
+              <span class="badge" [class.badge-verde]="det.viavel" [class.badge-vermelho]="!det.viavel">
+                {{ det.viavel ? 'Suficiente' : 'Faltando' }}
+              </span>
+            </div>
+            <div class="det-body">
+              <div class="det-dado"><span>Necessário:</span> <b>{{ det.quantidadeNecessaria }}</b></div>
+              <div class="det-dado"><span>Disponível:</span> <b>{{ det.quantidadeDisponivel }}</b></div>
+              <div class="det-dado destaque" *ngIf="!det.viavel"><span>Faltam:</span> <b style="color:#ef4444">{{ det.quantidadeFaltante }}</b></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions" style="margin-top: 30px; display: flex; gap: 16px;">
+          <button class="btn-outline" (click)="novaSimulacao()">Fazer nova simulação</button>
+          <button class="btn-primary" *ngIf="resultadoSimulacao.expansaoTotalmenteViavel">Iniciar Reserva (Em Breve)</button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>

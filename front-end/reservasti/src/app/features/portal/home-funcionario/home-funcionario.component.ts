@@ -40,7 +40,8 @@ export class HomeFuncionarioComponent implements OnInit {
         this.carregandoReservas = false;
       },
       error: (erro) => {
-        console.error('Erro ao buscar reservas, backend pode estar desligado/ausente', erro);
+        console.error(erro);
+
         this.carregandoReservas = false;
       }
     });
@@ -51,7 +52,7 @@ export class HomeFuncionarioComponent implements OnInit {
         this.carregandoHistorico = false;
       },
       error: (erro) => {
-        console.error('Erro histórico reservas', erro);
+        console.error(erro);
         this.carregandoHistorico = false;
       }
     });
@@ -62,7 +63,7 @@ export class HomeFuncionarioComponent implements OnInit {
         this.carregandoChamados = false;
       },
       error: (erro) => {
-        console.error('Erro chamados', erro);
+        console.error(erro);
         this.carregandoChamados = false;
       }
     });
@@ -74,6 +75,6 @@ export class HomeFuncionarioComponent implements OnInit {
   }
 
   navegarParaNovoChamado(): void {
-    this.router.navigate(['/chamados/abrir']);
+    this.router.navigate(['/fazerchamado']);
   }
 }

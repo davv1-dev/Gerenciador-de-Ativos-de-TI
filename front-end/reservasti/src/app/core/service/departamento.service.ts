@@ -1,12 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-
-export interface DepartamentoDTO {
-  id: number;
-  nome: string;
-}
+import { DepartamentoDTO, DepartamentoRetornoDTO, DepartamentoAtualizacaoDTO } from '../models/departamento';
+import { Page } from '../models/chamado';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +14,27 @@ export class DepartamentoService {
 
   constructor(private http: HttpClient) { }
 
-  listarTodos(): Observable<DepartamentoDTO[]> {
-    return this.http.get<DepartamentoDTO[]>(this.apiUrl);
+  listarDepartamentos(page: number = 0, size: number = 10): Observable<Page<DepartamentoRetornoDTO>> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+
+    return this.http.get<Page<DepartamentoRetornoDTO>>(this.apiUrl, { params });
+  }
+
+  buscarPorId(id: number): Observable<DepartamentoRetornoDTO> {
+    return this.http.get<DepartamentoRetornoDTO>(`${this.apiUrl}/${id}`);
+  }
+
+  cadastrarDepartamento(dto: DepartamentoDTO): Observable<DepartamentoRetornoDTO> {
+    return this.http.post<DepartamentoRetornoDTO>(this.apiUrl, dto);
+  }
+
+  atualizarDepartamento(id: number, dto: DepartamentoAtualizacaoDTO): Observable<DepartamentoRetornoDTO> {
+    return this.http.put<DepartamentoRetornoDTO>(`${this.apiUrl}/${id}`, dto);
+  }
+
+  excluirDepartamento(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

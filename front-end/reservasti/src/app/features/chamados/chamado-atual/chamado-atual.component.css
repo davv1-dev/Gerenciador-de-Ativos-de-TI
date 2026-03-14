@@ -1,0 +1,184 @@
+.page-container {
+  max-width: 800px; /* Mais estreito para focar a leitura */
+  margin: 40px auto;
+  padding: 0 24px;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.page-header h2 {
+  font-size: 2rem;
+  color: #1f2937;
+  margin: 0 0 8px 0;
+}
+
+.page-header p {
+  color: #6b7280;
+  font-size: 1.1rem;
+}
+
+/* --- Painel de Foco --- */
+.painel-foco {
+  background: #ffffff;
+  border: 2px solid #e5e7eb;
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.foco-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.badge-status {
+  background: #eff6ff;
+  color: #2563eb;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.tempo {
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+.foco-body {
+  margin-bottom: 40px;
+}
+
+.chamado-id {
+  display: block;
+  font-weight: 700;
+  color: #6b7280;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+.problema {
+  font-size: 2.2rem;
+  color: #111827;
+  margin: 0 0 24px 0;
+  line-height: 1.2;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  background: #f9fafb;
+  padding: 24px;
+  border-radius: 16px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.info-item .label {
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+.info-item .valor {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+/* --- Botão Gigante --- */
+.btn-resolver-gigante {
+  width: 100%;
+  background: #10b981;
+  color: white;
+  border: none;
+  padding: 20px;
+  border-radius: 16px;
+  font-weight: 700;
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.btn-resolver-gigante:hover:not(:disabled) {
+  background: #059669;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+}
+
+.btn-resolver-gigante:disabled {
+  background: #a7f3d0;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+/* --- Estados Vazios --- */
+.empty-state {
+  text-align: center;
+  padding: 64px 24px;
+  background: #f9fafb;
+  border-radius: 24px;
+  border: 2px dashed #e5e7eb;
+}
+
+.empty-state.success {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.icone-ok {
+  font-size: 4rem;
+  margin-bottom: 24px;
+}
+
+.empty-state h3 {
+  color: #166534;
+  font-size: 1.5rem;
+  margin: 0 0 12px 0;
+}
+
+.empty-state p {
+  color: #4b5563;
+  font-size: 1.1rem;
+  margin-bottom: 32px;
+}
+
+.btn-secundario {
+  display: inline-block;
+  background: #ffffff;
+  color: #2563eb;
+  border: 2px solid #2563eb;
+  padding: 12px 32px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: all 0.2s;
+}
+
+.btn-secundario:hover {
+  background: #eff6ff;
+}
+
+/* Responsividade Básica */
+@media (max-width: 600px) {
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+  .problema {
+    font-size: 1.8rem;
+  }
+}

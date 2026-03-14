@@ -1,0 +1,49 @@
+.snackbar-container {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%); /* Centraliza perfeitamente */
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 24px;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  color: white;
+  font-weight: 500;
+  min-width: 300px;
+
+  /* A mágica da entrada suave */
+  animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Cores Premium */
+.snackbar-container.sucesso { background-color: #10b981; } /* Verde Esmeralda */
+.snackbar-container.erro { background-color: #ef4444; } /* Vermelho Alerta */
+.snackbar-container.info { background-color: #3b82f6; } /* Azul Informação */
+
+.snackbar-close {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.5rem;
+  cursor: pointer;
+  margin-left: auto; /* Empurra o X pro cantinho */
+  transition: color 0.2s;
+}
+
+.snackbar-close:hover {
+  color: white;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    bottom: -50px;
+  }
+  to {
+    opacity: 1;
+    bottom: 30px;
+  }
+}

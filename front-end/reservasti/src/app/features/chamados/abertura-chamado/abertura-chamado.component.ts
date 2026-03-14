@@ -3,7 +3,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ChamadoService } from '../../../core/service/chamado.service';
 import { AberturaChamadoDTO } from '../../../core/models/chamado';
-
+import { FuncionarioRetornoDTO } from 'src/app/core/models/funcionario';
+import { TecnicoService } from 'src/app/core/service/tecnico.service';
+import { ToastService } from 'src/app/core/service/toast.service';
 @Component({
   selector: 'app-chamado-abertura',
   templateUrl: './abertura-chamado.component.html',
@@ -14,8 +16,8 @@ export class AberturaChamadoComponent implements OnInit {
   chamadoForm!: FormGroup;
   carregando = false;
 
-  // 🚨 ATENÇÃO: Ajuste a propriedade 'value' para bater EXATAMENTE com os nomes
-  // que você colocou no seu 'enum TipoProblema' no Java.
+  tecnicosOnline: FuncionarioRetornoDTO[] = [];
+
   tiposDeProblema = [
     { label: 'Hardware (Computador, Mouse, Teclado)', value: 'HARDWARE' },
     { label: 'Software (Sistema Lento, Travando)', value: 'LENTIDAO_SISTEMA' },
@@ -27,19 +29,23 @@ export class AberturaChamadoComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private chamadoService: ChamadoService,
-    private router: Router
+    private tecnicoService: TecnicoService,
+    private router: Router,
+    private toastSevice: ToastService
   ) {}
 
   ngOnInit(): void {
     this.iniciarFormulario();
+    this.carregarTecnicos();
   }
 
   iniciarFormulario(): void {
     this.chamadoForm = this.fb.group({
-      equipamentoId: [null], // 👈 Campo opcional novo
+      equipamentoId: [null],
+      tecnicoId: [null],
       tipoProblema: ['', Validators.required],
       localizacao: ['', Validators.required],
-      descricaoDetalhada: ['', [Validators.required, Validators.minLength(10)]] // 👈 Nome atualizado
+      descricaoDetalhada: ['', [Validators.required, Validators.minLength(10)]]
     });
   }
 
@@ -48,20 +54,19 @@ export class AberturaChamadoComponent implements OnInit {
       this.carregando = true;
 
       const dto: AberturaChamadoDTO = {
-        solicitanteId: 1, // Mock temporário até termos o usuário logado
-        tecnicoId: null, // Na abertura, ainda não tem técnico
+        solicitanteId: 6,
+        tecnicoId: null,
         ...this.chamadoForm.value
       };
 
       this.chamadoService.abrirChamado(dto).subscribe({
         next: (retorno) => {
-          console.log('Chamado aberto com sucesso!', retorno);
-          alert(`Chamado aberto! Posição atual na fila: ${retorno.posicaoFila || 'Calculando...'}`);
+          this.toastSevice.mostrar(`Chamado aberto! Posição atual na fila: ${retorno.posicaoFila || 'Calculando...'}`,'sucesso');
           this.router.navigate(['/home']);
         },
         error: (erro) => {
-          console.error('Erro ao abrir o chamado', erro);
-          alert('Erro ao abrir o chamado. Verifique o console.');
+          console.error(erro);
+          this.toastSevice.mostrar('Erro ao abrir o chamado, tente novamente mais tarde','erro');
           this.carregando = false;
         }
       });
@@ -69,7 +74,16 @@ export class AberturaChamadoComponent implements OnInit {
       this.chamadoForm.markAllAsTouched();
     }
   }
-
+carregarTecnicos(): void {
+    this.tecnicoService.listarTecnicosOnline().subscribe({
+      next: (pagina) => {
+        this.tecnicosOnline = pagina.content;
+      },
+      error: (erro) => {
+        console.error('Erro ao buscar técnicos online', erro);
+      }
+    });
+  }
   voltar(): void {
     this.router.navigate(['/home']);
   }

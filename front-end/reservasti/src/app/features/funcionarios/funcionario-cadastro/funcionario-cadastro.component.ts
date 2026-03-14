@@ -1,7 +1,10 @@
+import { Page } from 'src/app/core/models/chamado';
+import { ToastService } from './../../../core/service/toast.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FuncionarioService } from '../../../core/service/funcionario.service';
-import { DepartamentoService, DepartamentoDTO } from '../../../core/service/departamento.service';
+import { DepartamentoRetornoDTO } from '../../../core/models/departamento';
+import { DepartamentoService } from 'src/app/core/service/departamento.service';
 
 @Component({
   selector: 'app-funcionario-cadastro',
@@ -13,19 +16,22 @@ export class FuncionarioCadastroComponent implements OnInit {
   funcionarioForm!: FormGroup;
   carregando = false;
 
-  listaDepartamentos: DepartamentoDTO[] = [];
+  private _listaDepartamentos!: Page<DepartamentoRetornoDTO>;
 
   constructor(
     private fb: FormBuilder,
     private funcionarioService: FuncionarioService,
-    private departamentoService: DepartamentoService
+    private departamentoService: DepartamentoService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
     this.iniciarFormulario();
     this.carregarDepartamentos();
   }
-
+  get departamentos(): Page<DepartamentoRetornoDTO> {
+  return this._listaDepartamentos;
+}
   iniciarFormulario(): void {
     this.funcionarioForm = this.fb.group({
       nomeCompleto: ['', Validators.required],
@@ -52,15 +58,14 @@ export class FuncionarioCadastroComponent implements OnInit {
       const dto = this.funcionarioForm.value;
 
       this.funcionarioService.cadastrar(dto).subscribe({
-        next: (retorno) => {
-          console.log('Sucesso! Funcionário cadastrado:', retorno);
-          alert('Funcionário cadastrado com sucesso!');
+        next: () => {
+          this.toastService.mostrar('Funcionário cadastrado com sucesso!','sucesso');
           this.funcionarioForm.reset();
           this.carregando = false;
         },
         error: (erro) => {
-          console.error('Erro ao cadastrar', erro);
-          alert('Erro ao cadastrar. Verifique o console.');
+          console.error(erro);
+          this.toastService.mostrar('Erro ao cadastrar. Verifique o console.','erro');
           this.carregando = false;
         }
       });
@@ -71,13 +76,13 @@ export class FuncionarioCadastroComponent implements OnInit {
 
   carregarDepartamentos(): void {
 
-    this.departamentoService.listarTodos().subscribe({
+    this.departamentoService.listarDepartamentos().subscribe({
       next: (dados) => {
-        this.listaDepartamentos = dados;
+        this._listaDepartamentos = dados;
       },
       error: (erro) => {
         console.error('Erro ao buscar departamentos', erro);
-        alert('Não foi possível carregar a lista de departamentos.');
+        this.toastService.mostrar('Não foi possível carregar a lista de departamentos.','info');
       }
     });
   }

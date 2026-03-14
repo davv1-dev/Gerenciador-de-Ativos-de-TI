@@ -30,9 +30,9 @@
         <label>Departamento *</label>
         <select formControlName="departamentoId">
           <option [ngValue]="null" disabled>Selecione o departamento...</option>
-          <option *ngFor="let dep of listaDepartamentos" [value]="dep.id">
-            {{ dep.nome }}
-          </option>
+            <option *ngFor="let dep of departamentos?.content" [value]="dep.id">
+                {{ dep.nome }}
+            </option>
         </select>
       </div>
     </fieldset>

@@ -30,6 +30,22 @@
     </div>
 
     <div class="form-group">
+      <label>Técnico Específico (Opcional)</label>
+      <select formControlName="tecnicoId">
+        <option [ngValue]="null">Qualquer técnico disponível na fila</option>
+
+        <option *ngFor="let tec of tecnicosOnline" [ngValue]="tec.id">
+          {{ tec.nomeCompleto }}
+        </option>
+      </select>
+
+      <small style="color: #6b7280; font-size: 0.8rem; display: block; margin-top: 4px;">
+        <span *ngIf="tecnicosOnline.length > 0">Selecione apenas se você já estiver em contato com alguém da TI.</span>
+        <span *ngIf="tecnicosOnline.length === 0" style="color: #d97706;">Buscando técnicos disponíveis...</span>
+      </small>
+    </div>
+
+    <div class="form-group">
       <label>Onde você (ou o equipamento) está localizado? *</label>
       <input type="text" formControlName="localizacao" placeholder="Ex: Matriz - Andar 3, Mesa 12">
       <small class="error" *ngIf="chamadoForm.get('localizacao')?.invalid && chamadoForm.get('localizacao')?.touched">

@@ -1,0 +1,167 @@
+<div class="page-container">
+
+  <header class="page-header">
+    <div class="header-titles">
+      <h2>Gestão de Equipamentos</h2>
+      <p>Cadastre novos ativos no inventário ou edite equipamentos existentes.</p>
+    </div>
+  </header>
+
+  <div class="tabs-container">
+    <button class="tab-btn" [class.active]="abaAtual === 'cadastro'" (click)="alternarAba('cadastro')">
+      Novo Cadastro
+    </button>
+    <button class="tab-btn" [class.active]="abaAtual === 'edicao'" (click)="alternarAba('edicao')">
+      Editar Existentes
+    </button>
+  </div>
+
+  <div class="content-card">
+
+    <div *ngIf="abaAtual === 'cadastro'" class="form-section fade-in">
+      <h3>Informações do Novo Equipamento</h3>
+
+      <form [formGroup]="formCadastro" (ngSubmit)="salvarNovoEquipamento()" class="modern-form">
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nome do Equipamento *</label>
+            <input type="text" formControlName="nome" placeholder="Ex: Notebook Dell Latitude">
+          </div>
+          <div class="form-group">
+            <label>Categoria *</label>
+            <select formControlName="categoriaId">
+              <option value="" disabled selected>Selecione a categoria</option>
+              <option *ngFor="let cat of categorias" [value]="cat.id">{{ cat.nome }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Marca *</label>
+            <input type="text" formControlName="marca" placeholder="Ex: Dell">
+          </div>
+          <div class="form-group">
+            <label>Modelo *</label>
+            <input type="text" formControlName="modelo" placeholder="Ex: Latitude 5420">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label>Número de Patrimônio (Etiqueta) *</label>
+            <input type="text" formControlName="numeroPatrimonio" placeholder="Ex: PAT-2024-001">
+            <small class="hint">O patrimônio é imutável após o cadastro.</small>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-primary" [disabled]="salvando">
+            {{ salvando ? 'Cadastrando...' : 'Cadastrar Equipamento' }}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div *ngIf="abaAtual === 'edicao'" class="form-section fade-in">
+
+      <div *ngIf="!equipamentoSelecionadoParaEdicao">
+        <h3>Selecione um equipamento para editar</h3>
+        <p class="subtitle">Utilize os filtros abaixo para encontrar o equipamento desejado.</p>
+
+        <form [formGroup]="formBusca" (ngSubmit)="carregarEquipamentos()" class="busca-container">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Buscar por Nome</label>
+              <input type="text" formControlName="nome" placeholder="Ex: Notebook Dell...">
+            </div>
+
+            <div class="form-group">
+              <label>Filtrar por Categoria</label>
+              <select formControlName="categoriaId">
+                <option value="">Todas as categorias</option>
+                <option *ngFor="let cat of categorias" [value]="cat.id">{{ cat.nome }}</option>
+              </select>
+            </div>
+
+            <div class="form-group form-actions-inline">
+              <button type="submit" class="btn-primary btn-sm" [disabled]="carregandoLista">
+                {{ carregandoLista ? 'Buscando...' : 'Pesquisar' }}
+              </button>
+              <button type="button" class="btn-secondary btn-sm" (click)="limparBusca()" [disabled]="carregandoLista">
+                Limpar
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <div *ngIf="carregandoLista" class="loading-state">
+          Buscando equipamentos no banco de dados...
+        </div>
+
+        <div *ngIf="!carregandoLista && equipamentosCadastrados.length === 0" class="empty-state">
+          Nenhum equipamento encontrado com estes filtros.
+        </div>
+
+        <div class="lista-equipamentos" *ngIf="!carregandoLista && equipamentosCadastrados.length > 0">
+          <div class="equipamento-item" *ngFor="let eqp of equipamentosCadastrados" (click)="selecionarParaEdicao(eqp)">
+            <div class="eqp-info">
+              <div class="eqp-badges">
+                <span class="eqp-patrimonio">{{ eqp.numeroPatrimonio }}</span>
+                <span class="eqp-status">{{ eqp.status }}</span>
+              </div>
+              <h4>{{ eqp.nome }}</h4>
+              <p>{{ eqp.marca }} • {{ eqp.nomeCategoria }}</p>
+            </div>
+            <div class="eqp-acao">
+              <span class="icon-edit">✏️</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="equipamentoSelecionadoParaEdicao">
+        <div class="edicao-header">
+          <h3>Editando: {{ equipamentoSelecionadoParaEdicao.numeroPatrimonio }}</h3>
+          <button class="btn-voltar" (click)="cancelarEdicao()">← Voltar à lista</button>
+        </div>
+
+        <form [formGroup]="formEdicao" (ngSubmit)="salvarEdicao()" class="modern-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Nome do Equipamento</label>
+              <input type="text" formControlName="nome">
+            </div>
+            <div class="form-group">
+              <label>Categoria</label>
+              <select formControlName="categoriaId">
+                <option *ngFor="let cat of categorias" [value]="cat.id">{{ cat.nome }}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Marca</label>
+              <input type="text" formControlName="marca">
+            </div>
+            <div class="form-group">
+              <label>Modelo</label>
+              <input type="text" formControlName="modelo">
+            </div>
+          </div>
+
+          <div class="form-actions space-between">
+            <button type="button" class="btn-secondary" (click)="cancelarEdicao()">Cancelar</button>
+            <button type="submit" class="btn-primary" [disabled]="salvando">
+              {{ salvando ? 'Salvando...' : 'Salvar Alterações' }}
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+
+  </div>
+</div>

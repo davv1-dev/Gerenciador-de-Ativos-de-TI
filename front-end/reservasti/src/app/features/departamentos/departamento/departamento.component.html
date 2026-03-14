@@ -1,0 +1,103 @@
+<div class="page-container">
+
+  <header class="page-header">
+    <div class="header-titles">
+      <h2>Gestão de Departamentos</h2>
+      <p>Cadastre novos setores ou gerencie as informações dos departamentos existentes.</p>
+    </div>
+  </header>
+
+  <div class="tabs-container">
+    <button class="tab-btn" [class.active]="abaAtual === 'cadastro'" (click)="alternarAba('cadastro')">
+      Novo Cadastro
+    </button>
+    <button class="tab-btn" [class.active]="abaAtual === 'gerenciar'" (click)="alternarAba('gerenciar')">
+      Gerenciar Departamentos
+    </button>
+  </div>
+
+  <div class="content-card">
+
+    <div *ngIf="abaAtual === 'cadastro'" class="form-section fade-in">
+      <h3>Informações do Novo Departamento</h3>
+
+      <form [formGroup]="formCadastro" (ngSubmit)="salvarNovoDepartamento()" class="modern-form">
+
+        <div class="form-row">
+          <div class="form-group" style="flex: 2;">
+            <label>Nome do Departamento *</label>
+            <input type="text" formControlName="nome" placeholder="Ex: Recursos Humanos">
+          </div>
+          <div class="form-group" style="flex: 1;">
+            <label>Centro de Custo (CC) *</label>
+            <input type="text" formControlName="centroDeCusto" placeholder="Ex: 001.RH">
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-primary" [disabled]="salvando || formCadastro.invalid">
+            {{ salvando ? 'Cadastrando...' : 'Cadastrar Departamento' }}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div *ngIf="abaAtual === 'gerenciar'" class="form-section fade-in">
+
+      <div *ngIf="!departamentoSelecionadoParaEdicao">
+        <h3>Departamentos Cadastrados</h3>
+        <p class="subtitle">Selecione um departamento para editar ou use o ícone da lixeira para remover.</p>
+
+        <div *ngIf="carregandoLista" class="loading-state" style="text-align: center; padding: 20px; color: #64748b;">
+          Carregando departamentos...
+        </div>
+
+        <div *ngIf="!carregandoLista && departamentosCadastrados.length === 0" class="empty-state">
+          Nenhum departamento cadastrado.
+        </div>
+
+        <div class="lista-itens" *ngIf="!carregandoLista && departamentosCadastrados.length > 0">
+          <div class="item-card" *ngFor="let dep of departamentosCadastrados" (click)="selecionarParaEdicao(dep)">
+            <div class="item-info">
+              <span class="item-badge">{{ dep.centroDeCusto }}</span>
+              <h4>{{ dep.nome }}</h4>
+            </div>
+            <div class="item-acoes">
+              <span class="icon-btn edit" title="Editar">✏️</span>
+              <span class="icon-btn delete" title="Excluir" (click)="excluirDepartamento(dep, $event)">🗑️</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="departamentoSelecionadoParaEdicao">
+        <div class="edicao-header">
+          <h3>Editando: {{ departamentoSelecionadoParaEdicao.nome }}</h3>
+          <button class="btn-voltar" (click)="cancelarEdicao()">← Voltar à lista</button>
+        </div>
+
+        <form [formGroup]="formEdicao" (ngSubmit)="salvarEdicao()" class="modern-form">
+          <div class="form-row">
+            <div class="form-group" style="flex: 2;">
+              <label>Nome do Departamento</label>
+              <input type="text" formControlName="nome">
+            </div>
+            <div class="form-group" style="flex: 1;">
+              <label>Centro de Custo (CC)</label>
+              <input type="text" formControlName="centroDeCusto">
+            </div>
+          </div>
+
+          <div class="form-actions space-between">
+            <button type="button" class="btn-secondary" (click)="cancelarEdicao()">Cancelar</button>
+            <button type="submit" class="btn-primary" [disabled]="salvando || formEdicao.invalid">
+              {{ salvando ? 'Salvando...' : 'Salvar Alterações' }}
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+
+  </div>
+</div>

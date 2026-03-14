@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FilaGlobalComponent } from './features/chamados/fila-global/fila-global.component';
@@ -12,6 +12,17 @@ import { HomeFuncionarioComponent } from './features/portal/home-funcionario/hom
 import { AberturaChamadoComponent } from './features/chamados/abertura-chamado/abertura-chamado.component';
 import { NovaReservaComponent } from './features/reservas/nova-reserva/nova-reserva.component';
 import { HeaderComponent } from './core/components/header/header.component';
+import { HomeTecnicoComponent } from './features/portal/home-tecnico/home-tecnico.component';
+import { ChamadoAtualComponent } from './features/chamados/chamado-atual/chamado-atual.component';
+import { ToastComponent } from './core/components/toast/toast.component';
+import { ConfirmDialogComponent } from './core/components/confirm-dialog/confirm-dialog.component';
+import { MinhaFilaComponent } from './features/chamados/minha-fila/minha-fila.component';
+import { HomeAdminComponent } from './features/portal/home-admin/home-admin.component';
+import { EquipamentoAdminComponent } from './features/equipamento/equipamento-admin/equipamento-admin.component';
+import { AlocacaoAtivosComponent } from './features/departamentos/alocacao-ativos/alocacao-ativos.component';
+import { DepartamentoComponent } from './features/departamentos/departamento/departamento.component';
+import { RelatoriosComponent } from './features/relatorios/relatorios/relatorios.component';
+import { GestaoUsuariosComponent } from './features/funcionarios/gestao-usuarios/gestao-usuarios.component';
 
 
 @NgModule({
@@ -22,7 +33,18 @@ import { HeaderComponent } from './core/components/header/header.component';
     FuncionarioCadastroComponent,
     HomeFuncionarioComponent,
     AberturaChamadoComponent,
-    NovaReservaComponent
+    NovaReservaComponent,
+    HomeTecnicoComponent,
+    ChamadoAtualComponent,
+    ToastComponent,
+    ConfirmDialogComponent,
+    MinhaFilaComponent,
+    HomeAdminComponent,
+    EquipamentoAdminComponent,
+    AlocacaoAtivosComponent,
+    DepartamentoComponent,
+    RelatoriosComponent,
+    GestaoUsuariosComponent
   ],
   imports: [
     BrowserModule,
@@ -30,7 +52,8 @@ import { HeaderComponent } from './core/components/header/header.component';
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
-    HeaderComponent
+    HeaderComponent,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

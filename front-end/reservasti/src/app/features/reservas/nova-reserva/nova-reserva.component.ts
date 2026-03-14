@@ -7,6 +7,7 @@ import { EquipamentoRetornoDTO } from '../../../core/models/equipamento';
 import { ReservaDTO } from '../../../core/models/reserva';
 import { CategoriariaRetornoDTO } from 'src/app/core/models/categoria';
 import { Page } from 'src/app/core/models/chamado';
+import { ToastService } from 'src/app/core/service/toast.service';
 
 @Component({
   selector: 'app-nova-reserva',
@@ -31,7 +32,8 @@ export class NovaReservaComponent implements OnInit {
     private equipamentoService: EquipamentoService,
     private reservaService: ReservaService,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private toastService:ToastService
   ) {
     this.reservaForm = this.fb.group({
       dataPrevistaRetirada: ['', Validators.required],
@@ -83,11 +85,11 @@ export class NovaReservaComponent implements OnInit {
 
     this.reservaService.abrirReserva(novaReserva).subscribe({
       next: () => {
-        alert('Reserva solicitada com sucesso!');
+        this.toastService.mostrar('Reserva solicitada com sucesso!','sucesso');
         this.router.navigate(['/home']);
       },
       error: (err) => {
-        alert('Erro ao realizar reserva: ' + err.error.message);
+        this.toastService.mostrar('Erro ao realizar reserva: ' + err.error.message,'erro');
         this.enviando = false;
       }
     });

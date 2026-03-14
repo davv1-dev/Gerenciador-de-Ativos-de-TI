@@ -16,3 +16,24 @@ export interface FuncionarioDTO {
   departamentoId: number;
   endereco: EnderecoDTO;
 }
+export interface FuncionarioRetornoDTO {
+  id: number;
+  nomeCompleto: string;
+  email: string,
+  cpf: string ,
+  numeroDeTelefone: string ,
+  nomeDepartamento: string ,
+  ativo: boolean
+  statusAcesso?: string;
+  dataSolicitacao?: string | Date
+
+}
+export interface FuncionarioAtualizacaoDTO{
+nomeCompleto: string ,
+email: string,
+numeroDeTelefone: string,
+departamentoId: number
+}
+
+
+

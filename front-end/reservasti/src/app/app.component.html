@@ -1,5 +1,6 @@
 <app-header *ngIf="router.url !== '/login'"></app-header>
-<main>
-  <router-outlet></router-outlet>
+<main class="conteudo-principal" [@fadeAnimation]="prepareRoute(outlet)">
+  <router-outlet #outlet="outlet"></router-outlet>
 </main>
-
+<app-toast></app-toast>
+<app-confirm-dialog></app-confirm-dialog>

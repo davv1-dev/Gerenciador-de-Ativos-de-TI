@@ -1,0 +1,16 @@
+<div class="snackbar-container"
+     *ngIf="toastAtual as toast"
+     [ngClass]="toast.tipo">
+
+  <div class="snackbar-icon">
+    <span *ngIf="toast.tipo === 'sucesso'">✅</span>
+    <span *ngIf="toast.tipo === 'erro'">⚠️</span>
+    <span *ngIf="toast.tipo === 'info'">ℹ️</span>
+  </div>
+
+  <div class="snackbar-mensagem">
+    {{ toast.mensagem }}
+  </div>
+
+  <button class="snackbar-close" (click)="fechar()">&times;</button>
+</div>
