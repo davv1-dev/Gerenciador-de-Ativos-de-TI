@@ -13,11 +13,10 @@ import java.util.concurrent.ConcurrentHashMap;
 public class NotificacaoService {
 
     private final Map<Long, SseEmitter> emissoresTecnicos = new ConcurrentHashMap<>();
-
     private final Map<Long, SseEmitter> emissoresSolicitantes = new ConcurrentHashMap<>();
 
     public SseEmitter conectarTecnico(Long tecnicoId) {
-        SseEmitter emitter = new SseEmitter(30 * 60 * 1000L);
+        SseEmitter emitter = new SseEmitter(30 * 60 * 1000L); // 30 minutos
 
         emissoresTecnicos.put(tecnicoId, emitter);
 
@@ -42,34 +41,36 @@ public class NotificacaoService {
             }
         }
     }
-    public void notificarTodosTecnicos(DetalhamentoChamadoDTO dto) {
 
+    public void notificarTodosTecnicos(DetalhamentoChamadoDTO dto) {
         emissoresTecnicos.forEach((tecnicoId, emitter) -> {
             try {
+                // 👇 CORRIGIDO: Agora envia com o nome que o Angular espera!
                 emitter.send(SseEmitter.event()
-                        .name("NOVO_CHAMADO_GLOBAL")
+                        .name("NOVO_CHAMADO")
                         .data(dto, MediaType.APPLICATION_JSON));
 
             } catch (IOException | IllegalStateException e) {
-
                 System.out.println("Removendo conexão inativa do Técnico ID: " + tecnicoId);
-
                 try { emitter.completeWithError(e); } catch (Exception ignored) {}
-
                 emissoresTecnicos.remove(tecnicoId);
             }
         });
     }
+
     public SseEmitter conectarSolicitante(Long solicitanteId) {
-        SseEmitter emitter = new SseEmitter(0L);
+        // 👇 DICA: Coloquei 30 min em vez de 0L (infinito) para evitar vazamento de memória
+        SseEmitter emitter = new SseEmitter(30 * 60 * 1000L);
         emissoresSolicitantes.put(solicitanteId, emitter);
 
-        emitter.onCompletion(() -> emissoresTecnicos.remove(solicitanteId));
-        emitter.onTimeout(() -> emissoresTecnicos.remove(solicitanteId));
-        emitter.onError((e) -> emissoresTecnicos.remove(solicitanteId));
+        // 👇 CORRIGIDO: Agora remove da lista de solicitantes!
+        emitter.onCompletion(() -> emissoresSolicitantes.remove(solicitanteId));
+        emitter.onTimeout(() -> emissoresSolicitantes.remove(solicitanteId));
+        emitter.onError((e) -> emissoresSolicitantes.remove(solicitanteId));
 
         return emitter;
     }
+
     public void notificarPosicaoFila(Long solicitanteId, Long novaPosicao) {
         SseEmitter emitter = emissoresSolicitantes.get(solicitanteId);
         if (emitter != null) {

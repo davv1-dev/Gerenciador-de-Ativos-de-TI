@@ -12,8 +12,11 @@ public class ValidarExclusaoCategoriaComEquipamentos implements IValidatorCatego
 
     @Override
     public void validar(CategoriaValidacaoContext context) {
-        if (equipamentoRepository.existsByCategoriaId(context.id())) {
-            throw new ValidacaoException("Não é possível excluir: existem equipamentos vinculados a esta categoria.");
+        if(context.id()!=null){
+            if (equipamentoRepository.existsByCategoriaId(context.id())) {
+                throw new ValidacaoException("Não é possível excluir: existem equipamentos vinculados a esta categoria.");
+            }
         }
+
     }
 }

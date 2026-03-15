@@ -1,5 +1,6 @@
 package br.com.reservasti.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,6 +25,7 @@ public class DepartamentoController {
     private DepartamentoService service;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<DepartamentoRetornoDTO> cadastrar(
             @RequestBody @Valid DepartamentoDTO dto,
             UriComponentsBuilder uriBuilder) {
@@ -39,11 +41,13 @@ public class DepartamentoController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','COMUM','TECNICO')")
     public ResponseEntity<DepartamentoRetornoDTO> detalhar(@PathVariable Long id) {
         return ResponseEntity.ok(service.buscarPorIdDepartamento(id));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<DepartamentoRetornoDTO> atualizar(
             @PathVariable Long id,
             @RequestBody @Valid DepartamentoAtualizacaoDTO dto) {
@@ -51,6 +55,7 @@ public class DepartamentoController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
         service.excluirDepartamento(id);
         return ResponseEntity.noContent().build();

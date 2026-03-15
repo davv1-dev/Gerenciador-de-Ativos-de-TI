@@ -7,9 +7,6 @@ import jakarta.validation.constraints.NotNull;
 public record AberturaChamadoDTO(
         Long equipamentoId,
 
-        @NotNull(message = "O ID do solicitante é obrigatório")
-        Long solicitanteId,
-
         @NotNull(message = "Selecione o tipo de problema")
         TipoProblema tipoProblema,
 

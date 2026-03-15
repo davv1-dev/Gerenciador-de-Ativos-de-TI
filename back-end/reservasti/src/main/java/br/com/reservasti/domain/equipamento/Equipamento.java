@@ -30,8 +30,11 @@ public class Equipamento {
     private String marca;
     private String modelo;
 
-    @Column(unique = true,nullable = false)
+    @Column(unique = true)
     private String numeroPatrimonio;
+
+    @Column(nullable = false)
+    private Integer quantidade;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -56,6 +59,7 @@ public class Equipamento {
         this.status = StatusEquipamento.DISPONIVEL;
         this.categoria = categoria;
         this.dataFimGarantia = dto.dataFimGarantia();
+        this.quantidade = (dto.quantidade() != null && dto.quantidade() > 0) ? dto.quantidade() : 1;
     }
     public void atualizarInformacoes(EditarEquipamentoDTO dados,Categoria categorianova) {
         if (dados.nome() != null) {

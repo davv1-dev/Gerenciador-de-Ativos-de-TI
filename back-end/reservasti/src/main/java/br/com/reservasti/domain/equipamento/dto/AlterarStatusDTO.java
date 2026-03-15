@@ -1,4 +1,6 @@
 package br.com.reservasti.domain.equipamento.dto;
 
-public record AlterarStatusDTO() {
-}
+import br.com.reservasti.domain.equipamento.StatusEquipamento;
+
+public record AlterarStatusDTO(StatusEquipamento statusEquipamento,
+                               Integer quantidade) {}

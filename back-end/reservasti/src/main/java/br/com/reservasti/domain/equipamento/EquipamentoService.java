@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Service
 public class EquipamentoService {
 
@@ -26,6 +27,7 @@ public class EquipamentoService {
 
     @Autowired
     private CategoriaRepository categoriaRepository;
+
     @Autowired
     private DepartamentoRepository departamentoRepository;
 
@@ -34,9 +36,11 @@ public class EquipamentoService {
 
     @Transactional
     public EquipamentoRetornoDTO cadastrarEquipamento(EquipamentoDTO dto) {
-        validadores.forEach( validator -> validator.validar(dto));
+        validadores.forEach(validator -> validator.validar(dto));
 
-        Categoria categoria = categoriaRepository.findById(dto.categoriaId()).orElseThrow(() -> new IdNaoEncontradoException("Categoria não encontrada!"));
+        Categoria categoria = categoriaRepository.findById(dto.categoriaId())
+                .orElseThrow(() -> new IdNaoEncontradoException("Categoria não encontrada!"));
+
         Equipamento equipamento = new Equipamento(dto, categoria);
         equipamentoRepository.save(equipamento);
 
@@ -44,56 +48,54 @@ public class EquipamentoService {
     }
 
     public EquipamentoRetornoDTO buscarPorId(Long id) {
-
-        Equipamento equipamento = equipamentoRepository.findById(id).orElseThrow(() -> new IdNaoEncontradoException("Equipamento não encontrado!"));
+        Equipamento equipamento = equipamentoRepository.findById(id)
+                .orElseThrow(() -> new IdNaoEncontradoException("Equipamento não encontrado!"));
         return new EquipamentoRetornoDTO(equipamento);
-    }
-
-    @Transactional
-    public void alterarStatusEquipamento(Long id, StatusEquipamento status) {
-        Equipamento equipamento = equipamentoRepository.findById(id)
-                .orElseThrow(() -> new IdNaoEncontradoException("Equipamento não encontrado!"));
-
-        equipamento.setStatus(status);
-        equipamentoRepository.save(equipamento);
-    }
-    @Transactional
-    public void desativarEquipamento(Long id) {
-        Equipamento equipamento = equipamentoRepository.findById(id)
-                .orElseThrow(() -> new IdNaoEncontradoException("Equipamento não encontrado!"));
-
-        equipamento.setStatus(StatusEquipamento.BAIXADO);
     }
 
     public Page<EquipamentoRetornoDTO> bucarEquipamento(String nome, Long categoriaId, Pageable paginacao) {
-
         Specification<Equipamento> spec = EquipamentoSpecification.comFiltros(nome, categoriaId);
-
-        return equipamentoRepository.findAll(spec, paginacao)
-                .map(EquipamentoRetornoDTO::new);
+        return equipamentoRepository.findAll(spec, paginacao).map(EquipamentoRetornoDTO::new);
     }
+
     @Transactional
     public EquipamentoRetornoDTO editarEquipamento(Long id, EditarEquipamentoDTO dto) {
+        Equipamento equipamento = equipamentoRepository.findById(id)
+                .orElseThrow(() -> new IdNaoEncontradoException("Equipamento não encontrado!"));
 
-        Equipamento equipamento = equipamentoRepository.findById(id).orElseThrow(() -> new IdNaoEncontradoException("Equipamento não encontrado!"));
+        Categoria categoria = categoriaRepository.findById(dto.categoriaId())
+                .orElseThrow(() -> new IdNaoEncontradoException("Categoria não encontrada!"));
 
-        Categoria categoria = categoriaRepository.findById(dto.categoriaId()).orElseThrow(() -> new IdNaoEncontradoException("Categoria não encontrada!"));
-
-        equipamento.atualizarInformacoes(dto,categoria);
+        equipamento.atualizarInformacoes(dto, categoria);
 
         return new EquipamentoRetornoDTO(equipamento);
     }
+
+    // 👇 NOVA LÓGICA DE SPLIT PARA STATUS
+    @Transactional
+    public void alterarStatusEquipamento(Long id, StatusEquipamento status, Integer quantidade) {
+        processarMudancaDeLote(id, quantidade, equip -> equip.setStatus(status));
+    }
+
+    // 👇 NOVA LÓGICA DE SPLIT PARA DESATIVAR
+    @Transactional
+    public void desativarEquipamento(Long id, Integer quantidadeParaDesativar) {
+        processarMudancaDeLote(id, quantidadeParaDesativar, equip -> equip.setStatus(StatusEquipamento.BAIXADO));
+    }
+
+    // 👇 NOVA LÓGICA DE SPLIT PARA ALOCAÇÃO
     @Transactional
     public void alocarEquipamentoAoDepartamento(AlocarEquipamentoDTO dto) {
-        Equipamento equipamento = equipamentoRepository.findById(dto.idEquipamento())
-                .orElseThrow(() -> new IdNaoEncontradoException("Equipamento não encontrado"));
-
         Departamento departamento = departamentoRepository.findById(dto.idDepartamento())
                 .orElseThrow(() -> new IdNaoEncontradoException("Departamento não encontrado"));
 
-        equipamento.alocarAoDepartamento(departamento);
+        // Assumindo que você vai adicionar a "quantidade" no AlocarEquipamentoDTO
+        Integer qtdAlocar = (dto.quantidade() != null && dto.quantidade() > 0) ? dto.quantidade() : 1;
 
+        processarMudancaDeLote(dto.idEquipamento(), qtdAlocar, equip -> equip.alocarAoDepartamento(departamento));
     }
+
+    // 👇 NOVA LÓGICA PARA SIMULAÇÃO (Somando a quantidade em vez de contar linhas)
     public ResultadoSimulacaoDTO simularExpansao(SimulacaoEquipamentosDTO dto) {
         List<EquipamentoResultadoSimulacaoDTO> detalhes = new ArrayList<>();
         boolean tudoViavel = true;
@@ -103,28 +105,63 @@ public class EquipamentoService {
                     .map(Categoria::getNome)
                     .orElse("Categoria Desconhecida");
 
-            long disponivel = equipamentoRepository.countByCategoriaIdAndDepartamentoIsNullAndStatus(
+            // ATENÇÃO: Você precisará criar este método no seu EquipamentoRepository!
+            Integer qtdDisponivel = equipamentoRepository.somarQuantidadeDisponivelPorCategoria(
                     item.categoriaId(), StatusEquipamento.DISPONIVEL);
 
+            long disponivel = qtdDisponivel != null ? qtdDisponivel : 0;
+
             int faltante = item.quantidadeNecessaria() - (int) disponivel;
-            if (faltante < 0) faltante = 0; // Se sobrou, faltante é zero
+            if (faltante < 0) faltante = 0;
 
             boolean itemViavel = disponivel >= item.quantidadeNecessaria();
             if (!itemViavel) {
-                tudoViavel = false; // Se um falhar, a expansão geral fica bloqueada (ou com alerta)
+                tudoViavel = false;
             }
 
             detalhes.add(new EquipamentoResultadoSimulacaoDTO(
-                    item.categoriaId(),
-                    nomeCategoria,
-                    item.quantidadeNecessaria(),
-                    (int)disponivel,
-                    faltante,
-                    itemViavel
+                    item.categoriaId(), nomeCategoria, item.quantidadeNecessaria(),
+                    (int) disponivel, faltante, itemViavel
             ));
         }
-
         return new ResultadoSimulacaoDTO(tudoViavel, detalhes);
     }
 
+    // 🛠️ MÉTODO PRIVADO MÁGICO QUE FAZ O SPLIT DO LOTE
+    private void processarMudancaDeLote(Long idEquipamento, Integer quantidadeDesejada, java.util.function.Consumer<Equipamento> acao) {
+        Equipamento equipamentoOriginal = equipamentoRepository.findById(idEquipamento)
+                .orElseThrow(() -> new IdNaoEncontradoException("Equipamento não encontrado!"));
+
+        int qtd = (quantidadeDesejada != null && quantidadeDesejada > 0) ? quantidadeDesejada : 1;
+
+        if (qtd > equipamentoOriginal.getQuantidade()) {
+            throw new IllegalArgumentException("Quantidade solicitada (" + qtd + ") é maior que a disponível no lote (" + equipamentoOriginal.getQuantidade() + ").");
+        }
+
+        if (qtd == equipamentoOriginal.getQuantidade()) {
+            // Se quer alterar tudo, altera no próprio registro original
+            acao.accept(equipamentoOriginal);
+        } else {
+            // Se quer alterar uma parte, subtrai do original e cria um espelho com a ação aplicada
+            equipamentoOriginal.setQuantidade(equipamentoOriginal.getQuantidade() - qtd);
+
+            Equipamento equipamentoSplit = new Equipamento();
+            equipamentoSplit.setNome(equipamentoOriginal.getNome());
+            equipamentoSplit.setMarca(equipamentoOriginal.getMarca());
+            equipamentoSplit.setModelo(equipamentoOriginal.getModelo());
+            equipamentoSplit.setCategoria(equipamentoOriginal.getCategoria());
+            equipamentoSplit.setDataFimGarantia(equipamentoOriginal.getDataFimGarantia());
+
+            // O patrimônio não é copiado porque o split só acontece com lotes sem patrimônio
+            equipamentoSplit.setNumeroPatrimonio(null);
+            equipamentoSplit.setQuantidade(qtd);
+            equipamentoSplit.setStatus(equipamentoOriginal.getStatus()); // Copia o status atual
+            equipamentoSplit.setDepartamento(equipamentoOriginal.getDepartamento()); // Copia o depto atual
+
+            // Aplica a nova ação (Ex: setStatus BAIXADO) no registro separado
+            acao.accept(equipamentoSplit);
+
+            equipamentoRepository.save(equipamentoSplit);
+        }
+    }
 }

@@ -29,8 +29,11 @@ public class CategoriaService {
         validadores.forEach(v->v.validar(new CategoriaValidacaoContext(null,dto)));
 
         Categoria categoria = new Categoria(dto);
+
         repository.save(categoria);
+        System.out.println(categoria.getId());
         return new CategoriaRetornoDTO(categoria);
+
     }
 
     public Page<CategoriaRetornoDTO> listar(Pageable paginacao) {

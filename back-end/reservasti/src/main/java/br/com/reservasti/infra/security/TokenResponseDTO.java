@@ -1,4 +1,6 @@
 package br.com.reservasti.infra.security;
 
-public class TokenResponseDTO {
+import br.com.reservasti.domain.usuario.TipoUsuario;
+
+public record TokenResponseDTO(String tokenJWT, String refreshToken, TipoUsuario tipoUsuario) {
 }

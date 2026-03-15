@@ -11,6 +11,9 @@ public class ValidarExistenciaCategoria implements IValidatorCategoria{
     private CategoriaRepository repository;
     @Override
     public void validar(CategoriaValidacaoContext context) {
-        repository.findById(context.id()).orElseThrow(()-> new IdNaoEncontradoException("Categoria não encontrada"));
+        if (context.id() != null) {
+            repository.findById(context.id()).orElseThrow(()-> new IdNaoEncontradoException("Categoria não encontrada"));
+        }
+
     }
 }

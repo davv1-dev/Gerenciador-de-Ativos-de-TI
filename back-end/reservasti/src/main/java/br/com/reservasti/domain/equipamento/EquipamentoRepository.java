@@ -2,6 +2,7 @@ package br.com.reservasti.domain.equipamento;
 
 import br.com.reservasti.domain.relatorio.dto.RelatorioDeFalhaPorMarcaDTO;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -33,8 +34,14 @@ public interface EquipamentoRepository extends JpaRepository<Equipamento,Long>,J
             "(SELECT r FROM Reserva r WHERE r.equipamento = e AND r.dataDevolucaoReal >= :dataLimite)")
     List<Equipamento> findEquipamentosOciosos(@Param("dataLimite") LocalDate dataLimite);
 
-    long countByCategoriaIdAndDepartamentoIsNullAndStatus(Long categoriaId, StatusEquipamento status);
+    //long countByCategoriaIdAndDepartamentoIsNullAndStatus(Long categoriaId, StatusEquipamento status);
 
     Page<Equipamento> findAllByDataFimGarantiaBetween(LocalDate dataInicial,LocalDate dataFinal,Pageable paginacao);
 
+    @Query("SELECT COALESCE(SUM(e.quantidade), 0) FROM Equipamento e WHERE e.categoria.id = :categoriaId AND e.status = :status")
+    Integer somarQuantidadeDisponivelPorCategoria(
+            @Param("categoriaId") Long categoriaId,
+            @Param("status") StatusEquipamento status
+    );
 }
+

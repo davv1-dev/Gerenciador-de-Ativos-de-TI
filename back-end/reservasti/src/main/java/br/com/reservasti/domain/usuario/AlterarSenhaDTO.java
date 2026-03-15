@@ -1,4 +1,6 @@
 package br.com.reservasti.domain.usuario;
 
-public record AlterarSenhaDTO() {
+import jakarta.validation.constraints.NotBlank;
+
+public record AlterarSenhaDTO(@NotBlank String senhaAtual, @NotBlank String novaSenha, @NotBlank String novaSenhaConfirmacao) {
 }

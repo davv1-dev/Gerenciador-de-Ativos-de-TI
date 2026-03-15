@@ -8,9 +8,11 @@ public record EquipamentoRetornoDTO(
         Long id,
         String nome,
         String marca,
+        String modelo,
         String numeroPatrimonio,
+        Integer quantidade,
         String status,
-        String nomeCategoria,
+        Long categoriaid,
         LocalDate dataFimGarantia
 ) {
 
@@ -19,9 +21,11 @@ public record EquipamentoRetornoDTO(
                 equipamento.getId(),
                 equipamento.getNome(),
                 equipamento.getMarca(),
+                equipamento.getModelo(),
                 equipamento.getNumeroPatrimonio(),
+                equipamento.getQuantidade(),
                 equipamento.getStatus().name(),
-                equipamento.getCategoria().getNome(),
+                equipamento.getCategoria().getId(),
                 equipamento.getDataFimGarantia()
         );
     }

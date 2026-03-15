@@ -17,6 +17,8 @@ public record EquipamentoDTO(
         @NotBlank(message = "O modelo é obrigatório")
         String modelo,
 
+        Integer quantidade,
+
         @NotBlank(message = "O número de patrimônio (etiqueta) é obrigatório")
         String numeroPatrimonio,
 

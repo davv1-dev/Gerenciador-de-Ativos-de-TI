@@ -1,6 +1,6 @@
 package br.com.reservasti.infra.exceptions;
 
-public class ErroAoGerarTokenException extends Throwable {
-    public ErroAoGerarTokenException(String message) {super(message);
+public class TokenJWTException extends Throwable {
+    public TokenJWTException(String message) {super(message);
     }
 }

@@ -37,9 +37,9 @@ public class ChamadoService {
 
 
     @Transactional
-    public DetalhamentoChamadoDTO abrirChamado(AberturaChamadoDTO dto) {
+    public DetalhamentoChamadoDTO abrirChamado(Long id,AberturaChamadoDTO dto) {
 
-        Funcionario solicitante = funcionarioRepository.findById(dto.solicitanteId())
+        Funcionario solicitante = funcionarioRepository.findById(id)
                 .orElseThrow(() -> new IdNaoEncontradoException("Solicitante não encontrado"));
 
         Chamado chamado = new Chamado(dto, solicitante);

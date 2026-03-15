@@ -1,0 +1,1 @@
+ALTER TABLE equipamentos ADD COLUMN data_fim_garantia DATE;

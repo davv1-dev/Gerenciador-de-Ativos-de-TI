@@ -1,4 +1,8 @@
 package br.com.reservasti.domain.auth;
 
-public class RefreshTokenDTO {
+import jakarta.validation.constraints.NotBlank;
+
+public record RefreshTokenDTO(
+        @NotBlank
+        String refreshtoken) {
 }
