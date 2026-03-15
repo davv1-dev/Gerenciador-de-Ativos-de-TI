@@ -21,7 +21,7 @@ export class HomeTecnicoComponent implements OnInit {
   isUltimaPagina: boolean = true;
   isPrimeiraPagina: boolean = true;
 
-  private idTecnicoLogado = 7;
+  // 👇 REMOVIDO: private idTecnicoLogado = 7;
 
   constructor(
     private router: Router,
@@ -30,20 +30,33 @@ export class HomeTecnicoComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // 👇 PROTEÇÃO DE ROTA: Apenas Técnicos entram aqui!
+    const tipoUsuario = sessionStorage.getItem('tipoUsuario');
+    if (tipoUsuario !== 'TECNICO') {
+      this.toastService.mostrar('Acesso negado. Página restrita a Técnicos.', 'erro');
+
+      // Chuta o intruso para o lugar certo
+      if (tipoUsuario === 'ADMIN') {
+        this.router.navigate(['/home-admin']);
+      } else {
+        this.router.navigate(['/home']);
+      }
+      return;
+    }
+
     this.carregarHistorico(this.filtroAtivo);
   }
 
-
   irParaFilaGlobal(): void {
-    this.router.navigate(['/fila']);
+    this.router.navigate(['tecnico/fila']);
   }
 
   irParaMinhaFila(): void {
-    this.router.navigate(['/minha-fila']);
+    this.router.navigate(['tecnico/minha-fila']);
   }
 
   irParaChamadoAtual(): void {
-    this.router.navigate(['/chamado-atual']);
+    this.router.navigate(['tecnico/chamado-atual']);
   }
 
   irParaNovaReserva(): void {
@@ -54,27 +67,28 @@ export class HomeTecnicoComponent implements OnInit {
     if (this.filtroAtivo === periodo) return;
 
     this.filtroAtivo = periodo;
+    this.paginaAtual = 0;
     this.carregarHistorico(periodo);
   }
 
   private carregarHistorico(periodo: string): void {
     this.carregando = true;
 
-    this.chamadoService.listarHistoricoTecnico(this.idTecnicoLogado, periodo, this.paginaAtual, this.tamanhoPagina)
+    this.chamadoService.listarHistoricoTecnico(periodo, this.paginaAtual, this.tamanhoPagina)
       .subscribe({
         next: (pagina) => {
           this.historicoChamados = pagina.content;
 
           this.paginaAtual = pagina.number;
           this.totalPaginas = pagina.totalPages;
-          this.isPrimeiraPagina =(this.paginaAtual === 0) ;
+          this.isPrimeiraPagina = (this.paginaAtual === 0) ;
           this.isUltimaPagina = (this.totalPaginas === 0) || (this.paginaAtual >= this.totalPaginas - 1);
 
           this.carregando = false;
         },
         error: (erro) => {
           console.error('Erro ao buscar o histórico de chamados', erro);
-         this.toastService.mostrar('Não foi possível carregar o histórico. Verifique a conexão.','info');
+          this.toastService.mostrar('Não foi possível carregar o histórico. Verifique a conexão.', 'info');
           this.carregando = false;
         }
       });

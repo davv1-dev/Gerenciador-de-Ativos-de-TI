@@ -22,10 +22,10 @@
         </ng-container>
 
         <ng-container *ngIf="isTecnico && !isAdmin">
-          <a routerLink="/home-tecnico" routerLinkActive="ativo" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Dashboard</a>
-          <a routerLink="/fila" routerLinkActive="ativo" class="nav-link">Fila Global</a>
-          <a routerLink="/minha-fila" routerLinkActive="ativo" class="nav-link">Minha Fila</a>
-          <a routerLink="/chamado-atual" routerLinkActive="ativo" class="nav-link">Chamado Atual</a>
+          <a routerLink="/home-tecnico" routerLinkActive="ativo" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Home</a>
+          <a routerLink="/tecnico/fila" routerLinkActive="ativo" class="nav-link">Fila Global</a>
+          <a routerLink="/tecnico/minha-fila" routerLinkActive="ativo" class="nav-link">Minha Fila</a>
+          <a routerLink="/tecnico/chamado-atual" routerLinkActive="ativo" class="nav-link">Chamado Atual</a>
           <a routerLink="/novareserva" routerLinkActive="ativo" class="nav-link">Nova Reserva</a>
         </ng-container>
 
@@ -42,7 +42,19 @@
     </div>
 
     <div class="perfil-area">
-      <div class="avatar">{{ isAdmin ? 'AD' : (isTecnico ? 'TI' : 'US') }}</div>
+      <div class="avatar" (click)="toggleMenu($event)" style="cursor: pointer;">
+        {{ isAdmin ? 'AD' : (isTecnico ? 'TI' : 'US') }}
+      </div>
+
+      <div class="dropdown-menu" [class.mostrar]="menuAberto">
+        <a class="dropdown-item" (click)="irParaPerfil()">
+          <i class="icone-perfil"></i> Meu Perfil
+        </a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item texto-perigo" (click)="fazerLogout()">
+          <i class="icone-sair"></i> Sair
+        </a>
+      </div>
     </div>
 
   </div>

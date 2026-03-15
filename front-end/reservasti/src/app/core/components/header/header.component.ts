@@ -1,7 +1,10 @@
-import { Component, ElementRef, ViewChild, AfterViewInit, OnInit, OnDestroy } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewInit, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+import { AuthService } from '../../../core/service/auth.service'; // Ajuste o caminho se necessário
 
 @Component({
   selector: 'app-header',
@@ -12,24 +15,78 @@ import { filter, Subscription } from 'rxjs';
 })
 export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  isAdmin: boolean = true;
+  // 👇 Deixamos sem valor inicial, vamos preencher dinamicamente!
+  isAdmin: boolean = false;
   isTecnico: boolean = false;
 
-  @ViewChild('navMenu') navMenu!: ElementRef;
+  // Variável para controlar o abre/fecha do menu do perfil
+  menuAberto: boolean = false;
 
-  // Variável para guardar a nossa "escuta" e evitar vazamento de memória
+  @ViewChild('navMenu') navMenu!: ElementRef;
   private routerSub!: Subscription;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private http: HttpClient,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
-    // 1. O Header começa a escutar TODAS as mudanças de rota do sistema
+    this.sincronizarPerfil(); // 👈 Chama a função para ler quem está logado
+
     this.routerSub = this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd) // Filtra para avisar só quando a navegação terminar
+      filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
-      // 2. Quando a rota mudar, manda a roleta se alinhar sozinha!
       this.centralizarAbaAtiva();
     });
+  }
+
+  // Lógica para definir o que vai aparecer no header baseado no token/sessionStorage
+  sincronizarPerfil(): void {
+    const tipoUsuario = sessionStorage.getItem('tipoUsuario');
+    this.isAdmin = tipoUsuario === 'ADMIN';
+    this.isTecnico = tipoUsuario === 'TECNICO';
+  }
+
+  // Lógica do Menu do Avatar
+  toggleMenu(event: Event): void {
+    event.stopPropagation(); // Evita que o clique feche o menu na mesma hora
+    this.menuAberto = !this.menuAberto;
+  }
+
+  // Fecha o menu se clicar em qualquer outro lugar da tela (UX perfeita!)
+  @HostListener('document:click', ['$event'])
+  fecharMenu(event: Event): void {
+    this.menuAberto = false;
+  }
+
+  irParaPerfil(): void {
+    // Stub para o futuro
+    console.log('Indo para o perfil... (A implementar)');
+    this.menuAberto = false;
+  }
+
+  fazerLogout(): void {
+    // Chama o service para fazer o trabalho sujo
+    this.authService.logoutBackend().subscribe({
+      next: () => {
+        this.menuAberto = false; // Fecha o balãozinho
+        this.authService.encerrarSessaoLocal(); // Limpa o Front
+      },
+      error: (erro) => {
+        console.warn('O Back-end deu erro no logout, mas vamos deslogar do Front mesmo assim.', erro);
+        this.menuAberto = false;
+        this.authService.encerrarSessaoLocal();
+      }
+    });
+  }
+
+  private finalizarSessaoFront(): void {
+    // 2. Limpa todos os dados do navegador
+    sessionStorage.clear();
+    // 3. Fecha o menu e manda pro login
+    this.menuAberto = false;
+    this.router.navigate(['/login']);
   }
 
   ngAfterViewInit(): void {
@@ -37,17 +94,14 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Boa prática: limpa a escuta se o header for destruído
     if (this.routerSub) {
       this.routerSub.unsubscribe();
     }
   }
 
   centralizarAbaAtiva(event?: MouseEvent): void {
-    // O setTimeout garante que o Angular já aplicou a classe 'ativo' no novo link
     setTimeout(() => {
       let elementoAlvo: HTMLElement | null = null;
-
       if (event && (event.target as HTMLElement).classList.contains('nav-link')) {
         elementoAlvo = event.target as HTMLElement;
       }

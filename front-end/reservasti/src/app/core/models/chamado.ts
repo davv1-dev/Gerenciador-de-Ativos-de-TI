@@ -13,6 +13,7 @@ export interface ResumoChamadoDTO {
   tipoProblema: string;
   localizacao: string;
   status: string;
+  descricao: string;
   dataAbertura: string;
 }
 

@@ -65,11 +65,23 @@
         </div>
       </div>
 
-      <div class="form-actions sticky-action fade-in" *ngIf="departamentoSelecionado && equipamentoSelecionado">
-        <div class="resumo-alocacao">
-          Alocar <strong>{{ equipamentoSelecionado.numeroPatrimonio }}</strong> para <strong>{{ departamentoSelecionado.nome }}</strong>?
+      <div class="form-actions sticky-action fade-in" *ngIf="departamentoSelecionado && equipamentoSelecionado" style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; margin-top: 20px;">
+
+        <div class="resumo-alocacao" style="display: flex; flex-direction: column; gap: 8px;">
+          <span style="font-size: 1.1rem; color: #1e293b;">
+            Alocar <strong>{{ equipamentoSelecionado.numeroPatrimonio ? equipamentoSelecionado.numeroPatrimonio : equipamentoSelecionado.nome }}</strong>
+            para <strong>{{ departamentoSelecionado.nome }}</strong>?
+          </span>
+
+          <div *ngIf="!equipamentoSelecionado.numeroPatrimonio" style="display: flex; align-items: center; gap: 10px;">
+            <label style="font-weight: 600; font-size: 0.9rem; color: #475569;">Qtd:</label>
+            <input type="number" [(ngModel)]="quantidadeAlocacao" min="1" [max]="equipamentoSelecionado.quantidade"
+                   style="width: 80px; padding: 8px; border-radius: 6px; border: 1px solid #cbd5e1; outline: none;">
+            <small style="color: #64748b;">(Disponível: {{ equipamentoSelecionado.quantidade }})</small>
+          </div>
         </div>
-        <button class="btn-primary btn-lg" (click)="confirmarAlocacao()" [disabled]="alocando">
+
+        <button class="btn-primary" style="padding: 12px 30px; font-size: 1rem;" (click)="confirmarAlocacao()" [disabled]="alocando || quantidadeAlocacao < 1 || quantidadeAlocacao > equipamentoSelecionado.quantidade">
           {{ alocando ? 'Salvando...' : 'Confirmar Alocação' }}
         </button>
       </div>

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router'; // 👈 Importamos o Router
 import { RelatorioService } from 'src/app/core/service/relatorio.service';
 import { DepartamentoService } from 'src/app/core/service/departamento.service';
 import { ToastService } from 'src/app/core/service/toast.service';
@@ -47,7 +48,8 @@ export class RelatoriosComponent implements OnInit {
     private relatorioService: RelatorioService,
     private departamentoService: DepartamentoService,
     private fb: FormBuilder,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private router: Router // 👈 Injetamos o Router aqui
   ) {
     this.formDept = this.fb.group({ departamentoId: ['', Validators.required] });
 
@@ -60,8 +62,23 @@ export class RelatoriosComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // 👇 LEÃO DE CHÁCARA: Verifica se é ADMIN. Se não for, bloqueia!
+    const tipoUsuario = sessionStorage.getItem('tipoUsuario');
+    if (tipoUsuario !== 'ADMIN') {
+      this.toastService.mostrar('Acesso negado. Área restrita à diretoria.', 'erro');
+
+      // Redireciona o intruso para a home correta dele
+      if (tipoUsuario === 'TECNICO') {
+        this.router.navigate(['/home-tecnico']);
+      } else {
+        this.router.navigate(['/home']);
+      }
+      return; // Para a execução do ngOnInit aqui!
+    }
+
+    // Se passou, carrega os dados normalmente
     this.carregarRelatorioGeral();
-    this.carregarDepartamentos(); // Para o dropdown da aba 2
+    this.carregarDepartamentos();
   }
 
   alternarAba(aba: 'geral' | 'departamentos' | 'riscos' | 'inteligencia'|'garantias'): void {
@@ -139,6 +156,7 @@ export class RelatoriosComponent implements OnInit {
       }
     });
   }
+
   carregarGarantias(): void {
     this.carregando = true;
     this.relatorioService.relatorioGarantiasVencendo(this.paginaGarantia, 10).subscribe({
@@ -153,10 +171,12 @@ export class RelatoriosComponent implements OnInit {
       }
     });
   }
-mudarPaginaGarantia(novaPagina: number): void {
+
+  mudarPaginaGarantia(novaPagina: number): void {
     this.paginaGarantia = novaPagina;
     this.carregarGarantias();
   }
+
   gerarRelatorioInativos(): void {
     if (this.formInativos.invalid) return;
     this.carregando = true;

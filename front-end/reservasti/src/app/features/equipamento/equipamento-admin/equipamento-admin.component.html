@@ -14,6 +14,9 @@
     <button class="tab-btn" [class.active]="abaAtual === 'edicao'" (click)="alternarAba('edicao')">
       Editar Existentes
     </button>
+    <button class="tab-btn" [class.active]="abaAtual === 'categoria'" (click)="alternarAba('categoria')">
+      Nova Categoria
+    </button>
   </div>
 
   <div class="content-card">
@@ -25,18 +28,15 @@
 
         <div class="form-row">
           <div class="form-group">
-            <label>Nome do Equipamento *</label>
-            <input type="text" formControlName="nome" placeholder="Ex: Notebook Dell Latitude">
+            <label>Número de Patrimônio (Etiqueta) *</label>
+            <input type="text" formControlName="numeroPatrimonio" placeholder="Ex: PAT-2024-001">
+            <small class="hint">Deixe em branco para itens em lote (Ex: 50 mouses).</small>
           </div>
           <div class="form-group">
-            <label>Categoria *</label>
-            <select formControlName="categoriaId">
-              <option value="" disabled selected>Selecione a categoria</option>
-              <option *ngFor="let cat of categorias" [value]="cat.id">{{ cat.nome }}</option>
-            </select>
+            <label>Quantidade *</label>
+            <input type="number" formControlName="quantidade" min="1">
           </div>
         </div>
-
         <div class="form-row">
           <div class="form-group">
             <label>Marca *</label>
@@ -49,10 +49,14 @@
         </div>
 
         <div class="form-row">
-          <div class="form-group full-width">
+          <div class="form-group">
             <label>Número de Patrimônio (Etiqueta) *</label>
             <input type="text" formControlName="numeroPatrimonio" placeholder="Ex: PAT-2024-001">
             <small class="hint">O patrimônio é imutável após o cadastro.</small>
+          </div>
+          <div class="form-group">
+            <label>Fim da Garantia</label>
+            <input type="date" formControlName="dataFimGarantia">
           </div>
         </div>
 
@@ -108,14 +112,18 @@
           <div class="equipamento-item" *ngFor="let eqp of equipamentosCadastrados" (click)="selecionarParaEdicao(eqp)">
             <div class="eqp-info">
               <div class="eqp-badges">
-                <span class="eqp-patrimonio">{{ eqp.numeroPatrimonio }}</span>
+                <span class="eqp-patrimonio">
+                  {{ eqp.numeroPatrimonio ? eqp.numeroPatrimonio : 'Lote (Qtd: ' + eqp.quantidade + ')' }}
+                </span>
                 <span class="eqp-status">{{ eqp.status }}</span>
               </div>
               <h4>{{ eqp.nome }}</h4>
-              <p>{{ eqp.marca }} • {{ eqp.nomeCategoria }}</p>
+              <p>{{ eqp.marca }} • {{ eqp.categoriaNome }}</p>
             </div>
             <div class="eqp-acao">
-              <span class="icon-edit">✏️</span>
+              <span class="icon-edit" title="Editar">✏️</span>
+              <span class="icon-status" title="Alterar Status" (click)="abrirModalStatus(eqp, $event)" style="margin-left: 15px; cursor: pointer;">🔧</span>
+              <span class="icon-delete" title="Desativar" (click)="abrirModalDesativar(eqp, $event)" style="margin-left: 15px; cursor: pointer;">🗑️</span>
             </div>
           </div>
         </div>
@@ -152,6 +160,17 @@
             </div>
           </div>
 
+          <div class="form-row">
+            <div class="form-group">
+              <label>Quantidade</label>
+              <input type="number" formControlName="quantidade" min="1">
+            </div>
+            <div class="form-group">
+              <label>Fim da Garantia</label>
+              <input type="date" formControlName="dataFimGarantia">
+            </div>
+          </div>
+
           <div class="form-actions space-between">
             <button type="button" class="btn-secondary" (click)="cancelarEdicao()">Cancelar</button>
             <button type="submit" class="btn-primary" [disabled]="salvando">
@@ -162,6 +181,80 @@
       </div>
 
     </div>
+    <div *ngIf="abaAtual === 'categoria'" class="form-section fade-in">
+      <h3>Cadastrar Nova Categoria</h3>
+      <p class="subtitle">Crie novas categorias para organizar o inventário (Ex: Monitores, Periféricos, Servidores).</p>
+
+      <form [formGroup]="formCategoria" (ngSubmit)="salvarNovaCategoria()" class="modern-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nome da Categoria *</label>
+            <input type="text" formControlName="nome" placeholder="Ex: Monitores">
+          </div>
+
+          <div class="form-group">
+            <label>Descrição *</label>
+            <input type="text" formControlName="descricao" placeholder="Ex: Telas, displays e projetores em geral">
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-primary" [disabled]="salvando">
+            {{ salvando ? 'Cadastrando...' : 'Cadastrar Categoria' }}
+          </button>
+        </div>
+      </form>
+    </div>
 
   </div>
 </div>
+<div class="modal-overlay" *ngIf="exibindoModalDesativar">
+  <div class="modal-content fade-in">
+    <h3>Desativar Equipamento</h3>
+    <p>Você está prestes a desativar o item <strong>{{ equipamentoParaDesativar?.nome }}</strong>.</p>
+
+    <div class="form-group" style="margin: 20px 0;" *ngIf="!equipamentoParaDesativar?.numeroPatrimonio">
+      <label>Quantidade a desativar (Máx: {{ equipamentoParaDesativar?.quantidade }})</label>
+      <input type="number" [(ngModel)]="quantidadeParaDesativar" min="1" [max]="equipamentoParaDesativar?.quantidade || 1">
+    </div>
+
+    <div class="warning-box" style="margin: 20px 0; padding: 10px; background: #fff3cd; border-left: 4px solid #ffc107;" *ngIf="equipamentoParaDesativar?.numeroPatrimonio">
+      <small>Este é um item único com patrimônio ({{ equipamentoParaDesativar?.numeroPatrimonio }}). Ele será integralmente baixado do inventário.</small>
+    </div>
+
+    <div class="form-actions space-between">
+      <button class="btn-secondary" (click)="fecharModalDesativar()" [disabled]="salvando">Cancelar</button>
+      <button class="btn-primary" style="background-color: #dc3545;" (click)="confirmarDesativacao()" [disabled]="salvando">
+        {{ salvando ? 'Processando...' : 'Confirmar Desativação' }}
+      </button>
+    </div>
+  </div>
+</div>
+<div class="modal-overlay" *ngIf="exibindoModalStatus">
+  <div class="modal-content fade-in-modal">
+    <h3>Alterar Status</h3>
+    <p>Alterando o status do item <strong>{{ equipamentoParaStatus?.nome }}</strong>.</p>
+
+    <div class="form-group" style="margin: 20px 0;">
+      <label>Novo Status</label>
+      <select [(ngModel)]="novoStatusSelecionado" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #cbd5e1;">
+        <option value="DISPONIVEL">Disponível</option>
+        <option value="MANUTENCAO">Em Manutenção</option>
+        <option value="EM_USO">Em Uso</option>
+      </select>
+    </div>
+
+    <div class="form-group" style="margin: 20px 0;" *ngIf="!equipamentoParaStatus?.numeroPatrimonio">
+      <label>Quantidade (Máx disponível: {{ equipamentoParaStatus?.quantidade }})</label>
+      <input type="number" [(ngModel)]="quantidadeParaStatus" min="1" [max]="equipamentoParaStatus?.quantidade || 1" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #cbd5e1;">
+    </div>
+
+    <div class="form-actions space-between">
+      <button class="btn-secondary" (click)="fecharModalStatus()" [disabled]="salvando">Cancelar</button>
+      <button class="btn-primary" (click)="confirmarAlteracaoStatus()" [disabled]="salvando">
+        {{ salvando ? 'Processando...' : 'Confirmar' }}
+      </button>
+    </div>
+  </div>
+</div>
+

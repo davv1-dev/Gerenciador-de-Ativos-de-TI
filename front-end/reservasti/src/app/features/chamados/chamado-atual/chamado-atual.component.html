@@ -20,13 +20,18 @@
       <span class="chamado-id">Chamado #{{ chamadoAtual.id }}</span>
       <h1 class="problema">{{ chamadoAtual.tipoProblema || 'Suporte Técnico Geral' }}</h1>
 
+      <div class="descricao-box">
+        <span class="label">Descrição do Problema:</span>
+        <p class="texto-descricao">{{ chamadoAtual.descricao || 'Nenhuma descrição fornecida pelo solicitante.' }}</p>
+      </div>
+
       <div class="info-grid">
         <div class="info-item">
           <span class="label">👤 Solicitante:</span>
           <span class="valor">{{ chamadoAtual.nomeSolicitante }}</span>
         </div>
         <div class="info-item">
-          <span class="label">📍 Localização:</span>
+          <span class="label">Localização:</span>
           <span class="valor">{{ chamadoAtual.localizacao || 'Não informada' }}</span>
         </div>
       </div>
@@ -45,7 +50,7 @@
   <div class="empty-state success" *ngIf="!carregando && !chamadoAtual">
     <h3>Você está livre!</h3>
     <p>Nenhum chamado em andamento na sua mesa. Puxe um novo na Fila Global.</p>
-    <a routerLink="/fila" class="btn-secundario">Ir para Fila Global</a>
+    <a routerLink="/tecnico/fila" class="btn-secundario">Ir para Fila Global</a>
   </div>
 
 </div>

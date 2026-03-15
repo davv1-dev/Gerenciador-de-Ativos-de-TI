@@ -12,48 +12,32 @@ import { MinhaFilaComponent } from './features/chamados/minha-fila/minha-fila.co
 import { HomeAdminComponent } from './features/portal/home-admin/home-admin.component';
 import { EquipamentoAdminComponent } from './features/equipamento/equipamento-admin/equipamento-admin.component';
 import { AlocacaoAtivosComponent } from './features/departamentos/alocacao-ativos/alocacao-ativos.component';
-import { animation } from '@angular/animations';
 import { DepartamentoComponent } from './features/departamentos/departamento/departamento.component';
 import { RelatoriosComponent } from './features/relatorios/relatorios/relatorios.component';
 import { GestaoUsuariosComponent } from './features/funcionarios/gestao-usuarios/gestao-usuarios.component';
+import { AuthGuard } from './core/guards/auth.guard';
 
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
-
   { path: 'login', component: LoginComponent, data: { animation: 'LoginPage' } },
+  { path: 'cadastro', component: FuncionarioCadastroComponent, data: { animation: 'CadastroPage' } },
 
-  { path: 'fila', component: FilaGlobalComponent, data: { animation: 'FilaPage' } },
+  { path: 'home', component: HomeFuncionarioComponent, canActivate: [AuthGuard], data: { animation: 'HomePage' } },
+  { path: 'fazerchamado', component: AberturaChamadoComponent, canActivate: [AuthGuard], data: { animation: 'ChamadoPage' } },
+  { path: 'novareserva', component: NovaReservaComponent, canActivate: [AuthGuard], data: { animation: 'ReservaPage' } },
 
-  {path: 'cadastro-funcionario', component:FuncionarioCadastroComponent, data: { animation: 'CadastroPage' } },
+  { path: 'home-tecnico', component: HomeTecnicoComponent, canActivate: [AuthGuard], data: { animation: 'HomeTecnicoPage' } },
+  { path: 'tecnico/fila', component: FilaGlobalComponent, canActivate: [AuthGuard], data: { animation: 'FilaPage' } },
+  { path: 'tecnico/chamado-atual', component: ChamadoAtualComponent, canActivate: [AuthGuard], data: { animation: 'ChamadoAtualPage' } },
+  { path: 'tecnico/minha-fila', component: MinhaFilaComponent, canActivate: [AuthGuard], data: { animation: 'MinhaFilaPage' } },
 
-  {path: 'home',component:HomeFuncionarioComponent, data: { animation: 'HomePage' } },
-
-  {path: 'fazerchamado',component:AberturaChamadoComponent, data: { animation: 'ChamadoPage' } },
-
-  { path: 'novareserva', component: NovaReservaComponent, data: { animation: 'ReservaPage' } },
-
-  { path: 'home-tecnico', component: HomeTecnicoComponent, data: {animation:'HomeTecnicoPage'}},
-
-  { path: 'chamado-atual', component: ChamadoAtualComponent, data: {animation:'ChamadoAtualPage'}},
-
-  { path: 'minha-fila', component: MinhaFilaComponent, data: {animation:'MinhaFilaPage'}},
-
-  { path: 'home-admin', component: HomeAdminComponent, data: {animation:'HomeAdminPage'}},
-
-  { path: 'admin/equipamentos', component: EquipamentoAdminComponent, data: {animation:'AdminEquipamentosPage'}},
-
-  {path: 'admin/alocacao', component: AlocacaoAtivosComponent,data: {animation:'AlocacaoAtivosPage'}},
-
-  {path: 'admin/departamentos', component: DepartamentoComponent,data: {animation:'DepartamentosPage'}},
-
-  {path: 'admin/relatorios', component: RelatoriosComponent, data: {animation:'RelatoriosPage'}},
-
-  {path: 'admin/usuarios', component: GestaoUsuariosComponent, data: {animation:'GestaoUsuariosPage'}}
-
-
-
-
+  { path: 'home-admin', component: HomeAdminComponent, canActivate: [AuthGuard], data: { animation: 'HomeAdminPage' } },
+  { path: 'admin/equipamentos', component: EquipamentoAdminComponent, canActivate: [AuthGuard], data: { animation: 'AdminEquipamentosPage' } },
+  { path: 'admin/alocacao', component: AlocacaoAtivosComponent, canActivate: [AuthGuard], data: { animation: 'AlocacaoAtivosPage' } },
+  { path: 'admin/departamentos', component: DepartamentoComponent, canActivate: [AuthGuard], data: { animation: 'DepartamentosPage' } },
+  { path: 'admin/relatorios', component: RelatoriosComponent, canActivate: [AuthGuard], data: { animation: 'RelatoriosPage' } },
+  { path: 'admin/usuarios', component: GestaoUsuariosComponent, canActivate: [AuthGuard], data: { animation: 'GestaoUsuariosPage' } }
 ];
 
 @NgModule({

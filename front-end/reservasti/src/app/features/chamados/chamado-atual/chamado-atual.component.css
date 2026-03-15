@@ -172,7 +172,32 @@
 .btn-secundario:hover {
   background: #eff6ff;
 }
+/* --- Área de Descrição --- */
+.descricao-box {
+  background: #f8fafc; /* Um cinza/azulado bem claro */
+  border-left: 4px solid #3b82f6; /* Uma barra azul na lateral para destacar */
+  padding: 20px;
+  border-radius: 0 12px 12px 0;
+  margin-bottom: 32px; /* Espaço antes do info-grid */
+}
 
+.descricao-box .label {
+  display: block;
+  font-size: 0.9rem;
+  color: #64748b;
+  font-weight: 600;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.texto-descricao {
+  font-size: 1.15rem;
+  color: #334155;
+  line-height: 1.6;
+  margin: 0;
+  white-space: pre-wrap; /* 👇 MÁGICA: Mantém as quebras de linha (Enters) que o usuário digitou! */
+}
 /* Responsividade Básica */
 @media (max-width: 600px) {
   .info-grid {

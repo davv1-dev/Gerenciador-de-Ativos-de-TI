@@ -2,17 +2,20 @@ export interface EquipamentoRetornoDTO {
   id: number;
   nome: string;
   marca: string;
+  modelo: string;
   status: string;
   numeroPatrimonio: string;
-  nomeCategoria: string;
-  dataSolicitacao: string | Date;
+  quantidade: number;
+  categoriaNome: string;
+  dataFimGarantia: string | Date;
 }
 export interface EquipamentoDTO {
   nome: string;
   marca: string;
-  modelo: string;
+  quantidade?: number;
   numeroPatrimonio: string;
   categoriaId: number;
+  dataFimGarantia: string | Date;
 }
 
 export interface EditarEquipamentoDTO {
@@ -20,17 +23,21 @@ export interface EditarEquipamentoDTO {
   marca?: string;
   modelo?: string;
   categoriaId?: number;
+  dataFimGarantia?: string | Date;
+  quantidade?:number
+
 }
 export interface AlocarEquipamentoDTO {
   equipamentoId: number;
   departamentoId: number;
+  quantidade?: number;
 }
 export interface ItemSimulacaoRequestDTO {
   categoriaId: number;
   quantidadeNecessaria: number;
 }
 
-export interface SimulacaoExpansaoDTO {
+export interface SimulacaoEquipamentosDTO {
   itens: ItemSimulacaoRequestDTO[];
 }
 
@@ -47,3 +54,8 @@ export interface ResultadoSimulacaoDTO {
   expansaoTotalmenteViavel: boolean;
   detalhes: ItemResultadoSimulacaoDTO[];
 }
+export interface AlterarStatusDTO{
+  statusEquipamento:string
+  quantidade?:number
+  }
+

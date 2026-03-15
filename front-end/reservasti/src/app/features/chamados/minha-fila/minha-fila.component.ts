@@ -3,22 +3,21 @@ import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { ChamadoService } from 'src/app/core/service/chamado.service';
 import { ToastService } from 'src/app/core/service/toast.service';
-import { Page, ResumoChamadoDTO } from 'src/app/core/models/chamado'; // 👈 Importando o Page!
+import { Page, ResumoChamadoDTO } from 'src/app/core/models/chamado';
 
 @Component({
   selector: 'app-minha-fila',
   templateUrl: './minha-fila.component.html',
-  styleUrls: ['../fila-global/fila-global.component.css'] // Reaproveitando o CSS (Excelente escolha!)
+  styleUrls: ['../fila-global/fila-global.component.css']
 })
 export class MinhaFilaComponent implements OnInit, OnDestroy {
 
-  // 👇 Usando o mesmo padrão da Fila Global
   minhaFilaPage: Page<ResumoChamadoDTO> | null = null;
   carregando: boolean = true;
-  processandoId: number | null = null; // Para desabilitar o botão enquanto redireciona
+  processandoId: number | null = null;
 
   private sseSubscription: Subscription | null = null;
-  private idTecnicoLogado = 7;
+  // 👇 Agora pegaremos dinamicamente
 
   constructor(
     private chamadoService: ChamadoService,
@@ -27,14 +26,23 @@ export class MinhaFilaComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.carregarFila(0); // Começando pela página 0
+    // 👇 LEÃO DE CHÁCARA: Apenas Técnicos (ou Admins, se fizer sentido na sua regra de negócio) acessam a fila.
+    const tipoUsuario = sessionStorage.getItem('tipoUsuario');
+    if (tipoUsuario !== 'TECNICO') {
+      this.toastService.mostrar('Acesso negado. Área restrita a técnicos.', 'erro');
+      this.router.navigate(['/home']);
+      return;
+    }
+
+    // 👇 Pegando o ID do usuário de forma dinâmica do sessionStorage
+
+    this.carregarFila(0);
     this.iniciarEscutaAoVivo();
   }
 
-  // 👇 Método padronizado para suportar paginação
   carregarFila(pagina: number): void {
     this.carregando = true;
-    this.chamadoService.listarFilaPessoal(this.idTecnicoLogado, pagina, 10).subscribe({
+    this.chamadoService.listarFilaPessoal(pagina, 10).subscribe({
       next: (page) => {
         this.minhaFilaPage = page;
         this.carregando = false;
@@ -48,18 +56,14 @@ export class MinhaFilaComponent implements OnInit, OnDestroy {
   }
 
   iniciarEscutaAoVivo(): void {
-    this.sseSubscription = this.chamadoService.escutarMinhaFilaAoVivo(this.idTecnicoLogado).subscribe({
+    this.sseSubscription = this.chamadoService.escutarMinhaFilaAoVivo().subscribe({
       next: (novoChamado) => {
-
-        // 👇 Logica segura para atualizar o Page com o novo item do SSE
         if (this.minhaFilaPage && this.minhaFilaPage.content) {
-          this.minhaFilaPage.content.push(novoChamado); // FIFO
+          this.minhaFilaPage.content.push(novoChamado);
           this.minhaFilaPage.totalElements++;
         } else {
-          // Se estava nulo, força um recarregamento
           this.carregarFila(0);
         }
-
         this.toastService.mostrar('Novo chamado direcionado para você!', 'info');
       },
       error: (erro) => {
@@ -68,14 +72,11 @@ export class MinhaFilaComponent implements OnInit, OnDestroy {
     });
   }
 
-  // 👇 Redireciona para o Modo Foco (Chamado Atual)
   atenderChamado(idChamado: number): void {
     this.processandoId = idChamado;
-    // Opcional: mostrar um toast avisando que está abrindo
-    // this.toastService.mostrar('Abrindo área de trabalho...', 'info');
-
-    // O router.navigate é muito rápido, mas mantemos o processandoId para dar feedback visual no botão
-    this.router.navigate(['/chamado-atual']);
+    // Precisamos gravar qual chamado o técnico vai atender para a próxima tela saber
+    sessionStorage.setItem('idChamadoAtual', idChamado.toString());
+    this.router.navigate(['/tecnico/chamado-atual']);
   }
 
   ngOnDestroy(): void {

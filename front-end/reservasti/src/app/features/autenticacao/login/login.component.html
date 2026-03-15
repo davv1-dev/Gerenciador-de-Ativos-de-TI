@@ -1,19 +1,19 @@
 <div class="login-container">
   <div class="login-card">
     <div class="login-header">
-      <h2>Bem-vindo ao ReservaTI</h2>
+      <h2>Bem-vindo ao ReservasTI</h2>
       <p>Faça login para acessar os chamados e equipamentos.</p>
     </div>
 
     <form class="login-form">
       <div class="input-group">
         <label for="email">E-mail Corporativo</label>
-        <input type="email" id="email" placeholder="seu.nome@empresa.com" autocomplete="off">
+        <input type="email" id="email" name="login" [(ngModel)]="credenciais.login" placeholder="seu.nome@empresa.com" autocomplete="off">
       </div>
 
       <div class="input-group">
         <label for="senha">Senha</label>
-        <input type="password" id="senha" placeholder="••••••••">
+        <input type="password" id="senha" name="senha" [(ngModel)]="credenciais.senha" placeholder="••••••••">
       </div>
 
       <div class="acoes-extras">
@@ -23,7 +23,7 @@
         <a href="#" class="esqueci-senha">Esqueci minha senha</a>
       </div>
 
-      <button type="button" class="btn-entrar" (click)="navegarParaHomeFuncionario()">Entrar no Sistema</button>
+      <button type="button" class="btn-entrar" (click)="fazerLogin()">Entrar no Sistema</button>
     </form>
 
     <div class="login-footer">

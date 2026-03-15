@@ -23,6 +23,9 @@ import { AlocacaoAtivosComponent } from './features/departamentos/alocacao-ativo
 import { DepartamentoComponent } from './features/departamentos/departamento/departamento.component';
 import { RelatoriosComponent } from './features/relatorios/relatorios/relatorios.component';
 import { GestaoUsuariosComponent } from './features/funcionarios/gestao-usuarios/gestao-usuarios.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './core/interceptors/auth.interceptor';
+
 
 
 @NgModule({
@@ -55,7 +58,13 @@ import { GestaoUsuariosComponent } from './features/funcionarios/gestao-usuarios
     HeaderComponent,
     BrowserAnimationsModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

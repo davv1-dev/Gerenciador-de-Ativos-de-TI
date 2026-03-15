@@ -194,7 +194,7 @@
           <div class="lista-itens" *ngIf="listaGarantias.length > 0">
             <div class="item-card" *ngFor="let gar of listaGarantias">
               <div class="item-info">
-                <span class="item-badge bg-yellow">Vence em: {{ gar.dataSolicitacao | date:'dd/MM/yyyy' }}</span>
+                <span class="item-badge bg-yellow">Vence em: {{ gar.dataFimGarantia | date:'dd/MM/yyyy' }}</span>
                 <h4>{{ gar.nome }}</h4>
                 <p>Patrimônio: {{ gar.numeroPatrimonio }}</p>
               </div>

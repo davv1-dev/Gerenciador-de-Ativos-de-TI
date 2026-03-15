@@ -45,6 +45,7 @@
           </span>
         </div>
 
+
         <div class="equip-body">
           <h3>{{ equip.nome }}</h3>
           <p class="detalhe">{{ equip.marca }} {{ equip.nome }}</p>
@@ -61,8 +62,30 @@
         </div>
       </div>
 
-    </div>
-  </div>
+        </div>
+          <div class="paginacao" *ngIf="totalPaginas > 1 && !carregandoCatalogo">
+
+            <button
+              class="btn-secundario btn-sm"
+              (click)="mudarPagina(paginaAtual - 1)"
+              [disabled]="paginaAtual === 0">
+              &larr; Anterior
+            </button>
+
+            <span class="paginacao-info">
+              Página {{ paginaAtual + 1 }} de {{ totalPaginas }}
+            </span>
+
+            <button
+              class="btn-secundario btn-sm"
+              (click)="mudarPagina(paginaAtual + 1)"
+              [disabled]="paginaAtual === (totalPaginas - 1)">
+              Próxima &rarr;
+            </button>
+
+        </div>
+      </div>
+
 
   <div *ngIf="equipamentoSelecionado" class="formulario-section">
 
@@ -93,8 +116,9 @@
         </div>
 
         <div class="acoes-finais">
-          <button type="button" class="btn-secundario" routerLink="/home-funcionario">Cancelar</button>
-          <button type="submit" class="btn-primario" [disabled]="reservaForm.invalid || enviando">
+            <button type="button" class="btn-secundario" (click)="voltarParaHome()">Cancelar</button>
+
+            <button type="submit" class="btn-primario" [disabled]="reservaForm.invalid || enviando">
             {{ enviando ? 'Processando...' : 'Confirmar Reserva' }}
           </button>
         </div>

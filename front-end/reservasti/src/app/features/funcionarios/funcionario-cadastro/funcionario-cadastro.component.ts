@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FuncionarioService } from '../../../core/service/funcionario.service';
 import { DepartamentoRetornoDTO } from '../../../core/models/departamento';
 import { DepartamentoService } from 'src/app/core/service/departamento.service';
+import { Router } from '@angular/router'; // 👈 Adicionamos o Router para redirecionar
 
 @Component({
   selector: 'app-funcionario-cadastro',
@@ -22,16 +23,19 @@ export class FuncionarioCadastroComponent implements OnInit {
     private fb: FormBuilder,
     private funcionarioService: FuncionarioService,
     private departamentoService: DepartamentoService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private router: Router // 👈 Injetado aqui
   ) {}
 
   ngOnInit(): void {
     this.iniciarFormulario();
     this.carregarDepartamentos();
   }
+
   get departamentos(): Page<DepartamentoRetornoDTO> {
-  return this._listaDepartamentos;
-}
+    return this._listaDepartamentos;
+  }
+
   iniciarFormulario(): void {
     this.funcionarioForm = this.fb.group({
       nomeCompleto: ['', Validators.required],
@@ -59,30 +63,34 @@ export class FuncionarioCadastroComponent implements OnInit {
 
       this.funcionarioService.cadastrar(dto).subscribe({
         next: () => {
-          this.toastService.mostrar('Funcionário cadastrado com sucesso!','sucesso');
+          // 👇 Mensagem alinhada com a regra de negócio!
+          this.toastService.mostrar('Cadastro realizado! Seu acesso foi enviado para aprovação do administrador.', 'sucesso');
           this.funcionarioForm.reset();
           this.carregando = false;
+
+          // 👇 Manda o usuário de volta para o login para aguardar
+          this.router.navigate(['/login']);
         },
         error: (erro) => {
           console.error(erro);
-          this.toastService.mostrar('Erro ao cadastrar. Verifique o console.','erro');
+          this.toastService.mostrar('Erro ao cadastrar. Verifique os dados ou tente novamente mais tarde.', 'erro');
           this.carregando = false;
         }
       });
     } else {
       this.funcionarioForm.markAllAsTouched();
+      this.toastService.mostrar('Por favor, preencha todos os campos obrigatórios corretamente.', 'info');
     }
   }
 
   carregarDepartamentos(): void {
-
     this.departamentoService.listarDepartamentos().subscribe({
       next: (dados) => {
         this._listaDepartamentos = dados;
       },
       error: (erro) => {
         console.error('Erro ao buscar departamentos', erro);
-        this.toastService.mostrar('Não foi possível carregar a lista de departamentos.','info');
+        this.toastService.mostrar('Não foi possível carregar a lista de departamentos.', 'info');
       }
     });
   }

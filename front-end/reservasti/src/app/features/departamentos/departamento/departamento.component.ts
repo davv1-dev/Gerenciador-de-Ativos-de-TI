@@ -4,6 +4,7 @@ import { DepartamentoService } from 'src/app/core/service/departamento.service';
 import { ToastService } from 'src/app/core/service/toast.service';
 import { ConfirmDialogService } from 'src/app/core/service/confirm-dialog.service';
 import { DepartamentoRetornoDTO, DepartamentoDTO, DepartamentoAtualizacaoDTO } from '../../../core/models/departamento';
+import { Router } from '@angular/router'; // 👈 Importamos o Router
 
 @Component({
   selector: 'app-departamento',
@@ -27,7 +28,8 @@ export class DepartamentoComponent implements OnInit {
     private fb: FormBuilder,
     private departamentoService: DepartamentoService,
     private toastService: ToastService,
-    private confirmDialogService: ConfirmDialogService
+    private confirmDialogService: ConfirmDialogService,
+    private router: Router // 👈 Injetamos o Router aqui
   ) {
     this.formCadastro = this.fb.group({
       nome: ['', [Validators.required, Validators.minLength(3)]],
@@ -41,6 +43,19 @@ export class DepartamentoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // 👇 LEÃO DE CHÁCARA: Apenas Admins podem gerenciar os departamentos!
+    const tipoUsuario = sessionStorage.getItem('tipoUsuario');
+    if (tipoUsuario !== 'ADMIN') {
+      this.toastService.mostrar('Acesso restrito. Área exclusiva da diretoria.', 'erro');
+
+      if (tipoUsuario === 'TECNICO') {
+        this.router.navigate(['/home-tecnico']);
+      } else {
+        this.router.navigate(['/home']);
+      }
+      return; // Interrompe a execução para não carregar a lista à toa
+    }
+
     this.carregarDepartamentos();
   }
 

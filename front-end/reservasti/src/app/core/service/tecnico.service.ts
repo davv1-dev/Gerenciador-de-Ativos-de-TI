@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient,HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { FuncionarioRetornoDTO } from '../models/funcionario';
@@ -14,7 +14,11 @@ export class TecnicoService {
 
   constructor(private http: HttpClient) { }
 
-  listarTecnicosOnline(): Observable<Page<FuncionarioRetornoDTO>> {
-    return this.http.get<Page<FuncionarioRetornoDTO>>(`${this.apiUrl}`);
+  listarTecnicosOnline(page: number = 0, size: number = 10): Observable<Page<FuncionarioRetornoDTO>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+
+    return this.http.get<Page<FuncionarioRetornoDTO>>(`${environment.apiUrl}/tecnicos`, { params });
   }
 }

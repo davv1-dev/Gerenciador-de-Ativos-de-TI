@@ -37,6 +37,25 @@ export class HomeAdminComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // 👇 LEÃO DE CHÁCARA: Apenas Admins entram aqui!
+    const tipoUsuario = sessionStorage.getItem('tipoUsuario');
+    if (tipoUsuario !== 'ADMIN') {
+      this.toastService.mostrar('Acesso negado. Área restrita à diretoria.', 'erro');
+
+      if (tipoUsuario === 'TECNICO') {
+        this.router.navigate(['/home-tecnico']);
+      } else {
+        this.router.navigate(['/home']);
+      }
+      return;
+    }
+
+    // 👇 Puxa o nome real do Admin para exibir na tela
+    const nomeSalvo = sessionStorage.getItem('nomeUsuario');
+    if (nomeSalvo) {
+      this.nomeAdmin = nomeSalvo.split(' ')[0];
+    }
+
     this.carregarDashboardGeral();
     this.carregarSolicitacoesPendentes();
     this.carregarHistorico();
@@ -62,7 +81,7 @@ export class HomeAdminComponent implements OnInit {
     });
   }
 
- carregarSolicitacoesPendentes(): void {
+  carregarSolicitacoesPendentes(): void {
     this.carregandoPendentes = true;
     this.funcionarioService.listarPendentes(0).subscribe({
       next: (pagina: Page<FuncionarioRetornoDTO>) => {
@@ -92,7 +111,7 @@ export class HomeAdminComponent implements OnInit {
     });
   }
 
- async aprovarAcesso(id: number): Promise<void> {
+  async aprovarAcesso(id: number): Promise<void> {
     const confirmado = await this.confirmDialogService.confirmar(
       'Aprovar Acesso',
       'Tem certeza que deseja APROVAR este usuário?'
@@ -133,6 +152,7 @@ export class HomeAdminComponent implements OnInit {
       });
     }
   }
+
   irParaGerenciarEquipamentos(): void { this.router.navigate(['/admin/equipamentos']); }
   irParaAlocacaoEquipamentos(): void { this.router.navigate(['/admin/alocacao']); }
   irParaGerenciarDepartamentos(): void { this.router.navigate(['/admin/departamentos']); }

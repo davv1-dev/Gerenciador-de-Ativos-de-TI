@@ -241,6 +241,107 @@
   border: 1px dashed #cbd5e1;
   margin-bottom: 20px;
 }
+/* =========================================
+   MODAL DE DESATIVAÇÃO (E OUTROS MODAIS)
+   ========================================= */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(15, 23, 42, 0.6); /* Fundo escurecido combinando com o #0f172a */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  backdrop-filter: blur(3px); /* Efeito moderno de vidro no fundo */
+}
+
+.modal-content {
+  background: #ffffff;
+  border-radius: 16px; /* Mesma borda do content-card */
+  padding: 30px;
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e2e8f0;
+}
+
+.modal-content h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  color: #0f172a;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.modal-content p {
+  color: #475569;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.modal-content strong {
+  color: #1e293b;
+}
+
+/* Caixa de Aviso (Warning) dentro do modal */
+.warning-box {
+  background-color: #fefce8; /* Amarelo bem claro */
+  border-left: 4px solid #eab308; /* Borda lateral amarela */
+  padding: 12px 16px;
+  border-radius: 0 8px 8px 0;
+  margin: 20px 0;
+}
+
+.warning-box small {
+  color: #854d0e;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  display: block;
+}
+
+/* Ajustes no botão de deletar do modal para ficar vermelho */
+.btn-danger {
+  background: #ef4444;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: #dc2626;
+  transform: translateY(-1px);
+}
+
+.btn-danger:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Animação suave para o Modal aparecer */
+.fade-in-modal {
+  animation: modalPopIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes modalPopIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
 @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
 @media (max-width: 600px) {

@@ -14,14 +14,14 @@ export class FilaGlobalComponent implements OnInit, OnDestroy {
   chamadosPage: Page<ResumoChamadoDTO> | null = null;
   carregando: boolean = true;
   processandoId: number | null = null;
-  private pingSubscription!: Subscription;
-  private idDoTecnicoLogado = 7;
 
+  private pingSubscription!: Subscription;
   private sseSubscription?: Subscription;
 
-  constructor(private chamadoService: ChamadoService,
-              private router: Router,
-              private toastService:ToastService
+  constructor(
+    private chamadoService: ChamadoService,
+    private router: Router,
+    private toastService: ToastService
   ) { }
 
   ngOnInit(): void {
@@ -33,7 +33,6 @@ export class FilaGlobalComponent implements OnInit, OnDestroy {
       this.avisarQueEstouOnline();
     });
   }
-
 
   ngOnDestroy(): void {
     if (this.sseSubscription) {
@@ -59,15 +58,13 @@ export class FilaGlobalComponent implements OnInit, OnDestroy {
   }
 
   iniciarEscutaAoVivo(): void {
-
-    this.sseSubscription = this.chamadoService.escutarFilaGlobalAoVivo(this.idDoTecnicoLogado).subscribe({
+    this.sseSubscription = this.chamadoService.escutarFilaGlobalAoVivo().subscribe({
       next: (novoChamado) => {
-        console.log(novoChamado);
+        console.log('🔥 COMPONENTE: Novo chamado na tela!', novoChamado);
 
         if (this.chamadosPage && this.chamadosPage.content) {
-
-          this.chamadosPage.content.push(novoChamado);
-
+          // Mantemos a recriação do array, é a melhor prática no Angular!
+          this.chamadosPage.content = [novoChamado, ...this.chamadosPage.content];
           this.chamadosPage.totalElements++;
         } else {
           this.carregarFila(0);
@@ -78,28 +75,28 @@ export class FilaGlobalComponent implements OnInit, OnDestroy {
       }
     });
   }
+
   assumir(chamadoId: number): void {
     this.processandoId = chamadoId;
 
-    this.chamadoService.assumirChamado(chamadoId, this.idDoTecnicoLogado).subscribe({
+    this.chamadoService.assumirChamado(chamadoId).subscribe({
       next: () => {
         this.toastService.mostrar('Chamado assumido com sucesso! Redirecionando para aba do chamado');
         this.processandoId = null;
-        this.router.navigate(['/chamado-atual']);
+        this.router.navigate(['/tecnico/chamado-atual']);
       },
       error: (erro) => {
         console.error('Erro ao assumir o chamado', erro);
-
-        const msgErro = erro.error?.message || erro.error || 'Você já possui um chamado em andamento ou ocorreu um erro.';
-        this.toastService.mostrar(msgErro,'info');
-
+        this.toastService.mostrar('Ja existe um chamado em andamento resolva', 'info');
         this.processandoId = null;
       }
     });
   }
+
   avisarQueEstouOnline(): void {
-    this.chamadoService.pingTecnico(this.idDoTecnicoLogado).subscribe({
-      error: (err) => console.error('Erro no ping silencioso', err)
+    this.chamadoService.pingTecnico().subscribe({
+      next: () => console.log('Ping enviado. Técnico online!'),
+      error: (err) => console.error('Erro ao enviar ping de status', err)
     });
   }
 }

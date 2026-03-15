@@ -38,6 +38,20 @@ export class GestaoUsuariosComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // 👇 LEÃO DE CHÁCARA: Apenas Admins passam da porta!
+    const tipoUsuario = sessionStorage.getItem('tipoUsuario');
+    if (tipoUsuario !== 'ADMIN') {
+      this.toastService.mostrar('Acesso negado. Área restrita à administração.', 'erro');
+
+      if (tipoUsuario === 'TECNICO') {
+        this.router.navigate(['/home-tecnico']);
+      } else {
+        this.router.navigate(['/home']);
+      }
+      return; // Para a execução aqui!
+    }
+
+    // Se é Admin, carrega os dados normalmente
     this.carregarUsuarios();
     this.carregarSolicitacoesPendentes(); // Já carrega em background para mostrar o contador
   }

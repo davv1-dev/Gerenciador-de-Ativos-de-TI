@@ -28,12 +28,14 @@ export class NovaReservaComponent implements OnInit {
   reservaForm: FormGroup;
   enviando = false;
 
+  paginaAtual: number = 0;
+  totalPaginas: number = 0;
   constructor(
     private equipamentoService: EquipamentoService,
     private reservaService: ReservaService,
     private fb: FormBuilder,
     private router: Router,
-    private toastService:ToastService
+    private toastService: ToastService
   ) {
     this.reservaForm = this.fb.group({
       dataPrevistaRetirada: ['', Validators.required],
@@ -46,11 +48,19 @@ export class NovaReservaComponent implements OnInit {
     this.buscarEquipamentos();
   }
 
-  buscarEquipamentos(): void {
+  buscarEquipamentos(pagina: number = 0): void {
     this.carregandoCatalogo = true;
-    this.equipamentoService.listarCatalogo(this.termoBusca, undefined).subscribe({
-      next: (pagina) => {
-        this.equipamentos = pagina.content;
+    this.paginaAtual = pagina; // Guarda a página que estamos buscando
+
+    const idCategoria = this.categoriaSelecionada ? Number(this.categoriaSelecionada) : undefined;
+
+    this.equipamentoService.listarCatalogo(this.termoBusca, idCategoria, this.paginaAtual, 10).subscribe({
+      next: (paginaResposta) => {
+        // Filtra os disponíveis (lembre-se do aviso sobre o tamanho das páginas ficar irregular!)
+        this.equipamentos = paginaResposta.content.filter(eqp => eqp.status === 'DISPONIVEL');
+
+        // Atualiza o total de páginas que o Spring Boot devolveu
+        this.totalPaginas = paginaResposta.totalPages;
         this.carregandoCatalogo = false;
       },
       error: (err) => {
@@ -59,7 +69,11 @@ export class NovaReservaComponent implements OnInit {
       }
     });
   }
-
+  mudarPagina(novaPagina: number): void {
+    if (novaPagina >= 0 && novaPagina < this.totalPaginas) {
+      this.buscarEquipamentos(novaPagina);
+    }
+  }
   selecionarEquipamento(equipamento: EquipamentoRetornoDTO): void {
     this.equipamentoSelecionado = equipamento;
   }
@@ -74,26 +88,24 @@ export class NovaReservaComponent implements OnInit {
 
     this.enviando = true;
 
-    const funcionarioIdMock = 6;
-
-    const novaReserva: ReservaDTO = {
+    const novaReserva = {
       equipamentoId: this.equipamentoSelecionado.id,
-      funcionarioId: funcionarioIdMock,
       dataPrevistaRetirada: this.reservaForm.value.dataPrevistaRetirada,
       dataPrevistaDevolucao: this.reservaForm.value.dataPrevistaDevolucao
-    };
+    } as ReservaDTO;
 
     this.reservaService.abrirReserva(novaReserva).subscribe({
       next: () => {
-        this.toastService.mostrar('Reserva solicitada com sucesso!','sucesso');
-        this.router.navigate(['/home']);
+        this.toastService.mostrar('Reserva solicitada com sucesso!', 'sucesso');
+        this.voltarParaHome();
       },
       error: (err) => {
-        this.toastService.mostrar('Erro ao realizar reserva: ' + err.error.message,'erro');
+        this.toastService.mostrar('Erro ao realizar reserva: ' + err.error.message, 'erro');
         this.enviando = false;
       }
     });
   }
+
   carregarCategorias(): void {
     this.equipamentoService.listarCategorias().subscribe({
       next: (pagina: Page<CategoriariaRetornoDTO>) => {
@@ -101,5 +113,21 @@ export class NovaReservaComponent implements OnInit {
       },
       error: (err) => console.error('Erro ao buscar categorias', err)
     });
+  }
+
+  voltarParaHome(): void {
+    const tipoUsuario = sessionStorage.getItem('tipoUsuario');
+
+    if (tipoUsuario === 'ADMIN') {
+      this.router.navigate(['/home-admin']);
+    } else if (tipoUsuario === 'TECNICO') {
+      this.router.navigate(['/home-tecnico']);
+    } else {
+      this.router.navigate(['/home']);
+    }
+  }
+
+  aplicarFiltros(): void {
+    this.buscarEquipamentos(0);
   }
 }
