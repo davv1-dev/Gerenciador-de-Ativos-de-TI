@@ -1,0 +1,191 @@
+/* Reseta margens e define fontes */
+.landing-container {
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+  background-color: #0f172a; /* Fundo base escuro para transições suaves */
+  color: #f8fafc;
+}
+
+/* Secção Hero (Primeira tela) */
+.hero-section {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 0 20px;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  position: relative;
+}
+
+.badge-novidade {
+  background: rgba(37, 99, 235, 0.2);
+  color: #60a5fa;
+  padding: 8px 20px;
+  border-radius: 50px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin-bottom: 25px;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.hero-content h1 {
+  font-size: 4rem;
+  font-weight: 800;
+  margin: 0 0 20px 0;
+  color: #ffffff;
+}
+
+.highlight { color: #3b82f6; }
+
+.hero-content p {
+  font-size: 1.3rem;
+  color: #94a3b8;
+  max-width: 650px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Indicador de Scroll animado */
+.scroll-indicator {
+  position: absolute;
+  bottom: 40px;
+  width: 40px;
+  height: 40px;
+  animation: bounce 2s infinite;
+}
+.scroll-indicator svg {
+  width: 100%; height: 100%; fill: none; stroke: #64748b; stroke-width: 2;
+}
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-15px); }
+  60% { transform: translateY(-7px); }
+}
+
+/* 🌟 AS SECÇÕES PARALLAX 🌟 */
+.parallax-section {
+  position: relative;
+  min-height: 85vh; /* Ocupa 85% da tela para criar o ritmo de scroll */
+  display: flex;
+  align-items: center;
+  padding: 0 10%;
+
+  /* O SEGREDO DO PARALLAX AQUI 👇 */
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/* Máscara escura sobre a foto para dar contraste ao texto */
+.overlay-escuro {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(to right, rgba(15, 23, 42, 0.9) 0%, rgba(15, 23, 42, 0.4) 100%);
+  z-index: 1;
+}
+
+/* Inverte o gradiente da máscara dependendo do lado da caixa (dica de design!) */
+.parallax-section:nth-child(even) .overlay-escuro {
+  background: linear-gradient(to left, rgba(15, 23, 42, 0.9) 0%, rgba(15, 23, 42, 0.4) 100%);
+}
+
+/* A Caixa de Texto (Glassmorphism) */
+.content-box {
+  position: relative;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 50px 40px;
+  border-radius: 24px;
+  max-width: 500px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.content-box:hover {
+  transform: translateY(-10px) scale(1.02);
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.content-box h2 {
+  font-size: 2.2rem;
+  color: #ffffff;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.content-box p {
+  color: #cbd5e1;
+  font-size: 1.15rem;
+  line-height: 1.7;
+}
+
+/* Alternância Esquerda/Direita */
+.align-left { margin-right: auto; }
+.align-right { margin-left: auto; text-align: right; }
+
+/* Secção CTA Final */
+.cta-section {
+  padding: 100px 20px;
+  text-align: center;
+  background: #0f172a;
+}
+.cta-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+.cta-content h2 { font-size: 2.5rem; color: #ffffff; margin-bottom: 15px; }
+.cta-content p { color: #94a3b8; font-size: 1.2rem; margin-bottom: 40px; }
+
+/* Botão de Teste */
+.btn-teste-agora {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 50px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #fff;
+  background: #2563eb;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.btn-teste-agora:hover {
+  background: #3b82f6;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.5);
+}
+.arrow-icon {
+  width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round;
+  transition: transform 0.3s ease;
+}
+.btn-teste-agora:hover .arrow-icon {
+  transform: translateX(8px);
+}
+
+/* Animação inicial Hero */
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 1s ease-out forwards;
+}
+@keyframes fadeInUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Ajustes para Mobile */
+@media (max-width: 768px) {
+  .hero-content h1 { font-size: 2.8rem; }
+  .parallax-section { padding: 40px 20px; background-attachment: scroll; /* Desativa parallax no mobile por questões de performance/bug do iOS */ }
+  .content-box { max-width: 100%; text-align: left; }
+  .align-left, .align-right { margin: 0; text-align: left; }
+  .overlay-escuro { background: rgba(15, 23, 42, 0.7) !important; } /* Fundo uniforme no mobile */
+}

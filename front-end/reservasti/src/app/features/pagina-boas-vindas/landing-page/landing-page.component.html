@@ -1,0 +1,40 @@
+<div class="landing-container">
+
+  <section class="hero-section fade-in-up">
+    <div class="hero-content">
+      <div class="badge-novidade">Sistema de Gestão de Ativos</div>
+      <h1>Bem-vindo ao <span class="highlight">ReservasTI</span></h1>
+      <p>A solução inteligente e definitiva para gerir os equipamentos e alocações da sua empresa com total fluidez. Desça para conhecer.</p>
+
+      <div class="scroll-indicator">
+        <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </div>
+    </div>
+  </section>
+
+  <ng-container *ngFor="let feat of funcionalidades; let i = index">
+
+    <section class="parallax-section" [ngStyle]="{'background-image': 'url(' + feat.imagem + ')'}">
+      <div class="overlay-escuro"></div>
+
+      <div class="content-box" [ngClass]="{'align-left': i % 2 === 0, 'align-right': i % 2 !== 0}">
+        <h2>{{ feat.titulo }}</h2>
+        <p>{{ feat.descricao }}</p>
+      </div>
+    </section>
+
+  </ng-container>
+
+  <section class="cta-section">
+    <div class="cta-content">
+      <h2>Pronto para transformar a sua gestão?</h2>
+      <p>Junte-se a nós e descubra na prática como podemos facilitar o seu dia a dia.</p>
+
+      <button class="btn-teste-agora" (click)="irParaLogin()">
+        Acessar o Sistema
+        <svg viewBox="0 0 24 24" class="arrow-icon"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </button>
+    </div>
+  </section>
+
+</div>

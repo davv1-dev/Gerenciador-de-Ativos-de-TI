@@ -25,6 +25,7 @@ import { RelatoriosComponent } from './features/relatorios/relatorios/relatorios
 import { GestaoUsuariosComponent } from './features/funcionarios/gestao-usuarios/gestao-usuarios.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
+import { LandingPageComponent } from './features/pagina-boas-vindas/landing-page/landing-page.component';
 
 
 
@@ -47,7 +48,8 @@ import { AuthInterceptor } from './core/interceptors/auth.interceptor';
     AlocacaoAtivosComponent,
     DepartamentoComponent,
     RelatoriosComponent,
-    GestaoUsuariosComponent
+    GestaoUsuariosComponent,
+    LandingPageComponent
   ],
   imports: [
     BrowserModule,

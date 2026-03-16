@@ -16,11 +16,13 @@ import { DepartamentoComponent } from './features/departamentos/departamento/dep
 import { RelatoriosComponent } from './features/relatorios/relatorios/relatorios.component';
 import { GestaoUsuariosComponent } from './features/funcionarios/gestao-usuarios/gestao-usuarios.component';
 import { AuthGuard } from './core/guards/auth.guard';
+import { LandingPageComponent } from './features/pagina-boas-vindas/landing-page/landing-page.component';
 
 
 const routes: Routes = [
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: '', redirectTo: '/boas-vindas', pathMatch: 'full' },
   { path: 'login', component: LoginComponent, data: { animation: 'LoginPage' } },
+  { path: 'boas-vindas', component: LandingPageComponent, data: { animation: 'BoasVindasPage' } },
   { path: 'cadastro', component: FuncionarioCadastroComponent, data: { animation: 'CadastroPage' } },
 
   { path: 'home', component: HomeFuncionarioComponent, canActivate: [AuthGuard], data: { animation: 'HomePage' } },

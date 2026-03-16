@@ -9,7 +9,7 @@
   <div *ngIf="!equipamentoSelecionado" class="catalogo-section">
 
     <div class="filtros-container card-base">
-      <div class="input-group">
+      <div class="form-group">
         <label>Buscar Equipamento</label>
         <div class="search-box">
           <input
@@ -29,9 +29,8 @@
           <button (click)="buscarEquipamentos()" class="btn-secundario">Filtrar</button>
         </div>
       </div>
-      </div>
+    </div> <div *ngIf="carregandoCatalogo" class="loading">Buscando catálogo...</div>
 
-    <div *ngIf="carregandoCatalogo" class="loading">Buscando catálogo...</div>
     <div *ngIf="!carregandoCatalogo && equipamentos.length === 0" class="empty-state">
       <p>Nenhum equipamento encontrado com esses filtros.</p>
     </div>
@@ -44,7 +43,6 @@
             {{ equip.status.replace('_', ' ') }}
           </span>
         </div>
-
 
         <div class="equip-body">
           <h3>{{ equip.nome }}</h3>
@@ -62,32 +60,30 @@
         </div>
       </div>
 
-        </div>
-          <div class="paginacao" *ngIf="totalPaginas > 1 && !carregandoCatalogo">
+    </div> <div class="paginacao-moderna" *ngIf="totalPaginas > 1 && !carregandoCatalogo">
 
-            <button
-              class="btn-secundario btn-sm"
-              (click)="mudarPagina(paginaAtual - 1)"
-              [disabled]="paginaAtual === 0">
-              &larr; Anterior
-            </button>
+      <button
+        class="btn-circular"
+        (click)="mudarPagina(paginaAtual - 1)"
+        [disabled]="paginaAtual === 0"
+        title="Página Anterior">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </button>
 
-            <span class="paginacao-info">
-              Página {{ paginaAtual + 1 }} de {{ totalPaginas }}
-            </span>
-
-            <button
-              class="btn-secundario btn-sm"
-              (click)="mudarPagina(paginaAtual + 1)"
-              [disabled]="paginaAtual === (totalPaginas - 1)">
-              Próxima &rarr;
-            </button>
-
-        </div>
+      <div class="indicador-paginas">
+        <span class="pagina-destaque">{{ paginaAtual + 1 }}</span>
+        <span class="pagina-total">de {{ totalPaginas }}</span>
       </div>
 
+      <button
+        class="btn-circular"
+        (click)="mudarPagina(paginaAtual + 1)"
+        [disabled]="paginaAtual === (totalPaginas - 1)"
+        title="Próxima Página">
+        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </button>
 
-  <div *ngIf="equipamentoSelecionado" class="formulario-section">
+    </div> </div> <div *ngIf="equipamentoSelecionado" class="formulario-section">
 
     <div class="card-base form-container">
 
@@ -125,6 +121,5 @@
 
       </form>
     </div>
-  </div>
 
-</div>
+  </div> </div>

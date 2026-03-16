@@ -14,7 +14,6 @@ import {
   ItemSimulacaoRequestDTO
 } from '../../../core/models/equipamento';
 import { DepartamentoRetornoDTO } from '../../../core/models/departamento';
-import { CategoriariaRetornoDTO } from '../../../core/models/categoria';
 
 @Component({
   selector: 'app-alocacao-ativos',
@@ -131,22 +130,24 @@ export class AlocacaoAtivosComponent implements OnInit {
     if (!confirmou) return;
 
     this.alocando = true;
+
+    // 👇 Mudança aqui: Usando os nomes exatos que o Java espera!
     const dto: AlocarEquipamentoDTO = {
-      equipamentoId: this.equipamentoSelecionado.id,
-      departamentoId: this.departamentoSelecionado.id,
-      quantidade: this.quantidadeAlocacao // 👈 Mandando a quantidade pro Back!
+      idEquipamento: this.equipamentoSelecionado.id,
+      idDepartamento: this.departamentoSelecionado.id,
+      quantidade: this.quantidadeAlocacao
     };
 
     this.equipamentoService.alocarAoDepartamento(dto).subscribe({
       next: () => {
-        this.confirmDialogService.confirmar('Sucesso!', 'Equipamento alocado!');
+        this.toastService.mostrar('Equipamento alocado!','sucesso');
         this.alocando = false;
         this.equipamentoSelecionado = null;
         this.equipamentosBusca = [];
       },
       error: (err) => {
         console.error(err);
-        this.confirmDialogService.confirmar('Erro', 'Não foi possível alocar.');
+        this.toastService.mostrar('Não foi possível alocar.','erro');
         this.alocando = false;
       }
     });

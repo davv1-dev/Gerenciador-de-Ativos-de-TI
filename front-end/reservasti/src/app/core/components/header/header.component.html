@@ -1,4 +1,4 @@
-<header class="header-global">
+<header class="header-global" *ngIf="mostrarHeader">
   <div class="header-container">
 
     <div class="logo-area">
@@ -9,51 +9,79 @@
     </div>
 
     <div class="nav-wrapper">
-
-      <nav nav class="nav-menu" #navMenu (click)="centralizarAbaAtiva($event)">
-
+      <nav class="nav-menu" #navMenu (click)="centralizarAbaAtiva($event)">
         <ng-container *ngIf="isAdmin">
+
           <a routerLink="/home-admin" routerLinkActive="ativo" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Home</a>
+
           <a routerLink="/admin/relatorios" routerLinkActive="ativo" class="nav-link">Dashboard & Inteligência</a>
+
           <a routerLink="/admin/equipamentos" routerLinkActive="ativo" class="nav-link">Gestão de Equipamentos</a>
+
           <a routerLink="/admin/departamentos" routerLinkActive="ativo" class="nav-link">Departamentos</a>
+
           <a routerLink="/novareserva" routerLinkActive="ativo" class="nav-link">Nova Reserva</a>
+
           <a routerLink="/fazerchamado" routerLinkActive="ativo" class="nav-link">Chamados</a>
+
         </ng-container>
+
+
 
         <ng-container *ngIf="isTecnico && !isAdmin">
+
           <a routerLink="/home-tecnico" routerLinkActive="ativo" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Home</a>
+
           <a routerLink="/tecnico/fila" routerLinkActive="ativo" class="nav-link">Fila Global</a>
+
           <a routerLink="/tecnico/minha-fila" routerLinkActive="ativo" class="nav-link">Minha Fila</a>
+
           <a routerLink="/tecnico/chamado-atual" routerLinkActive="ativo" class="nav-link">Chamado Atual</a>
+
           <a routerLink="/novareserva" routerLinkActive="ativo" class="nav-link">Nova Reserva</a>
+
         </ng-container>
+
+
 
         <ng-container *ngIf="!isTecnico && !isAdmin">
+
           <a routerLink="/home" routerLinkActive="ativo" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Home</a>
+
           <a routerLink="/fazerchamado" routerLinkActive="ativo" class="nav-link">Chamados</a>
+
           <a routerLink="/novareserva" routerLinkActive="ativo" class="nav-link">Nova Reserva</a>
+
         </ng-container>
-
       </nav>
-
       <div class="fade-right"></div>
-
     </div>
 
     <div class="perfil-area">
       <div class="avatar" (click)="toggleMenu($event)" style="cursor: pointer;">
+
         {{ isAdmin ? 'AD' : (isTecnico ? 'TI' : 'US') }}
+
       </div>
 
+
+
       <div class="dropdown-menu" [class.mostrar]="menuAberto">
+
         <a class="dropdown-item" (click)="irParaPerfil()">
+
           <i class="icone-perfil"></i> Meu Perfil
+
         </a>
+
         <div class="dropdown-divider"></div>
+
         <a class="dropdown-item texto-perigo" (click)="fazerLogout()">
+
           <i class="icone-sair"></i> Sair
+
         </a>
+
       </div>
     </div>
 

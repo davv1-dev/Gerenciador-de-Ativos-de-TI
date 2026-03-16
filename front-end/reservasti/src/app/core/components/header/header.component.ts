@@ -1,10 +1,11 @@
 import { Component, ElementRef, ViewChild, AfterViewInit, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Router, NavigationEnd } from '@angular/router';
+import { RouterModule, Router, NavigationEnd,NavigationStart } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
-import { AuthService } from '../../../core/service/auth.service'; // Ajuste o caminho se necessário
+// import { environment } from 'src/environments/environment'; // Descomente se for usar
+import { AuthService } from '../../../core/service/auth.service';
+import { Location } from '@angular/common'; // 👈 NOVO IMPORT AQUI
 
 @Component({
   selector: 'app-header',
@@ -15,82 +16,102 @@ import { AuthService } from '../../../core/service/auth.service'; // Ajuste o ca
 })
 export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  // 👇 Deixamos sem valor inicial, vamos preencher dinamicamente!
   isAdmin: boolean = false;
   isTecnico: boolean = false;
-
-  // Variável para controlar o abre/fecha do menu do perfil
   menuAberto: boolean = false;
 
+  // 👇 NOVA VARIÁVEL: Controla se o header aparece ou não
+  mostrarHeader: boolean = true;
+  // 👇 LISTA DE ROTAS INVISÍVEIS: Coloque aqui as rotas onde o header NÃO deve aparecer
+  rotasSemHeader: string[] = ['/boas-vindas', '/login'];
   @ViewChild('navMenu') navMenu!: ElementRef;
   private routerSub!: Subscription;
 
   constructor(
     private router: Router,
     private http: HttpClient,
-    private authService: AuthService
+    private authService: AuthService,
+    private location: Location
   ) {}
 
-  ngOnInit(): void {
-    this.sincronizarPerfil(); // 👈 Chama a função para ler quem está logado
+ ngOnInit(): void {
+    this.sincronizarPerfil();
 
+    // 🔥 ABORDAGEM AGRESSIVA 1: Usar o Location para pegar a URL física exata do browser antes de qualquer roteamento do Angular
+    this.verificarVisibilidadeHeader(this.location.path());
+
+    // 🔥 ABORDAGEM AGRESSIVA 2: Escutar tanto o Start quanto o End do roteamento
     this.routerSub = this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe(() => {
-      this.centralizarAbaAtiva();
+      filter(event => event instanceof NavigationStart || event instanceof NavigationEnd)
+    ).subscribe((event: any) => {
+      // Se for Start, usa a URL para onde ele está indo. Se for End, usa a URL final consolidada.
+      const urlAlvo = event instanceof NavigationStart ? event.url : event.urlAfterRedirects;
+      this.verificarVisibilidadeHeader(urlAlvo);
     });
   }
 
-  // Lógica para definir o que vai aparecer no header baseado no token/sessionStorage
+  // Criei esta função para não repetirmos código
+  verificarVisibilidadeHeader(url: string): void {
+    // 1. Pega a URL limpa (sem os ?filtros). Se vier undefined ou vazia, forçamos a ser '/'
+    let rotaAtual = url ? url.split('?')[0] : '/';
+
+    if (rotaAtual === '') {
+      rotaAtual = '/'; // Tratamento seguro para quando o Angular iniciar na raiz
+    }
+
+    // 2. Verificação EXATA. O header só some se a rota for exatamente '/' ou '/login'
+    this.mostrarHeader = !this.rotasSemHeader.includes(rotaAtual);
+
+    // 3. Centraliza a aba (se o header estiver visível)
+    if (this.mostrarHeader) {
+      this.centralizarAbaAtiva();
+    }
+  }
+
   sincronizarPerfil(): void {
     const tipoUsuario = sessionStorage.getItem('tipoUsuario');
     this.isAdmin = tipoUsuario === 'ADMIN';
     this.isTecnico = tipoUsuario === 'TECNICO';
   }
 
-  // Lógica do Menu do Avatar
   toggleMenu(event: Event): void {
-    event.stopPropagation(); // Evita que o clique feche o menu na mesma hora
+    event.stopPropagation();
     this.menuAberto = !this.menuAberto;
   }
 
-  // Fecha o menu se clicar em qualquer outro lugar da tela (UX perfeita!)
   @HostListener('document:click', ['$event'])
   fecharMenu(event: Event): void {
     this.menuAberto = false;
   }
 
   irParaPerfil(): void {
-    // Stub para o futuro
     console.log('Indo para o perfil... (A implementar)');
     this.menuAberto = false;
   }
 
   fazerLogout(): void {
-    // Chama o service para fazer o trabalho sujo
     this.authService.logoutBackend().subscribe({
       next: () => {
-        this.menuAberto = false; // Fecha o balãozinho
-        this.authService.encerrarSessaoLocal(); // Limpa o Front
+        this.finalizarSessaoFront();
       },
       error: (erro) => {
         console.warn('O Back-end deu erro no logout, mas vamos deslogar do Front mesmo assim.', erro);
-        this.menuAberto = false;
-        this.authService.encerrarSessaoLocal();
+        this.finalizarSessaoFront();
       }
     });
   }
 
   private finalizarSessaoFront(): void {
-    // 2. Limpa todos os dados do navegador
     sessionStorage.clear();
-    // 3. Fecha o menu e manda pro login
     this.menuAberto = false;
+    // Quando navegar pro login, a nossa nova lógica no ngOnInit vai esconder o header automaticamente!
     this.router.navigate(['/login']);
   }
 
   ngAfterViewInit(): void {
-    this.centralizarAbaAtiva();
+    if (this.mostrarHeader) {
+      this.centralizarAbaAtiva();
+    }
   }
 
   ngOnDestroy(): void {

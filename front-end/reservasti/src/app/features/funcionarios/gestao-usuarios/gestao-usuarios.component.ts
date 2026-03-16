@@ -93,7 +93,7 @@ export class GestaoUsuariosComponent implements OnInit {
   }
 
   novoUsuario(): void {
-    this.router.navigate(['cadastro-funcionario']);
+    this.router.navigate(['cadastro']);
   }
 
   editarUsuario(id: number): void {

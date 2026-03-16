@@ -28,8 +28,8 @@ export interface EditarEquipamentoDTO {
 
 }
 export interface AlocarEquipamentoDTO {
-  equipamentoId: number;
-  departamentoId: number;
+  idEquipamento: number;
+  idDepartamento: number;
   quantidade?: number;
 }
 export interface ItemSimulacaoRequestDTO {
