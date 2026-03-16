@@ -1,55 +1,47 @@
-# 💻 ReservaSTI - Sistema de Gestão de Ativos
+# 💻 ReservaSTI - Gerenciador de Ativos de TI
 
-![Angular](https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
-![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
-![Status](https://img.shields.io/badge/Status-Em_Desenvolvimento-success?style=for-the-badge)
+![Angular](https://img.shields.io/badge/Angular_14-DD0031?style=for-the-badge&logo=angular&logoColor=white)
+![Java](https://img.shields.io/badge/Java_17+-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
 
-O **ReservaSTI** é uma plataforma inteligente e imersiva desenvolvida para simplificar a gestão, alocação e reserva de equipamentos de TI corporativos. Através de uma interface fluida, o sistema conecta usuários, técnicos e administradores, otimizando o ciclo de vida dos ativos da empresa.
-
----
-
-## ✨ Funcionalidades
-
-* **🔐 Controle de Acesso por Perfis:** Experiências personalizadas para Administradores, Técnicos e Usuários Comuns.
-* **📦 Gestão de Equipamentos e Departamentos:** Controle total do inventário, sabendo exatamente onde cada ativo está alocado.
-* **📅 Sistema de Reservas:** Motor de busca inteligente e filtros avançados para reserva rápida de equipamentos.
-* **🛠️ Central de Chamados (Help Desk):** Fila global e filas individuais para técnicos gerenciarem manutenções e suportes.
-* **📊 Dashboard Analítico:** Inteligência de dados para prever expansões e evitar compras desnecessárias de ativos.
+O **ReservaSTI** é um sistema full-stack desenvolvido para modernizar e simplificar a gestão de equipamentos de TI dentro de uma empresa. Ele conecta usuários comuns, técnicos de suporte e administradores em uma única plataforma fluida e intuitiva.
 
 ---
 
-## 🎨 Arquitetura e UI/UX
+## ✨ O que o sistema faz? (Funcionalidades)
 
-O Front-end foi desenhado com foco absoluto na experiência do usuário (UX), adotando práticas modernas:
-* **Scroll-Telling & Efeito Parallax:** Landing page imersiva para apresentação do produto.
-* **Glassmorphism:** Componentes translúcidos e elegantes.
-* **Roteamento Dinâmico:** Header inteligente que se adapta à sessão do usuário e desaparece em telas de login/boas-vindas.
+O projeto foi construído para cobrir todo o ciclo de vida de um equipamento dentro da empresa. As principais funcionalidades incluem:
+
+* **👥 Controle de Perfis e Acesso:** O sistema identifica se quem está logado é um Administrador, um Técnico ou um Usuário padrão, adaptando os menus e as permissões automaticamente.
+  
+* **📦 Gestão de Inventário e Departamentos:** Permite o cadastro e o rastreamento completo de todo o maquinário da empresa. É possível saber exatamente em qual departamento um computador ou periférico está alocado no momento.
+
+* **📅 Sistema de Reservas:** Usuários podem buscar equipamentos disponíveis e solicitar reservas para uso temporário ou definitivo, com um fluxo de aprovação organizado.
+
+* **🛠️ Central de Help Desk (Chamados):** Se um equipamento quebra, o usuário pode abrir um chamado. Os técnicos possuem uma **Fila Global** de chamados e podem assumir tarefas para a sua **Fila Individual**, mantendo o suporte organizado.
+
+* **🎨 Interface Inteligente (UI/UX):** O front-end conta com uma navegação limpa, utilizando conceitos modernos de design como Glassmorphism e uma Landing Page imersiva para apresentar o produto.
 
 ---
 
-## 🚀 Como executar o projeto localmente
+## 🛠️ Tecnologias Utilizadas
 
-### Pré-requisitos
-* [Node.js](https://nodejs.org/) (versão 16+)
-* [Angular CLI](https://angular.io/cli) (versão 14+)
+Este é um projeto *Monorepo* (Front-end e Back-end no mesmo repositório), construído com as seguintes tecnologias:
 
-### Passos para rodar o Front-end
+**Front-end:**
+* Angular 14
+* Node.js 16
+* TypeScript, HTML5, CSS3
 
-1. Clone este repositório:
-   git clone [https://github.com/davv1-dev/reserva-sti.git](https://github.com/davv1-dev/Gerenciador-de-Ativos-de-TI.git)
-   
-2.Acesse a pasta do projeoto:
-   cd reserva-sti
+**Back-end & Infraestrutura:**
+* Java 17+ (Spring Boot)
+* Banco de Dados PostgreSQL
+* Docker (via `docker-compose` para subir o banco de dados)
 
-3. Instale as dependecias
-   npm install
+---
 
-4.Inicie o servidor de desenvolvimento:
-   ng serve -o
+## 👨‍💻 Desenvolvedor
 
-👨‍💻 Autor
-Davi Amaral Desenvolvedor Fullstack / Back-end
-www.linkedin.com/in/davi-amaral-santana-1200152b6
-
-Feito com dedicação e muito código limpo! 
+**Davi Amaral Santana** *Desenvolvedor Fullstack*
+* 💼 [LinkedIn](https://www.linkedin.com/in/davi-amaral-santana-1200152b6)
+* 🐙 [GitHub](https://github.com/davv1-dev)
