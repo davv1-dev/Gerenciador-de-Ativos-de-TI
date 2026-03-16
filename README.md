@@ -37,7 +37,7 @@ O Front-end foi desenhado com foco absoluto na experiência do usuário (UX), ad
 ### Passos para rodar o Front-end
 
 1. Clone este repositório:
-   git clone [https://github.com/davv1-dev/reserva-sti.git](https://github.com/davv1-dev/reserva-sti.git)
+   git clone [https://github.com/davv1-dev/reserva-sti.git](https://github.com/davv1-dev/Gerenciador-de-Ativos-de-TI.git)
    
 2.Acesse a pasta do projeoto:
    cd reserva-sti
