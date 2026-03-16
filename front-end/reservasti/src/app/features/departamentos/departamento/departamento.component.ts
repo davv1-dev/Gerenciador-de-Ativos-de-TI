@@ -4,7 +4,7 @@ import { DepartamentoService } from 'src/app/core/service/departamento.service';
 import { ToastService } from 'src/app/core/service/toast.service';
 import { ConfirmDialogService } from 'src/app/core/service/confirm-dialog.service';
 import { DepartamentoRetornoDTO, DepartamentoDTO, DepartamentoAtualizacaoDTO } from '../../../core/models/departamento';
-import { Router } from '@angular/router'; // 👈 Importamos o Router
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-departamento',
@@ -29,7 +29,7 @@ export class DepartamentoComponent implements OnInit {
     private departamentoService: DepartamentoService,
     private toastService: ToastService,
     private confirmDialogService: ConfirmDialogService,
-    private router: Router // 👈 Injetamos o Router aqui
+    private router: Router
   ) {
     this.formCadastro = this.fb.group({
       nome: ['', [Validators.required, Validators.minLength(3)]],
@@ -43,7 +43,6 @@ export class DepartamentoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // 👇 LEÃO DE CHÁCARA: Apenas Admins podem gerenciar os departamentos!
     const tipoUsuario = sessionStorage.getItem('tipoUsuario');
     if (tipoUsuario !== 'ADMIN') {
       this.toastService.mostrar('Acesso restrito. Área exclusiva da diretoria.', 'erro');
@@ -53,7 +52,7 @@ export class DepartamentoComponent implements OnInit {
       } else {
         this.router.navigate(['/home']);
       }
-      return; // Interrompe a execução para não carregar a lista à toa
+      return;
     }
 
     this.carregarDepartamentos();
@@ -82,7 +81,6 @@ export class DepartamentoComponent implements OnInit {
     });
   }
 
-  // --- ABA 1: CADASTRO ---
   salvarNovoDepartamento(): void {
     if (this.formCadastro.invalid) {
       this.toastService.mostrar('Preencha os campos obrigatórios.', 'info');
@@ -106,7 +104,6 @@ export class DepartamentoComponent implements OnInit {
     });
   }
 
-  // --- ABA 2: GERENCIAR (EDITAR E EXCLUIR) ---
   selecionarParaEdicao(dep: DepartamentoRetornoDTO): void {
     this.departamentoSelecionadoParaEdicao = dep;
     this.formEdicao.patchValue({
@@ -145,7 +142,7 @@ export class DepartamentoComponent implements OnInit {
   }
 
   async excluirDepartamento(dep: DepartamentoRetornoDTO, event: Event) {
-    event.stopPropagation(); // Evita que o clique acione o "editar" no card
+    event.stopPropagation();
 
     const confirmou = await this.confirmDialogService.confirmar(
       'Excluir Departamento',

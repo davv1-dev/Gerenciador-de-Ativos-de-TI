@@ -1,4 +1,5 @@
 <div class="login-container">
+
   <div class="login-card">
     <div class="login-header">
       <h2>Bem-vindo ao ReservasTI</h2>
@@ -13,14 +14,32 @@
 
       <div class="input-group">
         <label for="senha">Senha</label>
-        <input type="password" id="senha" name="senha" [(ngModel)]="credenciais.senha" placeholder="••••••••">
+        <div class="senha-wrapper">
+          <input
+            [type]="mostrarSenha ? 'text' : 'password'"
+            id="senha"
+            name="senha"
+            [(ngModel)]="credenciais.senha"
+            placeholder="••••••••">
+
+          <button type="button" class="btn-toggle-senha" (click)="toggleSenha()" title="Mostrar/Ocultar Senha">
+            <svg *ngIf="mostrarSenha" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <svg *ngIf="!mostrarSenha" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+              <line x1="1" y1="1" x2="23" y2="23"></line>
+            </svg>
+          </button>
+        </div>
       </div>
 
       <div class="acoes-extras">
         <label class="lembrar-me">
           <input type="checkbox"> Lembrar de mim
         </label>
-        <a href="#" class="esqueci-senha">Esqueci minha senha</a>
+        <a routerLink="/esqueci-senha" class="esqueci-senha">Esqueci minha senha</a>
       </div>
 
       <button type="button" class="btn-entrar" (click)="fazerLogin()">Entrar no Sistema</button>
@@ -30,4 +49,34 @@
       <p>Ainda não tem acesso? <a routerLink="/cadastro">Solicite aqui</a></p>
     </div>
   </div>
+
+  <div class="test-credentials-card">
+    <h3>🧪 Contas de Teste</h3>
+    <p>Clique em um perfil para preencher automaticamente:</p>
+
+    <div class="cred-item" (click)="preencherFormulario('davi.amaral@reservasti.com.br', '12345678909')">
+      <div class="cred-header">
+        <span class="badge badge-admin">Admin</span>
+      </div>
+      <span class="email">davi.amaral@reservasti.com.br</span>
+      <span class="senha">Senha: 12345678909</span>
+    </div>
+
+    <div class="cred-item" (click)="preencherFormulario('joao.pedro@reservasti.com.br', '84136274026')">
+      <div class="cred-header">
+        <span class="badge badge-tecnico">Técnico</span>
+      </div>
+      <span class="email">joao.pedro@reservasti.com.br</span>
+      <span class="senha">Senha: 84136274026</span>
+    </div>
+
+    <div class="cred-item" (click)="preencherFormulario('roberto.almeida@reservasti.com.br', '98765432100')">
+      <div class="cred-header">
+        <span class="badge badge-comum">Comum</span>
+      </div>
+      <span class="email">roberto.almeida@reservasti.com.br</span>
+      <span class="senha">Senha: 98765432100</span>
+    </div>
+  </div>
+
 </div>

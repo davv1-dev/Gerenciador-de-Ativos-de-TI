@@ -12,6 +12,8 @@ import { TokenResponseDTO } from 'src/app/core/models/token';
 })
 export class LoginComponent implements OnInit {
 
+  mostrarSenha: boolean = false;
+
   credenciais: UsuarioEntradaDTO= {
     login: '',
     senha: ''
@@ -49,4 +51,12 @@ export class LoginComponent implements OnInit {
       }
     });
   }
+  toggleSenha(): void {
+  this.mostrarSenha = !this.mostrarSenha;
+}
+// Adicione esta função junto com as outras (fazerLogin, toggleSenha, etc)
+preencherFormulario(email: string, senha: string): void {
+  this.credenciais.login = email;
+  this.credenciais.senha = senha;
+}
 }

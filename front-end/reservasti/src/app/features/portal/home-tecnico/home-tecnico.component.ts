@@ -21,8 +21,6 @@ export class HomeTecnicoComponent implements OnInit {
   isUltimaPagina: boolean = true;
   isPrimeiraPagina: boolean = true;
 
-  // 👇 REMOVIDO: private idTecnicoLogado = 7;
-
   constructor(
     private router: Router,
     private chamadoService: ChamadoService,
@@ -30,12 +28,11 @@ export class HomeTecnicoComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // 👇 PROTEÇÃO DE ROTA: Apenas Técnicos entram aqui!
+    //Verificacao
     const tipoUsuario = sessionStorage.getItem('tipoUsuario');
     if (tipoUsuario !== 'TECNICO') {
       this.toastService.mostrar('Acesso negado. Página restrita a Técnicos.', 'erro');
 
-      // Chuta o intruso para o lugar certo
       if (tipoUsuario === 'ADMIN') {
         this.router.navigate(['/home-admin']);
       } else {

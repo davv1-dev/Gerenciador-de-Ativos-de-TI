@@ -13,7 +13,7 @@ import { ToastService } from 'src/app/core/service/toast.service'; // 👈 Adici
 })
 export class HomeFuncionarioComponent implements OnInit {
 
-  nomeUsuario = 'Colaborador';
+  nomeUsuario:string = sessionStorage.getItem('nomeUsuario') || 'Colaborador';
   minhasReservas: ReservaRetornoDTO[] = [];
   historicoReservas: ReservaRetornoDTO[] = [];
   meusChamados: ResumoChamadoDTO[] = [];
@@ -30,7 +30,8 @@ export class HomeFuncionarioComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const tipoUsuario = sessionStorage.getItem('tipoUsuario');
+    //Verificacao
+    const tipoUsuario:string = sessionStorage.getItem('tipoUsuario') || '';
     if (tipoUsuario === 'ADMIN') {
       this.router.navigate(['/home-admin']);
       return;
@@ -39,7 +40,7 @@ export class HomeFuncionarioComponent implements OnInit {
       return;
     }
 
-    const nomeSalvo = sessionStorage.getItem('nomeUsuario');
+    const nomeSalvo:string = sessionStorage.getItem('nomeUsuario') || '';
     if (nomeSalvo) {
       this.nomeUsuario = nomeSalvo.split(' ')[0];
     }

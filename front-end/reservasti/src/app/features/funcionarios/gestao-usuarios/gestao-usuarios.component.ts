@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FuncionarioService } from 'src/app/core/service/funcionario.service';
-import { FuncionarioRetornoDTO } from 'src/app/core/models/funcionario'; // Ajuste o path se necessário
+import { FuncionarioRetornoDTO } from 'src/app/core/models/funcionario';
 import { ToastService } from 'src/app/core/service/toast.service';
 import { Page } from 'src/app/core/models/chamado';
 import { Router } from '@angular/router';
@@ -13,10 +13,9 @@ import { ConfirmDialogService } from 'src/app/core/service/confirm-dialog.servic
 })
 export class GestaoUsuariosComponent implements OnInit {
 
-  // Controle de Abas
+
   abaAtiva: 'usuarios' | 'pendentes' | 'historico' = 'usuarios';
 
-  // --- Estado: Usuários Ativos ---
   funcionarios: FuncionarioRetornoDTO[] = [];
   carregandoUsuarios: boolean = true;
   paginaAtual: number = 0;
@@ -24,7 +23,6 @@ export class GestaoUsuariosComponent implements OnInit {
   totalElementos: number = 0;
   termoBusca: string = '';
 
-  // --- Estado: Solicitações ---
   solicitacoesPendentes: FuncionarioRetornoDTO[] = [];
   historicoSolicitacoes: FuncionarioRetornoDTO[] = [];
   carregandoPendentes: boolean = false;
@@ -38,7 +36,6 @@ export class GestaoUsuariosComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // 👇 LEÃO DE CHÁCARA: Apenas Admins passam da porta!
     const tipoUsuario = sessionStorage.getItem('tipoUsuario');
     if (tipoUsuario !== 'ADMIN') {
       this.toastService.mostrar('Acesso negado. Área restrita à administração.', 'erro');
@@ -48,12 +45,11 @@ export class GestaoUsuariosComponent implements OnInit {
       } else {
         this.router.navigate(['/home']);
       }
-      return; // Para a execução aqui!
+      return;
     }
 
-    // Se é Admin, carrega os dados normalmente
     this.carregarUsuarios();
-    this.carregarSolicitacoesPendentes(); // Já carrega em background para mostrar o contador
+    this.carregarSolicitacoesPendentes();
   }
 
   mudarAba(aba: 'usuarios' | 'pendentes' | 'historico'): void {
@@ -63,9 +59,7 @@ export class GestaoUsuariosComponent implements OnInit {
     if (aba === 'historico' && this.historicoSolicitacoes.length === 0) this.carregarHistorico();
   }
 
-  // ==========================================
-  // ABA 1: USUÁRIOS ATIVOS
-  // ==========================================
+
   carregarUsuarios(): void {
     this.carregandoUsuarios = true;
     this.funcionarioService.listar(this.paginaAtual, this.termoBusca).subscribe({
@@ -113,9 +107,6 @@ export class GestaoUsuariosComponent implements OnInit {
     }
   }
 
-  // ==========================================
-  // ABA 2 e 3: SOLICITAÇÕES DE ACESSO
-  // ==========================================
   carregarSolicitacoesPendentes(): void {
     this.carregandoPendentes = true;
     this.funcionarioService.listarPendentes(0).subscribe({
@@ -146,7 +137,7 @@ export class GestaoUsuariosComponent implements OnInit {
           this.toastService.mostrar('Acesso aprovado com sucesso!', 'sucesso');
           this.carregarSolicitacoesPendentes();
           this.carregarHistorico();
-          this.carregarUsuarios(); // Atualiza a lista principal de ativos também!
+          this.carregarUsuarios();
         },
         error: () => this.toastService.mostrar('Erro ao aprovar usuário.', 'erro')
       });

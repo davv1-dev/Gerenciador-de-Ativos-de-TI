@@ -26,6 +26,7 @@ import { GestaoUsuariosComponent } from './features/funcionarios/gestao-usuarios
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { LandingPageComponent } from './features/pagina-boas-vindas/landing-page/landing-page.component';
+import { EsqueciSenhaComponent } from './features/pagina-suporte/esqueci-senha/esqueci-senha.component';
 
 
 
@@ -49,7 +50,8 @@ import { LandingPageComponent } from './features/pagina-boas-vindas/landing-page
     DepartamentoComponent,
     RelatoriosComponent,
     GestaoUsuariosComponent,
-    LandingPageComponent
+    LandingPageComponent,
+    EsqueciSenhaComponent
   ],
   imports: [
     BrowserModule,

@@ -17,6 +17,7 @@ import { RelatoriosComponent } from './features/relatorios/relatorios/relatorios
 import { GestaoUsuariosComponent } from './features/funcionarios/gestao-usuarios/gestao-usuarios.component';
 import { AuthGuard } from './core/guards/auth.guard';
 import { LandingPageComponent } from './features/pagina-boas-vindas/landing-page/landing-page.component';
+import { EsqueciSenhaComponent } from './features/pagina-suporte/esqueci-senha/esqueci-senha.component';
 
 
 const routes: Routes = [
@@ -24,6 +25,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent, data: { animation: 'LoginPage' } },
   { path: 'boas-vindas', component: LandingPageComponent, data: { animation: 'BoasVindasPage' } },
   { path: 'cadastro', component: FuncionarioCadastroComponent, data: { animation: 'CadastroPage' } },
+  { path: 'esqueci-senha', component: EsqueciSenhaComponent, data:{animation:"EsqueciSenhaPage"} },
 
   { path: 'home', component: HomeFuncionarioComponent, canActivate: [AuthGuard], data: { animation: 'HomePage' } },
   { path: 'fazerchamado', component: AberturaChamadoComponent, canActivate: [AuthGuard], data: { animation: 'ChamadoPage' } },

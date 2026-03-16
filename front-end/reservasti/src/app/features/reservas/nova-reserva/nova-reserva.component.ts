@@ -50,16 +50,15 @@ export class NovaReservaComponent implements OnInit {
 
   buscarEquipamentos(pagina: number = 0): void {
     this.carregandoCatalogo = true;
-    this.paginaAtual = pagina; // Guarda a página que estamos buscando
+    this.paginaAtual = pagina;
 
-    const idCategoria = this.categoriaSelecionada ? Number(this.categoriaSelecionada) : undefined;
+     const idCategoria = this.categoriaSelecionada ? Number(this.categoriaSelecionada) : undefined;
 
     this.equipamentoService.listarCatalogo(this.termoBusca, idCategoria, this.paginaAtual, 10).subscribe({
       next: (paginaResposta) => {
-        // Filtra os disponíveis (lembre-se do aviso sobre o tamanho das páginas ficar irregular!)
+
         this.equipamentos = paginaResposta.content.filter(eqp => eqp.status === 'DISPONIVEL');
 
-        // Atualiza o total de páginas que o Spring Boot devolveu
         this.totalPaginas = paginaResposta.totalPages;
         this.carregandoCatalogo = false;
       },
@@ -88,11 +87,11 @@ export class NovaReservaComponent implements OnInit {
 
     this.enviando = true;
 
-    const novaReserva = {
+    const novaReserva: ReservaDTO = {
       equipamentoId: this.equipamentoSelecionado.id,
       dataPrevistaRetirada: this.reservaForm.value.dataPrevistaRetirada,
       dataPrevistaDevolucao: this.reservaForm.value.dataPrevistaDevolucao
-    } as ReservaDTO;
+    };
 
     this.reservaService.abrirReserva(novaReserva).subscribe({
       next: () => {
@@ -116,7 +115,7 @@ export class NovaReservaComponent implements OnInit {
   }
 
   voltarParaHome(): void {
-    const tipoUsuario = sessionStorage.getItem('tipoUsuario');
+    const tipoUsuario: string = sessionStorage.getItem('tipoUsuario') || '';
 
     if (tipoUsuario === 'ADMIN') {
       this.router.navigate(['/home-admin']);

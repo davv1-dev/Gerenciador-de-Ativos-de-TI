@@ -1,5 +1,5 @@
 export interface ReservaDTO {
-  funcionarioId: number;
+  funcionarioId?: number;
   equipamentoId: number;
   dataPrevistaRetirada: string;
   dataPrevistaDevolucao: string;

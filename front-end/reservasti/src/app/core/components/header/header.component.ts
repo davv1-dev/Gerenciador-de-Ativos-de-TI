@@ -23,7 +23,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   // 👇 NOVA VARIÁVEL: Controla se o header aparece ou não
   mostrarHeader: boolean = true;
   // 👇 LISTA DE ROTAS INVISÍVEIS: Coloque aqui as rotas onde o header NÃO deve aparecer
-  rotasSemHeader: string[] = ['/boas-vindas', '/login'];
+  rotasSemHeader: string[] = ['/boas-vindas', '/login','/esqueci-senha'];
   @ViewChild('navMenu') navMenu!: ElementRef;
   private routerSub!: Subscription;
 

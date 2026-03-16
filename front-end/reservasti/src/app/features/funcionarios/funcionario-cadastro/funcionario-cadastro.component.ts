@@ -5,7 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FuncionarioService } from '../../../core/service/funcionario.service';
 import { DepartamentoRetornoDTO } from '../../../core/models/departamento';
 import { DepartamentoService } from 'src/app/core/service/departamento.service';
-import { Router } from '@angular/router'; // 👈 Adicionamos o Router para redirecionar
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-funcionario-cadastro',
@@ -24,7 +24,7 @@ export class FuncionarioCadastroComponent implements OnInit {
     private funcionarioService: FuncionarioService,
     private departamentoService: DepartamentoService,
     private toastService: ToastService,
-    private router: Router // 👈 Injetado aqui
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -63,12 +63,10 @@ export class FuncionarioCadastroComponent implements OnInit {
 
       this.funcionarioService.cadastrar(dto).subscribe({
         next: () => {
-          // 👇 Mensagem alinhada com a regra de negócio!
           this.toastService.mostrar('Cadastro realizado! Seu acesso foi enviado para aprovação do administrador.', 'sucesso');
           this.funcionarioForm.reset();
           this.carregando = false;
 
-          // 👇 Manda o usuário de volta para o login para aguardar
           this.router.navigate(['/login']);
         },
         error: (erro) => {

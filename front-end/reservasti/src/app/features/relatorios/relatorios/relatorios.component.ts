@@ -24,7 +24,7 @@ export class RelatoriosComponent implements OnInit {
 
   abaAtual: 'geral' | 'departamentos' | 'riscos' | 'inteligencia' | 'garantias'= 'geral';
 
-  // Dados dos Relatórios
+  // Dto dos relatorios
   relatorioGeral: RelatorioGeralDTO | null = null;
   relatorioDept: RelatorioDepartamentoDTO | null = null;
   listaAtrasos: RelatorioAtrasoDTO[] = [];
@@ -35,11 +35,11 @@ export class RelatoriosComponent implements OnInit {
   totalGarantias: number = 0;
   paginaGarantia: number = 0;
 
-  // Apoio
+
   departamentos: DepartamentoRetornoDTO[] = [];
   carregando: boolean = false;
 
-  // Formulários
+  // Formulários que viram do html
   formDept: FormGroup;
   formDemanda: FormGroup;
   formInativos: FormGroup;
@@ -49,8 +49,10 @@ export class RelatoriosComponent implements OnInit {
     private departamentoService: DepartamentoService,
     private fb: FormBuilder,
     private toastService: ToastService,
-    private router: Router // 👈 Injetamos o Router aqui
+    private router: Router
   ) {
+
+    //declarando os atributros dos fomularios:
     this.formDept = this.fb.group({ departamentoId: ['', Validators.required] });
 
     this.formDemanda = this.fb.group({
@@ -62,21 +64,20 @@ export class RelatoriosComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // 👇 LEÃO DE CHÁCARA: Verifica se é ADMIN. Se não for, bloqueia!
-    const tipoUsuario = sessionStorage.getItem('tipoUsuario');
+  //assim que abrir a pagina é feita a verificacao do tipo de usuario pra garantir a seguranca foi feito isso em todos:
+
+    const tipoUsuario:string = sessionStorage.getItem('tipoUsuario') || '';
     if (tipoUsuario !== 'ADMIN') {
       this.toastService.mostrar('Acesso negado. Área restrita à diretoria.', 'erro');
 
-      // Redireciona o intruso para a home correta dele
       if (tipoUsuario === 'TECNICO') {
         this.router.navigate(['/home-tecnico']);
       } else {
         this.router.navigate(['/home']);
       }
-      return; // Para a execução do ngOnInit aqui!
+      return;
     }
 
-    // Se passou, carrega os dados normalmente
     this.carregarRelatorioGeral();
     this.carregarDepartamentos();
   }
@@ -95,7 +96,6 @@ export class RelatoriosComponent implements OnInit {
     });
   }
 
-  // --- ABA 1: GERAL ---
   carregarRelatorioGeral(): void {
     this.carregando = true;
     this.relatorioService.gerarRelatorioGeral().subscribe({
@@ -110,11 +110,10 @@ export class RelatoriosComponent implements OnInit {
     });
   }
 
-  // --- ABA 2: DEPARTAMENTOS ---
   gerarRelatorioDept(): void {
     if (this.formDept.invalid) return;
     this.carregando = true;
-    const id = this.formDept.value.departamentoId;
+    const id:number = this.formDept.value.departamentoId;
 
     this.relatorioService.gerarResumoPorDepartamento(id).subscribe({
       next: (dados) => {
@@ -128,7 +127,6 @@ export class RelatoriosComponent implements OnInit {
     });
   }
 
-  // --- ABA 3: RISCOS E FALHAS ---
   carregarRiscosEFalhas(): void {
     this.carregando = true;
     this.relatorioService.relatorioAtrasos().subscribe(dados => this.listaAtrasos = dados);
@@ -138,7 +136,6 @@ export class RelatoriosComponent implements OnInit {
     });
   }
 
-  // --- ABA 4: INTELIGÊNCIA ---
   gerarPrevisaoDemanda(): void {
     if (this.formDemanda.invalid) return;
     this.carregando = true;

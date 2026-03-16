@@ -27,7 +27,7 @@
 }
 
 .login-header h2 {
-  color: var(--cor-primaria);
+  color: #2563eb;
   margin-bottom: 8px;
   font-size: 26px;
 }
@@ -63,9 +63,9 @@
 }
 
 .input-group input:focus {
-  border-color: var(--cor-primaria);
+  border-color: #2563eb;
   background-color: #FFFFFF;
-  box-shadow: 0 0 0 3px rgba(67, 24, 255, 0.1);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
 /* Layout das opções extras */
@@ -78,7 +78,7 @@
 }
 
 .esqueci-senha {
-  color: var(--cor-primaria);
+  color: #2563eb;
   text-decoration: none;
   font-weight: 600;
 }
@@ -90,7 +90,7 @@
 /* Botão Principal Padrão */
 .btn-entrar {
   width: 100%;
-  background-color: var(--cor-primaria);
+  background-color: #2563eb;
   color: white;
   border: none;
   border-radius: 12px;
@@ -99,13 +99,13 @@
   font-weight: bold;
   cursor: pointer;
   transition: var(--transicao);
-  box-shadow: 0 4px 14px rgba(67, 24, 255, 0.2);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.15);
 }
 
 .btn-entrar:hover {
-  background-color: var(--cor-primaria-hover);
+  background-color: #2563eb;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(67, 24, 255, 0.3);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.15);
 }
 
 .login-footer {
@@ -116,7 +116,122 @@
 }
 
 .login-footer a {
-  color: var(--cor-primaria);
+  color: #2563eb;
   font-weight: bold;
   text-decoration: none;
 }
+.senha-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.senha-wrapper input {
+  width: 100%;
+  padding-right: 70px; /* Dá espaço para o botão não ficar em cima do texto */
+}
+
+.btn-toggle-senha {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.btn-toggle-senha:hover {
+  color: #333;
+}
+/* Container que segura os dois cards */
+.login-container {
+  display: flex;
+  flex-direction: row; /* Coloca lado a lado */
+  justify-content: center;
+  align-items: center;
+  gap: 30px; /* Espaço entre os cards */
+  min-height: 100vh;
+  padding: 20px;
+  background-color: #f4f7f6; /* Ajuste para o seu fundo padrão */
+  flex-wrap: wrap; /* Muito importante: no celular eles vão ficar um embaixo do outro */
+}
+
+/* O card de testes novo */
+.test-credentials-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  border: 1px dashed #cbd5e1;
+  max-width: 350px;
+  width: 100%;
+}
+
+.test-credentials-card h3 {
+  margin-top: 0;
+  margin-bottom: 5px;
+  color: #1e293b;
+  font-size: 1.2rem;
+}
+
+.test-credentials-card p {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-bottom: 20px;
+}
+
+/* Estilo de cada item clicável */
+.cred-item {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px 15px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.cred-item:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.cred-item:active {
+  transform: translateY(0);
+}
+
+.cred-header {
+  margin-bottom: 6px;
+}
+
+.email {
+  font-size: 0.9rem;
+  color: #334155;
+  font-weight: 500;
+}
+
+.senha {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+/* Badges coloridas para cada perfil */
+.badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-admin { background: #fee2e2; color: #b91c1c; }
+.badge-tecnico { background: #dbeafe; color: #1d4ed8; }
+.badge-comum { background: #dcfce3; color: #15803d; }

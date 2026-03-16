@@ -37,7 +37,7 @@ export class HomeAdminComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // 👇 LEÃO DE CHÁCARA: Apenas Admins entram aqui!
+//Verificando
     const tipoUsuario = sessionStorage.getItem('tipoUsuario');
     if (tipoUsuario !== 'ADMIN') {
       this.toastService.mostrar('Acesso negado. Área restrita à diretoria.', 'erro');
@@ -50,8 +50,7 @@ export class HomeAdminComponent implements OnInit {
       return;
     }
 
-    // 👇 Puxa o nome real do Admin para exibir na tela
-    const nomeSalvo = sessionStorage.getItem('nomeUsuario');
+    const nomeSalvo:string = sessionStorage.getItem('nomeUsuario') || '';
     if (nomeSalvo) {
       this.nomeAdmin = nomeSalvo.split(' ')[0];
     }
@@ -133,7 +132,7 @@ export class HomeAdminComponent implements OnInit {
   }
 
   async negarAcesso(id: number): Promise<void> {
-    const confirmado = await this.confirmDialogService.confirmar(
+    const confirmado:boolean = await this.confirmDialogService.confirmar(
       'Negar Acesso',
       'Tem certeza que deseja NEGAR o acesso deste usuário?'
     );
