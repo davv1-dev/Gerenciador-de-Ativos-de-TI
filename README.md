@@ -15,7 +15,7 @@ O **ReservaSTI** é uma plataforma inteligente e imersiva desenvolvida para simp
 * **📦 Gestão de Equipamentos e Departamentos:** Controle total do inventário, sabendo exatamente onde cada ativo está alocado.
 * **📅 Sistema de Reservas:** Motor de busca inteligente e filtros avançados para reserva rápida de equipamentos.
 * **🛠️ Central de Chamados (Help Desk):** Fila global e filas individuais para técnicos gerenciarem manutenções e suportes.
-* **📊 Dashboard Analítico:** (Em breve) Inteligência de dados para prever expansões e evitar compras desnecessárias de ativos.
+* **📊 Dashboard Analítico:** Inteligência de dados para prever expansões e evitar compras desnecessárias de ativos.
 
 ---
 
