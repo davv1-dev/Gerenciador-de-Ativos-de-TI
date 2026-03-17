@@ -17,7 +17,6 @@ export class MinhaFilaComponent implements OnInit, OnDestroy {
   processandoId: number | null = null;
 
   private sseSubscription: Subscription | null = null;
-  // 👇 Agora pegaremos dinamicamente
 
   constructor(
     private chamadoService: ChamadoService,
@@ -26,15 +25,12 @@ export class MinhaFilaComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // 👇 LEÃO DE CHÁCARA: Apenas Técnicos (ou Admins, se fizer sentido na sua regra de negócio) acessam a fila.
     const tipoUsuario = sessionStorage.getItem('tipoUsuario');
     if (tipoUsuario !== 'TECNICO') {
       this.toastService.mostrar('Acesso negado. Área restrita a técnicos.', 'erro');
       this.router.navigate(['/home']);
       return;
     }
-
-    // 👇 Pegando o ID do usuário de forma dinâmica do sessionStorage
 
     this.carregarFila(0);
     this.iniciarEscutaAoVivo();
@@ -74,7 +70,6 @@ export class MinhaFilaComponent implements OnInit, OnDestroy {
 
   atenderChamado(idChamado: number): void {
     this.processandoId = idChamado;
-    // Precisamos gravar qual chamado o técnico vai atender para a próxima tela saber
     sessionStorage.setItem('idChamadoAtual', idChamado.toString());
     this.router.navigate(['/tecnico/chamado-atual']);
   }

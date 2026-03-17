@@ -4,7 +4,7 @@ import { EquipamentoService } from 'src/app/core/service/equipamento.service';
 import { DepartamentoService } from 'src/app/core/service/departamento.service';
 import { ToastService } from 'src/app/core/service/toast.service';
 import { ConfirmDialogService } from 'src/app/core/service/confirm-dialog.service';
-import { Router } from '@angular/router'; // 👈 Importamos o Router
+import { Router } from '@angular/router';
 
 import {
   EquipamentoRetornoDTO,
@@ -55,7 +55,7 @@ export class AlocacaoAtivosComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // 👇 LEÃO DE CHÁCARA: Apenas Admins podem acessar alocação e expansão!
+
     const tipoUsuario = sessionStorage.getItem('tipoUsuario');
     if (tipoUsuario !== 'ADMIN') {
       this.toastService.mostrar('Acesso restrito. Área exclusiva da administração.', 'erro');
@@ -65,7 +65,7 @@ export class AlocacaoAtivosComponent implements OnInit {
       } else {
         this.router.navigate(['/home']);
       }
-      return; // Impede que as chamadas a serviços sejam feitas
+      return;
     }
 
     this.carregarDepartamentos();
@@ -113,13 +113,12 @@ export class AlocacaoAtivosComponent implements OnInit {
 
   selecionarEquipamentoParaAlocar(eqp: EquipamentoRetornoDTO): void {
     this.equipamentoSelecionado = eqp;
-    this.quantidadeAlocacao = 1; // 👈 Reseta para 1 ao escolher novo item
+    this.quantidadeAlocacao = 1;
   }
 
   async confirmarAlocacao() {
     if (!this.departamentoSelecionado || !this.equipamentoSelecionado) return;
 
-    // Pega o patrimônio ou o nome (se for lote)
     const identificador = this.equipamentoSelecionado.numeroPatrimonio || this.equipamentoSelecionado.nome;
 
     const confirmou = await this.confirmDialogService.confirmar(
@@ -131,7 +130,6 @@ export class AlocacaoAtivosComponent implements OnInit {
 
     this.alocando = true;
 
-    // 👇 Mudança aqui: Usando os nomes exatos que o Java espera!
     const dto: AlocarEquipamentoDTO = {
       idEquipamento: this.equipamentoSelecionado.id,
       idDepartamento: this.departamentoSelecionado.id,

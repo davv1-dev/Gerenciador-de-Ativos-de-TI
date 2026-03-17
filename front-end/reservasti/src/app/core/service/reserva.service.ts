@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ReservaRetornoDTO, ReservaDTO } from '../models/reserva';
-import { Page } from '../models/chamado'; // Ajuste o caminho se necessário
+import { Page } from '../models/chamado';
 
 @Injectable({
   providedIn: 'root'

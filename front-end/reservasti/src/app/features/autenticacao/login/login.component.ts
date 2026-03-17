@@ -1,7 +1,7 @@
 import { UsuarioEntradaDTO } from './../../../core/models/usuario';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../core/service/auth.service'; // Ajuste o caminho se necessário
+import { AuthService } from '../../../core/service/auth.service';
 import { ToastService } from 'src/app/core/service/toast.service';
 import { TokenResponseDTO } from 'src/app/core/models/token';
 
@@ -54,7 +54,6 @@ export class LoginComponent implements OnInit {
   toggleSenha(): void {
   this.mostrarSenha = !this.mostrarSenha;
 }
-// Adicione esta função junto com as outras (fazerLogin, toggleSenha, etc)
 preencherFormulario(email: string, senha: string): void {
   this.credenciais.login = email;
   this.credenciais.senha = senha;

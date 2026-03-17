@@ -27,7 +27,7 @@ export class AuthService {
   }
 
 logoutBackend(): Observable<any> {
-    return this.http.post(`${environment.apiUrl}/reservasti/logout`, {});
+    return this.http.post(`${this.apiUrl}/logout`, {});
   }
 
   encerrarSessaoLocal(): void {

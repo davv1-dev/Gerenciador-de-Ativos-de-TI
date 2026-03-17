@@ -63,7 +63,6 @@ export class FilaGlobalComponent implements OnInit, OnDestroy {
         console.log('🔥 COMPONENTE: Novo chamado na tela!', novoChamado);
 
         if (this.chamadosPage && this.chamadosPage.content) {
-          // Mantemos a recriação do array, é a melhor prática no Angular!
           this.chamadosPage.content = [novoChamado, ...this.chamadosPage.content];
           this.chamadosPage.totalElements++;
         } else {

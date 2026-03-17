@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router'; // 👈 Importamos o Router
+import { Router } from '@angular/router';
 import { ChamadoService } from '../../../core/service/chamado.service';
 import { ResumoChamadoDTO } from '../../../core/models/chamado';
 import { ToastService } from 'src/app/core/service/toast.service';
 import { ConfirmDialogService } from 'src/app/core/service/confirm-dialog.service';
 
 @Component({
-  selector: 'app-chamado-atual', // Sugestão: alinhar o selector com o nome do arquivo/classe
+  selector: 'app-chamado-atual',
   templateUrl: './chamado-atual.component.html',
   styleUrls: ['./chamado-atual.component.css']
 })
@@ -20,11 +20,10 @@ export class ChamadoAtualComponent implements OnInit {
     private chamadoService: ChamadoService,
     private toastService: ToastService,
     private confirmDialogService: ConfirmDialogService,
-    private router: Router // 👈 Injetado aqui
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    // 👇 LEÃO DE CHÁCARA: Apenas Técnicos (ou Admins) acessam o atendimento.
     const tipoUsuario = sessionStorage.getItem('tipoUsuario');
     if (tipoUsuario !== 'TECNICO' && tipoUsuario !== 'ADMIN') {
       this.toastService.mostrar('Acesso negado. Área restrita a técnicos.', 'erro');
@@ -40,7 +39,6 @@ export class ChamadoAtualComponent implements OnInit {
   carregarFila(): void {
     this.carregando = true;
 
-    // Busca apenas o primeiro da fila pessoal (tamanho 1)
     this.chamadoService.listarFilaPessoal(0, 1).subscribe({
       next: (pagina) => {
         this.chamadoAtual = pagina.content.length > 0 ? pagina.content[0] : null;
@@ -71,7 +69,6 @@ export class ChamadoAtualComponent implements OnInit {
             this.chamadoAtual = null;
             this.processando = false;
 
-            // 👇 UX Plus: Traz automaticamente o próximo da fila!
             this.carregarFila();
           },
           error: (erro) => {

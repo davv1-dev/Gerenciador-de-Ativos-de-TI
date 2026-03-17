@@ -19,9 +19,6 @@ export class AberturaChamadoComponent implements OnInit {
 
   tecnicosOnline: FuncionarioRetornoDTO[] = [];
 
-  // 👇 Variável para guardar o ID real do usuário
-  private idUsuarioLogado!: number;
-
   tiposDeProblema = [
     { label: 'Hardware (Computador, Mouse, Teclado)', value: 'HARDWARE' },
     { label: 'Software (Sistema Lento, Travando)', value: 'LENTIDAO_SISTEMA' },
@@ -35,7 +32,7 @@ export class AberturaChamadoComponent implements OnInit {
     private chamadoService: ChamadoService,
     private tecnicoService: TecnicoService,
     private router: Router,
-    private toastService: ToastService // Arrumei um pequeno typo aqui ("toastSevice" -> "toastService") 😉
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -53,7 +50,7 @@ export class AberturaChamadoComponent implements OnInit {
   iniciarFormulario(): void {
     this.chamadoForm = this.fb.group({
       equipamentoId: [null],
-      tecnicoId: [null], // Se o técnico for nulo, o back-end coloca na Fila Global
+      tecnicoId: [null],
       tipoProblema: ['', Validators.required],
       localizacao: ['', Validators.required],
       descricaoDetalhada: ['', [Validators.required, Validators.minLength(10)]]

@@ -10,8 +10,6 @@ import { Page } from '../models/chamado';
 })
 export class TecnicoService {
 
-  private apiUrl = `${environment.apiUrl}/tecnicos`;
-
   constructor(private http: HttpClient) { }
 
   listarTecnicosOnline(page: number = 0, size: number = 10): Observable<Page<FuncionarioRetornoDTO>> {
