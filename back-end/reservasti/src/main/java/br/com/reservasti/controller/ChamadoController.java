@@ -77,7 +77,7 @@ public class ChamadoController {
     @GetMapping("/meus-chamados")
     @PreAuthorize("hasAnyRole('TECNICO','COMUM')")
 
-    public ResponseEntity<Page<ResumoChamadoDTO>> listarMeusChamados(@AuthenticationPrincipal Usuario usuarioLogado,@PageableDefault(size = 10, sort = {"dataAbertura"}) Pageable paginacao) {
+    public ResponseEntity<Page<ResumoChamadoDTO>> listarMeusChamados(@AuthenticationPrincipal Usuario usuarioLogado,@PageableDefault(size = 10, sort = {"dataAbertura"}, direction = Sort.Direction.DESC) Pageable paginacao) {
         Page<ResumoChamadoDTO> pagina = service.listarChamadosPorFuncionario(usuarioLogado.getId(), paginacao);
         return ResponseEntity.ok(pagina);
     }
