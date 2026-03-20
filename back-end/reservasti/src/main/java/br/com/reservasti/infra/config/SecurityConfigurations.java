@@ -42,6 +42,8 @@ public class SecurityConfigurations {
                         .requestMatchers(HttpMethod.POST, "/reservasti/alterar-senha").permitAll()
                         .requestMatchers(HttpMethod.POST, "/funcionarios").permitAll()
                         .requestMatchers(HttpMethod.GET,"/departamentos").permitAll()
+                        .requestMatchers( "/v3/api-docs/**","/swagger-ui.html","/swagger-ui/**").permitAll()
+
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
@@ -52,7 +54,7 @@ public class SecurityConfigurations {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
+        configuration.setAllowedOrigins(Arrays.asList("http://161.35.233.54","http://localhost:4200"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept"));
         configuration.setAllowCredentials(true);

@@ -71,31 +71,26 @@ public class EquipamentoService {
         return new EquipamentoRetornoDTO(equipamento);
     }
 
-    // 👇 NOVA LÓGICA DE SPLIT PARA STATUS
     @Transactional
     public void alterarStatusEquipamento(Long id, StatusEquipamento status, Integer quantidade) {
         processarMudancaDeLote(id, quantidade, equip -> equip.setStatus(status));
     }
 
-    // 👇 NOVA LÓGICA DE SPLIT PARA DESATIVAR
     @Transactional
     public void desativarEquipamento(Long id, Integer quantidadeParaDesativar) {
         processarMudancaDeLote(id, quantidadeParaDesativar, equip -> equip.setStatus(StatusEquipamento.BAIXADO));
     }
 
-    // 👇 NOVA LÓGICA DE SPLIT PARA ALOCAÇÃO
     @Transactional
     public void alocarEquipamentoAoDepartamento(AlocarEquipamentoDTO dto) {
         Departamento departamento = departamentoRepository.findById(dto.idDepartamento())
                 .orElseThrow(() -> new IdNaoEncontradoException("Departamento não encontrado"));
 
-        // Assumindo que você vai adicionar a "quantidade" no AlocarEquipamentoDTO
         Integer qtdAlocar = (dto.quantidade() != null && dto.quantidade() > 0) ? dto.quantidade() : 1;
 
         processarMudancaDeLote(dto.idEquipamento(), qtdAlocar, equip -> equip.alocarAoDepartamento(departamento));
     }
 
-    // 👇 NOVA LÓGICA PARA SIMULAÇÃO (Somando a quantidade em vez de contar linhas)
     public ResultadoSimulacaoDTO simularExpansao(SimulacaoEquipamentosDTO dto) {
         List<EquipamentoResultadoSimulacaoDTO> detalhes = new ArrayList<>();
         boolean tudoViavel = true;
@@ -105,7 +100,6 @@ public class EquipamentoService {
                     .map(Categoria::getNome)
                     .orElse("Categoria Desconhecida");
 
-            // ATENÇÃO: Você precisará criar este método no seu EquipamentoRepository!
             Integer qtdDisponivel = equipamentoRepository.somarQuantidadeDisponivelPorCategoria(
                     item.categoriaId(), StatusEquipamento.DISPONIVEL);
 
@@ -127,7 +121,6 @@ public class EquipamentoService {
         return new ResultadoSimulacaoDTO(tudoViavel, detalhes);
     }
 
-    // 🛠️ MÉTODO PRIVADO MÁGICO QUE FAZ O SPLIT DO LOTE
     private void processarMudancaDeLote(Long idEquipamento, Integer quantidadeDesejada, java.util.function.Consumer<Equipamento> acao) {
         Equipamento equipamentoOriginal = equipamentoRepository.findById(idEquipamento)
                 .orElseThrow(() -> new IdNaoEncontradoException("Equipamento não encontrado!"));
@@ -139,10 +132,8 @@ public class EquipamentoService {
         }
 
         if (qtd == equipamentoOriginal.getQuantidade()) {
-            // Se quer alterar tudo, altera no próprio registro original
             acao.accept(equipamentoOriginal);
         } else {
-            // Se quer alterar uma parte, subtrai do original e cria um espelho com a ação aplicada
             equipamentoOriginal.setQuantidade(equipamentoOriginal.getQuantidade() - qtd);
 
             Equipamento equipamentoSplit = new Equipamento();
@@ -152,13 +143,11 @@ public class EquipamentoService {
             equipamentoSplit.setCategoria(equipamentoOriginal.getCategoria());
             equipamentoSplit.setDataFimGarantia(equipamentoOriginal.getDataFimGarantia());
 
-            // O patrimônio não é copiado porque o split só acontece com lotes sem patrimônio
             equipamentoSplit.setNumeroPatrimonio(null);
             equipamentoSplit.setQuantidade(qtd);
-            equipamentoSplit.setStatus(equipamentoOriginal.getStatus()); // Copia o status atual
-            equipamentoSplit.setDepartamento(equipamentoOriginal.getDepartamento()); // Copia o depto atual
+            equipamentoSplit.setStatus(equipamentoOriginal.getStatus());
+            equipamentoSplit.setDepartamento(equipamentoOriginal.getDepartamento());
 
-            // Aplica a nova ação (Ex: setStatus BAIXADO) no registro separado
             acao.accept(equipamentoSplit);
 
             equipamentoRepository.save(equipamentoSplit);

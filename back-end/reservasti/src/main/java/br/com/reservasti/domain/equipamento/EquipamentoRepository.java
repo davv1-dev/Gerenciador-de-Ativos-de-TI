@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -32,7 +33,7 @@ public interface EquipamentoRepository extends JpaRepository<Equipamento,Long>,J
 
     @Query("SELECT e FROM Equipamento e WHERE e.status = 'DISPONIVEL' AND NOT EXISTS " +
             "(SELECT r FROM Reserva r WHERE r.equipamento = e AND r.dataDevolucaoReal >= :dataLimite)")
-    List<Equipamento> findEquipamentosOciosos(@Param("dataLimite") LocalDate dataLimite);
+    List<Equipamento> findEquipamentosOciosos(@Param("dataLimite") LocalDateTime dataLimite);
 
     //long countByCategoriaIdAndDepartamentoIsNullAndStatus(Long categoriaId, StatusEquipamento status);
 

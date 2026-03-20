@@ -10,16 +10,21 @@ public record DetalhamentoChamadoDTO(
         String nomeTecnico,
         String tipoProblema,
         String status,
-        LocalDateTime dataAbertura
+        LocalDateTime dataAbertura,
+        Long posicaoFila
 ) {
-    public DetalhamentoChamadoDTO(Chamado chamado) {
+    public DetalhamentoChamadoDTO(Chamado chamado,Long posicaoFila) {
         this(
                 chamado.getId(),
                 chamado.getSolicitante().getNomeCompleto(),
                 chamado.getTecnico() !=null ? chamado.getTecnico().getNomeCompleto() : null,
                 chamado.getTipoProblema().name(),
                 chamado.getStatus().name(),
-                chamado.getDataAbertura()
+                chamado.getDataAbertura(),
+                posicaoFila
         );
+    }
+    public DetalhamentoChamadoDTO(Chamado chamado) {
+        this(chamado, null);
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,6 +19,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
+
+import static org.springframework.data.web.config.EnableSpringDataWebSupport.PageSerializationMode.VIA_DTO;
 
 @RestController
 @RequestMapping("/chamados")
@@ -72,11 +75,9 @@ public class ChamadoController {
         return ResponseEntity.ok(chamadoCancelado);
     }
     @GetMapping("/meus-chamados")
-    @PreAuthorize("hasRole('TECNICO')")
-    public ResponseEntity<Page<ResumoChamadoDTO>> listarMeusChamados(
-            @AuthenticationPrincipal Usuario usuarioLogado,
-            @PageableDefault(size = 10, sort = {"dataAbertura"}) Pageable paginacao) {
+    @PreAuthorize("hasAnyRole('TECNICO','COMUM')")
 
+    public ResponseEntity<Page<ResumoChamadoDTO>> listarMeusChamados(@AuthenticationPrincipal Usuario usuarioLogado,@PageableDefault(size = 10, sort = {"dataAbertura"}) Pageable paginacao) {
         Page<ResumoChamadoDTO> pagina = service.listarChamadosPorFuncionario(usuarioLogado.getId(), paginacao);
         return ResponseEntity.ok(pagina);
     }

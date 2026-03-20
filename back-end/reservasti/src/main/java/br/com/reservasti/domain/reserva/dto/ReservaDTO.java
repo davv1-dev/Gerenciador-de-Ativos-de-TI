@@ -6,17 +6,16 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 public record ReservaDTO(
-        @NotNull
         Long funcionarioId,
         @NotNull
         Long equipamentoId,
         @NotNull
         @FutureOrPresent(message = "A data de retirada invalida")
-        @JsonFormat(pattern = "dd/MM/yyyy")
+        @JsonFormat(pattern = "yyyy-MM-dd")
         LocalDate dataPrevistaRetirada,
         @NotNull
         @FutureOrPresent
-        @JsonFormat(pattern = "dd/MM/yyyy")
+        @JsonFormat(pattern = "yyyy-MM-dd")
         LocalDate dataPrevistaDevolucao
 ) {
 }

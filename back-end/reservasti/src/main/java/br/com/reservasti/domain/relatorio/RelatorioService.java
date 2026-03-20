@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -82,7 +83,7 @@ public class RelatorioService {
     }
     @Transactional(readOnly = true)
     public List<RelatorioInativosDTO> gerarRelatorioOciosidade(int diasLimite) {
-        LocalDate dataCorte = LocalDate.now().minusDays(diasLimite);
+        LocalDateTime dataCorte = LocalDateTime.now().minusDays(diasLimite);
         List<Equipamento> ociosos = equipamentoRepository.findEquipamentosOciosos(dataCorte);
 
         return ociosos.stream().map(e -> {

@@ -57,12 +57,12 @@ public class ChamadoService {
             alocarParaTecnico(chamado, tecnico);
         } else {
             chamado.setStatus(StatusChamado.NA_FILA);
-
+            chamadoRepository.save(chamado);
         }
+        Long posicaoFila = chamadoRepository.countByStatus(StatusChamado.NA_FILA);
 
-        chamadoRepository.save(chamado);
 
-        DetalhamentoChamadoDTO chamadoSalvoDTO = new DetalhamentoChamadoDTO(chamado);
+        DetalhamentoChamadoDTO chamadoSalvoDTO = new DetalhamentoChamadoDTO(chamado,posicaoFila);
 
         if (dto.tecnicoId() != null) {
             notificacaoService.notificarTecnico(dto.tecnicoId(), chamadoSalvoDTO);
@@ -112,14 +112,14 @@ public class ChamadoService {
 
         alocarParaTecnico(chamado, tecnico);
 
-        List<Chamado> chamadosRestantes = chamadoRepository.findByStatusOrderByDataAberturaAsc(StatusChamado.NA_FILA);
+        //List<Chamado> chamadosRestantes = chamadoRepository.findByStatusOrderByDataAberturaAsc(StatusChamado.NA_FILA);
 
-        for (int i = 0; i < chamadosRestantes.size(); i++) {
-            Chamado c = chamadosRestantes.get(i);
-            Long novaPosicao = (long) (i + 1);
-
-            notificacaoService.notificarPosicaoFila(c.getSolicitante().getId(), novaPosicao);
-        }
+//        for (int i = 0; i < chamadosRestantes.size(); i++) {
+//            Chamado c = chamadosRestantes.get(i);
+//            Long novaPosicao = (long) (i + 1);
+//
+//            notificacaoService.notificarPosicaoFila(c.getSolicitante().getId(), novaPosicao);
+//        }
 
         return new DetalhamentoChamadoDTO(chamado);
     }

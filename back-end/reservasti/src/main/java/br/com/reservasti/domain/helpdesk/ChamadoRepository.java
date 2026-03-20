@@ -20,7 +20,7 @@ public interface ChamadoRepository extends JpaRepository<Chamado,Long> {
     @Query("SELECT COUNT(c) FROM Chamado c WHERE c.status = 'NA_FILA' AND c.dataAbertura < :dataAbertura")
     Long contarChamadosNaFrente(@Param("dataAbertura") LocalDateTime dataAbertura);
 
-    List<Chamado> findByStatusOrderByDataAberturaAsc(StatusChamado statusChamado);
+    Long countByStatus(StatusChamado status);
 
     Page<Chamado> findBySolicitanteId(Long solicitanteId, Pageable paginacao);
 

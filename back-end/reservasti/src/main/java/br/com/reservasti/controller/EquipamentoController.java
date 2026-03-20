@@ -64,18 +64,16 @@ public class EquipamentoController {
         return ResponseEntity.ok(retorno);
     }
 
-    // 👇 AJUSTE 1: Mudamos para @RequestParam. No Angular será: .delete(`/equipamentos/${id}?quantidade=5`)
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> excluir(
             @PathVariable Long id,
-            @RequestParam(required = false) Integer quantidade) { // 👈 required=false para manter a retrocompatibilidade
+            @RequestParam(required = false) Integer quantidade) {
 
         service.desativarEquipamento(id, quantidade);
         return ResponseEntity.noContent().build();
     }
 
-    // 👇 AJUSTE 2: Agora usamos um DTO para receber o status e a quantidade no body de forma estruturada.
     @PatchMapping("/{id}/status")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> alterarStatus(

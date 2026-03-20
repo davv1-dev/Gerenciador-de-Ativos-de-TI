@@ -13,10 +13,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class NotificacaoService {
 
     private final Map<Long, SseEmitter> emissoresTecnicos = new ConcurrentHashMap<>();
-    private final Map<Long, SseEmitter> emissoresSolicitantes = new ConcurrentHashMap<>();
 
     public SseEmitter conectarTecnico(Long tecnicoId) {
-        SseEmitter emitter = new SseEmitter(30 * 60 * 1000L); // 30 minutos
+        SseEmitter emitter = new SseEmitter(30 * 60 * 1000L);
 
         emissoresTecnicos.put(tecnicoId, emitter);
 
@@ -45,7 +44,6 @@ public class NotificacaoService {
     public void notificarTodosTecnicos(DetalhamentoChamadoDTO dto) {
         emissoresTecnicos.forEach((tecnicoId, emitter) -> {
             try {
-                // 👇 CORRIGIDO: Agora envia com o nome que o Angular espera!
                 emitter.send(SseEmitter.event()
                         .name("NOVO_CHAMADO")
                         .data(dto, MediaType.APPLICATION_JSON));
@@ -56,31 +54,5 @@ public class NotificacaoService {
                 emissoresTecnicos.remove(tecnicoId);
             }
         });
-    }
-
-    public SseEmitter conectarSolicitante(Long solicitanteId) {
-        // 👇 DICA: Coloquei 30 min em vez de 0L (infinito) para evitar vazamento de memória
-        SseEmitter emitter = new SseEmitter(30 * 60 * 1000L);
-        emissoresSolicitantes.put(solicitanteId, emitter);
-
-        // 👇 CORRIGIDO: Agora remove da lista de solicitantes!
-        emitter.onCompletion(() -> emissoresSolicitantes.remove(solicitanteId));
-        emitter.onTimeout(() -> emissoresSolicitantes.remove(solicitanteId));
-        emitter.onError((e) -> emissoresSolicitantes.remove(solicitanteId));
-
-        return emitter;
-    }
-
-    public void notificarPosicaoFila(Long solicitanteId, Long novaPosicao) {
-        SseEmitter emitter = emissoresSolicitantes.get(solicitanteId);
-        if (emitter != null) {
-            try {
-                emitter.send(SseEmitter.event()
-                        .name("ATUALIZACAO_FILA")
-                        .data("{\"posicaoFila\": " + novaPosicao + "}", MediaType.APPLICATION_JSON));
-            } catch (Exception e) {
-                emissoresSolicitantes.remove(solicitanteId);
-            }
-        }
     }
 }

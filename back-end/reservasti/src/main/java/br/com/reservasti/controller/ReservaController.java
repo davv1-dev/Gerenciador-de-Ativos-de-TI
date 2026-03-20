@@ -24,8 +24,10 @@ public class ReservaController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('COMUM','TECNICO','ADMIN')")
-    public ResponseEntity<ReservaRetornoDTO> agendar(@RequestBody @Valid ReservaDTO dto, UriComponentsBuilder uriBuilder) {
-        ReservaRetornoDTO retorno = service.solicitarReserva(dto);
+    public ResponseEntity<ReservaRetornoDTO> agendar(@AuthenticationPrincipal Usuario usuarioLogado,@RequestBody @Valid ReservaDTO dto, UriComponentsBuilder uriBuilder) {
+        ReservaDTO dtocorreto = new ReservaDTO(usuarioLogado.getId(), dto.equipamentoId(),dto.dataPrevistaRetirada(),dto.dataPrevistaDevolucao());
+        ReservaRetornoDTO retorno = service.solicitarReserva(dtocorreto);
+
         var uri = uriBuilder.path("/reservas/{id}").buildAndExpand(retorno.id()).toUri();
         return ResponseEntity.created(uri).body(retorno);
     }
