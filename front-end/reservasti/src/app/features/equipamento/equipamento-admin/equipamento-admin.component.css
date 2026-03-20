@@ -166,7 +166,16 @@
 
 .eqp-info h4 { margin: 0 0 4px 0; color: #2563eb }
 .eqp-info p { margin: 0; font-size: 0.85rem; color: #64748b; }
-.eqp-acao { font-size: 1.2rem; opacity: 0.5; }
+.eqp-acao {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+.eqp-acao span {
+  margin-left: 0 !important; /* Remove o margin-left inline que estava no HTML */
+  font-size: 1.3rem; /* Um pouco maior para facilitar o clique no mobile */
+  padding: 5px; /* Área de clique maior */
+}
 .equipamento-item:hover .eqp-acao { opacity: 1; }
 
 .edicao-header {
@@ -350,4 +359,34 @@
   .tab-btn { border-bottom: 1px solid #e2e8f0; border-radius: 0; }
   .tab-btn.active::after { display: none; }
   .tab-btn.active { background: #f1f5f9; color: #2563eb; border-left: 3px solid #4338ca; }
+
+  /* Filtros de Busca na Gestão de Equipamentos */
+  .busca-container .form-row {
+    flex-direction: column;
+    align-items: stretch; /* Faz os inputs ocuparem 100% */
+  }
+
+  .form-actions-inline {
+    flex-direction: column; /* Empilha os botões Pesquisar e Limpar */
+    width: 100%;
+  }
+
+  .form-actions-inline button {
+    width: 100%;
+  }
+
+  /* Ajuste nos cards para o mobile */
+  .equipamento-item {
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .eqp-acao {
+    width: 100%;
+    justify-content: flex-end; /* Empurra os ícones para a direita */
+    border-top: 1px solid #e2e8f0;
+    padding-top: 12px;
+    margin-top: 8px;
+    opacity: 1; /* Força os ícones a aparecerem no mobile (sem precisar de hover) */
+  }
 }

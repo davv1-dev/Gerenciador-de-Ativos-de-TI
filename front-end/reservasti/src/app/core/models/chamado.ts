@@ -24,7 +24,7 @@ export interface DetalhamentoChamadoDTO {
   tipoProblema: string;
   status: string;
   dataAbertura: string;
-  posicaoFila?: number;
+  posicaoFila: number;
 }
 export interface AberturaChamadoDTO {
   equipamentoId?: number | null;

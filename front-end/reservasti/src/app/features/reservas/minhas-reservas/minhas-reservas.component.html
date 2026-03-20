@@ -1,0 +1,51 @@
+<div class="dashboard-container">
+
+  <div class="boas-vindas">
+    <h1>Minhas Reservas Ativas</h1>
+    <p>Gerencie as retiradas e devoluções dos seus equipamentos.</p>
+  </div>
+
+  <div *ngIf="carregando" class="loading">Buscando suas reservas...</div>
+
+  <div *ngIf="!carregando && reservasAtivas.length === 0" class="empty-state">
+    <p>Você não possui equipamentos agendados ou em uso no momento.</p>
+  </div>
+
+  <div class="catalogo-grid" *ngIf="!carregando && reservasAtivas.length > 0">
+
+    <div class="card-equipamento" *ngFor="let reserva of reservasAtivas">
+
+      <div class="equip-header">
+        <span class="badge" [ngClass]="reserva.status.toLowerCase()">
+          {{ reserva.status.replace('_', ' ') }}
+        </span>
+      </div>
+
+      <div class="equip-body">
+        <h3>{{ reserva.nomeEquipamento }}</h3>
+        <p class="detalhe">Retirada: {{ reserva.dataPrevistaRetirada | date:'dd/MM/yyyy' }}</p>
+        <p class="detalhe">Devolução: {{ reserva.dataPrevistaDevolucao | date:'dd/MM/yyyy' }}</p>
+      </div>
+
+      <div class="equip-footer" style="flex-direction: column; gap: 10px;">
+
+        <ng-container *ngIf="reserva.status === 'AGENDADA'">
+          <button class="btn-primario" (click)="retirar(reserva.id)">
+            Confirmar Retirada
+          </button>
+          <button class="btn-secundario" (click)="cancelar(reserva.id)">
+            Cancelar Reserva
+          </button>
+        </ng-container>
+
+        <ng-container *ngIf="reserva.status === 'ATIVA'">
+          <button class="btn-primario btn-devolver" (click)="devolver(reserva.id)">
+            Devolver Equipamento
+          </button>
+        </ng-container>
+
+      </div>
+    </div>
+
+  </div>
+</div>

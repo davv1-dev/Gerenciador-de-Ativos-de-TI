@@ -18,6 +18,7 @@ import { GestaoUsuariosComponent } from './features/funcionarios/gestao-usuarios
 import { AuthGuard } from './core/guards/auth.guard';
 import { LandingPageComponent } from './features/pagina-boas-vindas/landing-page/landing-page.component';
 import { EsqueciSenhaComponent } from './features/pagina-suporte/esqueci-senha/esqueci-senha.component';
+import { MinhasReservasComponent } from './features/reservas/minhas-reservas/minhas-reservas.component';
 
 
 const routes: Routes = [
@@ -30,6 +31,7 @@ const routes: Routes = [
   { path: 'home', component: HomeFuncionarioComponent, canActivate: [AuthGuard], data: { animation: 'HomePage' } },
   { path: 'fazerchamado', component: AberturaChamadoComponent, canActivate: [AuthGuard], data: { animation: 'ChamadoPage' } },
   { path: 'novareserva', component: NovaReservaComponent, canActivate: [AuthGuard], data: { animation: 'ReservaPage' } },
+  { path: 'minhasreservas', component: MinhasReservasComponent, canActivate: [AuthGuard],data: { animation: 'MinhasReservasPage' }},
 
   { path: 'home-tecnico', component: HomeTecnicoComponent, canActivate: [AuthGuard], data: { animation: 'HomeTecnicoPage' } },
   { path: 'tecnico/fila', component: FilaGlobalComponent, canActivate: [AuthGuard], data: { animation: 'FilaPage' } },

@@ -54,10 +54,14 @@ export class EquipamentoService {
   simularExpansao(dto: SimulacaoEquipamentosDTO): Observable<ResultadoSimulacaoDTO> {
     return this.http.post<ResultadoSimulacaoDTO>(`${this.apiUrl}/simular-expansao`, dto);
   }
+
   cadastrarCategoria(dto: CategoriaDTO): Observable<CategoriaDTO> {
     return this.http.post<CategoriaDTO>(this.categoriasUrl, dto);
   }
+
   alterarStatus(id: number, dto: AlterarStatusDTO): Observable<void> {
     return this.http.patch<void>(`${this.apiUrl}/${id}/status`, dto);
   }
+
+
 }

@@ -17,6 +17,12 @@
       <h3>Preciso de Ajuda (TI)</h3>
       <p>Relate um problema com seu equipamento ou sistema.</p>
     </div>
+
+    <div class="card-acao" (click)="navegarParaMinhasReservas()">
+      <div class="icone">📦</div>
+      <h3>Minhas Reservas</h3>
+      <p>Gerencie, retire ou devolva os equipamentos agendados.</p>
+    </div>
   </section>
 
   <section class="minhas-reservas">
@@ -74,19 +80,48 @@
             <th>Status</th>
           </tr>
         </thead>
-        <tbody>
-          <tr *ngFor="let chamado of meusChamados">
-            <td><strong>#{{ chamado.id }}</strong></td>
-            <td>{{ chamado.tipoProblema.replace('_', ' ') }}</td>
-            <td>{{ chamado.dataAbertura | date:'dd/MM/yyyy HH:mm' }}</td>
-            <td>
-              <span class="badge" [ngClass]="chamado.status.toLowerCase()">
-                {{ chamado.status.replace('_', ' ') }}
-              </span>
-            </td>
-          </tr>
+          <tbody>
+            <tr *ngFor="let chamado of meusChamados">
+              <td><strong>#{{ chamado.id }}</strong></td>
+
+              <td>{{ chamado.tipoProblema ? chamado.tipoProblema.replace('_', ' ') : 'NÃO INFORMADO' }}</td>
+
+              <td>{{ $any(chamado.dataAbertura) | date:'dd/MM/yyyy HH:mm' }}</td>
+
+              <td>
+                <span class="badge" [ngClass]="chamado.status ? chamado.status.toLowerCase() : ''">
+                  {{ chamado.status ? chamado.status.replace('_', ' ') : 'SEM STATUS' }}
+                </span>
+              </td>
+            </tr>
         </tbody>
       </table>
+      </div>
+    <div class="paginacao-moderna" *ngIf="meusChamados.length > 0 && totalPaginasChamados > 1">
+
+      <button class="btn-circular"
+              (click)="mudarPaginaChamados(paginaAtualChamados - 1)"
+              [disabled]="isPrimeiraPaginaChamados"
+              title="Página Anterior">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+
+      <div class="indicador-paginas">
+        <span class="pagina-destaque">{{ paginaAtualChamados + 1 }}</span>
+        <span class="pagina-total">de {{ totalPaginasChamados }}</span>
+      </div>
+
+      <button class="btn-circular"
+              (click)="mudarPaginaChamados(paginaAtualChamados + 1)"
+              [disabled]="isUltimaPaginaChamados"
+              title="Próxima Página">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+
     </div>
   </section>
 

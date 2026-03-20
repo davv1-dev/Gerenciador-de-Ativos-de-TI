@@ -118,10 +118,13 @@ export class ChamadoService {
     });
   }
 
-  listarMeusChamados(): Observable<Page<ResumoChamadoDTO>> {
-    return this.http.get<Page<ResumoChamadoDTO>>(`${this.apiUrl}/meus-chamados`);
-  }
+  listarMeusChamados(page: number = 0, size: number = 10): Observable<Page<ResumoChamadoDTO>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
 
+    return this.http.get<Page<ResumoChamadoDTO>>(`${this.apiUrl}/meus-chamados`, { params });
+  }
   resolverChamado(id: number): Observable<DetalhamentoChamadoDTO> {
     return this.http.patch<DetalhamentoChamadoDTO>(`${this.apiUrl}/${id}/resolver`, {});
   }

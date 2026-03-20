@@ -157,6 +157,7 @@ export class HomeAdminComponent implements OnInit {
   irParaGerenciarDepartamentos(): void { this.router.navigate(['/admin/departamentos']); }
   irParaRelatorios(): void { this.router.navigate(['/admin/relatorios']); }
   irParaGerenciarUsuarios(): void { this.router.navigate(['/admin/usuarios']); }
-  irParaNovaReserva(): void { this.router.navigate(['/novareserva']); }
+  irParaNovaReserva(): void { this.router.navigate(['/novareserva']);}
   irParaFazerChamado(): void { this.router.navigate(['/fazerchamado']); }
+  irParaMinhasReservas(): void {this.router.navigate(['minhasreservas']);}
 }

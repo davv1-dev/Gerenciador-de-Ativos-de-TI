@@ -99,7 +99,7 @@ export class NovaReservaComponent implements OnInit {
         this.voltarParaHome();
       },
       error: (err) => {
-        this.toastService.mostrar('Erro ao realizar reserva: ' + err.error.message, 'erro');
+        this.toastService.mostrar(`Erro ao realizar reserva: ${err.error.mensagem}`, 'erro');
         this.enviando = false;
       }
     });

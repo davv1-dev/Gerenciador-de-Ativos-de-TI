@@ -95,4 +95,7 @@ export class HomeTecnicoComponent implements OnInit {
     this.paginaAtual = novaPagina;
     this.carregarHistorico(this.filtroAtivo);
   }
+  irParaMinhasReservas(): void {
+    this.router.navigate(['minhasreservas']);
+  }
 }

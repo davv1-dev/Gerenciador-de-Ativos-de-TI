@@ -27,6 +27,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { LandingPageComponent } from './features/pagina-boas-vindas/landing-page/landing-page.component';
 import { EsqueciSenhaComponent } from './features/pagina-suporte/esqueci-senha/esqueci-senha.component';
+import { MinhasReservasComponent } from './features/reservas/minhas-reservas/minhas-reservas.component';
 
 
 
@@ -51,7 +52,8 @@ import { EsqueciSenhaComponent } from './features/pagina-suporte/esqueci-senha/e
     RelatoriosComponent,
     GestaoUsuariosComponent,
     LandingPageComponent,
-    EsqueciSenhaComponent
+    EsqueciSenhaComponent,
+    MinhasReservasComponent
   ],
   imports: [
     BrowserModule,

@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { ReservaService } from '../../../core/service/reserva.service';
 import { ReservaRetornoDTO } from '../../../core/models/reserva';
 import { ChamadoService } from 'src/app/core/service/chamado.service';
-import { ToastService } from 'src/app/core/service/toast.service'; // 👈 Adicionamos para consistência
+import { ToastService } from 'src/app/core/service/toast.service';
 
 @Component({
   selector: 'app-home-funcionario',
@@ -21,6 +21,12 @@ export class HomeFuncionarioComponent implements OnInit {
   carregandoReservas = true;
   carregandoHistorico = true;
   carregandoChamados = true;
+
+  paginaAtualChamados: number = 0;
+  tamanhoPaginaChamados: number = 10;
+  totalPaginasChamados: number = 0;
+  isUltimaPaginaChamados: boolean = true;
+  isPrimeiraPaginaChamados: boolean = true;
 
   constructor(
     private reservaService: ReservaService,
@@ -57,7 +63,7 @@ export class HomeFuncionarioComponent implements OnInit {
       },
       error: (erro) => {
         console.error('Erro ao carregar reservas', erro);
-        this.carregandoReservas = false;
+        this.carregandoReservas= false;
       }
     });
 
@@ -71,6 +77,35 @@ export class HomeFuncionarioComponent implements OnInit {
         this.carregandoHistorico = false;
       }
     });
+    this.carregarMeusChamados();
+  }
+
+  carregarMeusChamados(pagina: number = 0): void {
+    this.carregandoChamados = true;
+    this.paginaAtualChamados = pagina;
+
+    this.chamadoService.listarMeusChamados(this.paginaAtualChamados, this.tamanhoPaginaChamados)
+      .subscribe({
+        next: (pagina) => {
+          this.meusChamados = pagina.content;
+
+
+          this.totalPaginasChamados = pagina.totalPages;
+
+          this.isPrimeiraPaginaChamados = (this.paginaAtualChamados === 0) ;
+          this.isUltimaPaginaChamados = (this.totalPaginasChamados === 0) || (this.paginaAtualChamados >= this.totalPaginasChamados - 1);
+
+          this.carregandoChamados = false;
+        },
+        error: (erro) => {
+          console.error('Erro ao carregar meus chamados', erro);
+          this.carregandoChamados = false;
+        }
+      });
+  }
+
+  navegarParaMinhasReservas():void{
+    this.router.navigate(['/minhasreservas']);
   }
 
   navegarParaNovaReserva(): void {
@@ -79,5 +114,11 @@ export class HomeFuncionarioComponent implements OnInit {
 
   navegarParaNovoChamado(): void {
     this.router.navigate(['/fazerchamado']);
+  }
+
+  mudarPaginaChamados(novaPagina: number): void {
+    if (novaPagina >= 0 && novaPagina < this.totalPaginasChamados) {
+      this.carregarMeusChamados(novaPagina);
+    }
   }
 }

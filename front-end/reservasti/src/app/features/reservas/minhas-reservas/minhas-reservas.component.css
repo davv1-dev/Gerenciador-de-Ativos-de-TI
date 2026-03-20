@@ -1,3 +1,10 @@
+
+
+
+
+
+
+
 .dashboard-container { max-width: 1100px; margin: 60px auto; padding: 0 30px; font-family: 'Inter', sans-serif; color: #1a202c; }
 .boas-vindas { margin-bottom: 40px; }
 .boas-vindas h1 { margin: 0; font-size: 2.5rem; font-weight: 800; letter-spacing: -1px; color: #111827; }
@@ -185,53 +192,17 @@
   font-weight: 500;
   font-size: 0.95rem;
 }
-@media (max-width: 600px) {
-  /* Ajusta o container principal para não grudar nas bordas */
-  .dashboard-container {
-    padding: 0 15px;
-    margin: 30px auto;
-  }
 
-  .boas-vindas h1 {
-    font-size: 2rem;
-  }
 
-  /* 1. Arrumando a Barra de Busca (Filtros e Categorias) */
-  .search-box {
-    flex-direction: column; /* Empilha o input, select e botão */
-    align-items: stretch; /* Estica todos para 100% da largura */
-  }
+/* Cores específicas para os status das reservas */
+.badge.agendada { background: #fef3c7; color: #d97706; } /* Amarelinho de espera */
+.badge.em_uso { background: #e0e7ff; color: #4338ca; } /* Azul de ativo */
 
-  .input-moderno,
-  .select-categoria {
-    width: 100%;
-    min-width: unset; /* Remove o min-width do select para ele não vazar */
-    box-sizing: border-box; /* Garante que o padding não aumente o tamanho final */
-  }
-
-  /* 2. Arrumando as Datas (Retirada e Devolução) */
-  .form-grid {
-    grid-template-columns: 1fr; /* Muda de 2 colunas para 1 coluna */
-  }
-
-  /* 3. Arrumando o Resumo da Seleção (Nome do Equipamento e Botão "Trocar") */
-  .resumo-selecao {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
-
-  .resumo-selecao .btn-texto {
-    align-self: flex-start; /* Alinha o botão "Trocar" à esquerda no mobile */
-  }
-
-  /* 4. Arrumando os Botões Finais (Cancelar e Confirmar) */
-  .acoes-finais {
-    flex-direction: column-reverse; /* Coloca o "Confirmar" em cima e o "Cancelar" embaixo */
-    align-items: stretch;
-  }
-
-  .acoes-finais button {
-    width: 100%;
-  }
+/* Estilo do botão exclusivo para devolução para chamar a atenção do usuário */
+.btn-devolver {
+  background: #10b981; /* Verde esmeralda */
+}
+.btn-devolver:hover:not(:disabled) {
+  background: #059669;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
 }

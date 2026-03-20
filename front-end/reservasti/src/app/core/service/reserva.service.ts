@@ -41,4 +41,5 @@ export class ReservaService {
   listarHistoricoAdmin(funcionarioId: number): Observable<Page<ReservaRetornoDTO>> {
     return this.http.get<Page<ReservaRetornoDTO>>(`${this.apiUrl}/historico/funcionarios/${funcionarioId}`);
   }
+
 }
