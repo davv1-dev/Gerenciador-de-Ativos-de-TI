@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { EquipamentoService } from '../../../core/service/equipamento.service';
-import { ReservaService } from '../../../core/service/reserva.service';
-import { EquipamentoRetornoDTO } from '../../../core/models/equipamento';
-import { ReservaDTO } from '../../../core/models/reserva';
-import { CategoriariaRetornoDTO } from 'src/app/core/models/categoria';
-import { Page } from 'src/app/core/models/chamado';
-import { ToastService } from 'src/app/core/service/toast.service';
+import { EquipamentoService } from '../../../core/api/service/equipamento.service';
+import { ReservaService } from '../../../core/api/service/reserva.service';
+import { EquipamentoRetornoDTO } from '../../../core/api/models/equipamento';
+import { ReservaDTO } from '../../../core/api/models/reserva';
+import { CategoriariaRetornoDTO } from 'src/app/core/api/models/categoria';
+import { Page } from 'src/app/core/api/models/chamado';
+import { ToastService } from 'src/app/core/api/service/toast.service';
 
 @Component({
   selector: 'app-nova-reserva',

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { EquipamentoService } from 'src/app/core/service/equipamento.service';
-import { DepartamentoService } from 'src/app/core/service/departamento.service';
-import { ToastService } from 'src/app/core/service/toast.service';
-import { ConfirmDialogService } from 'src/app/core/service/confirm-dialog.service';
+import { EquipamentoService } from 'src/app/core/api/service/equipamento.service';
+import { DepartamentoService } from 'src/app/core/api/service/departamento.service';
+import { ToastService } from 'src/app/core/api/service/toast.service';
+import { ConfirmDialogService } from 'src/app/core/api/service/confirm-dialog.service';
 import { Router } from '@angular/router';
 
 import {
@@ -12,8 +12,8 @@ import {
   SimulacaoEquipamentosDTO,
   ResultadoSimulacaoDTO,
   ItemSimulacaoRequestDTO
-} from '../../../core/models/equipamento';
-import { DepartamentoRetornoDTO } from '../../../core/models/departamento';
+} from '../../../core/api/models/equipamento';
+import { DepartamentoRetornoDTO } from '../../../core/api/models/departamento';
 
 @Component({
   selector: 'app-alocacao-ativos',

@@ -1,9 +1,9 @@
-import { UsuarioEntradaDTO } from './../../../core/models/usuario';
+import { UsuarioEntradaDTO } from '../../../core/api/models/usuario';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../core/service/auth.service';
-import { ToastService } from 'src/app/core/service/toast.service';
-import { TokenResponseDTO } from 'src/app/core/models/token';
+import { AuthService } from '../../../core/api/service/auth.service';
+import { ToastService } from 'src/app/core/api/service/toast.service';
+import { TokenResponseDTO } from 'src/app/core/api/models/token';
 
 @Component({
   selector: 'app-login',

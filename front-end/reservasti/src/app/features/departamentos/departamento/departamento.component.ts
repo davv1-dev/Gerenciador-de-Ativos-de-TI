@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DepartamentoService } from 'src/app/core/service/departamento.service';
-import { ToastService } from 'src/app/core/service/toast.service';
-import { ConfirmDialogService } from 'src/app/core/service/confirm-dialog.service';
-import { DepartamentoRetornoDTO, DepartamentoDTO, DepartamentoAtualizacaoDTO } from '../../../core/models/departamento';
+import { DepartamentoService } from 'src/app/core/api/service/departamento.service';
+import { ToastService } from 'src/app/core/api/service/toast.service';
+import { ConfirmDialogService } from 'src/app/core/api/service/confirm-dialog.service';
+import { DepartamentoRetornoDTO, DepartamentoDTO, DepartamentoAtualizacaoDTO } from '../../../core/api/models/departamento';
 import { Router } from '@angular/router';
 
 @Component({

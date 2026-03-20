@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router'; // 👈 Importamos o Router
-import { RelatorioService } from 'src/app/core/service/relatorio.service';
-import { DepartamentoService } from 'src/app/core/service/departamento.service';
-import { ToastService } from 'src/app/core/service/toast.service';
+import { RelatorioService } from 'src/app/core/api/service/relatorio.service';
+import { DepartamentoService } from 'src/app/core/api/service/departamento.service';
+import { ToastService } from 'src/app/core/api/service/toast.service';
 import {
   RelatorioGeralDTO,
   RelatorioDepartamentoDTO,
@@ -11,9 +11,9 @@ import {
   RelatorioDeFalhaPorMarcaDTO,
   PrevisaoDemandaDTO,
   RelatorioInativosDTO
-} from '../../../core/models/relatorio';
-import { DepartamentoRetornoDTO } from '../../../core/models/departamento';
-import { EquipamentoRetornoDTO } from 'src/app/core/models/equipamento';
+} from '../../../core/api/models/relatorio';
+import { DepartamentoRetornoDTO } from '../../../core/api/models/departamento';
+import { EquipamentoRetornoDTO } from 'src/app/core/api/models/equipamento';
 
 @Component({
   selector: 'app-relatorios',

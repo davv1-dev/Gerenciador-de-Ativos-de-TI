@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router,RouterOutlet } from '@angular/router';
-import { fadeAnimation } from './core/animacoes/animacoes';
+import { fadeAnimation } from './core/layout/animacoes/animacoes';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

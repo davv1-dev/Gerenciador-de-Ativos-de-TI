@@ -4,11 +4,11 @@ import {
   HttpHandler,
   HttpEvent,
   HttpInterceptor,
-  HttpErrorResponse // 👈 Importamos o tipo de erro do HTTP
+  HttpErrorResponse
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators'; // 👈 Importamos o operador de captura
-import { Router } from '@angular/router'; // 👈 Precisamos do Router para redirecionar
+import { catchError } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {

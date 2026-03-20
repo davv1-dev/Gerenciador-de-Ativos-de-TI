@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
-import { ChamadoService } from 'src/app/core/service/chamado.service';
-import { ToastService } from 'src/app/core/service/toast.service';
-import { Page, ResumoChamadoDTO } from 'src/app/core/models/chamado';
+import { ChamadoService } from 'src/app/core/api/service/chamado.service';
+import { ToastService } from 'src/app/core/api/service/toast.service';
+import { Page, ResumoChamadoDTO } from 'src/app/core/api/models/chamado';
 
 @Component({
   selector: 'app-minha-fila',

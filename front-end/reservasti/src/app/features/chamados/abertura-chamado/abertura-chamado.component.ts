@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ChamadoService } from '../../../core/service/chamado.service';
-import { AberturaChamadoDTO } from '../../../core/models/chamado';
-import { FuncionarioRetornoDTO } from 'src/app/core/models/funcionario';
-import { TecnicoService } from 'src/app/core/service/tecnico.service';
-import { ToastService } from 'src/app/core/service/toast.service';
+import { ChamadoService } from '../../../core/api/service/chamado.service';
+import { AberturaChamadoDTO } from '../../../core/api/models/chamado';
+import { FuncionarioRetornoDTO } from 'src/app/core/api/models/funcionario';
+import { TecnicoService } from 'src/app/core/api/service/tecnico.service';
+import { ToastService } from 'src/app/core/api/service/toast.service';
 
 @Component({
   selector: 'app-chamado-abertura',

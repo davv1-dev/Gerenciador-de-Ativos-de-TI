@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ReservaService } from '../../../core/service/reserva.service';
-import { ReservaRetornoDTO } from '../../../core/models/reserva';
-import { ToastService } from 'src/app/core/service/toast.service';
+import { ReservaService } from '../../../core/api/service/reserva.service';
+import { ReservaRetornoDTO } from '../../../core/api/models/reserva';
+import { ToastService } from 'src/app/core/api/service/toast.service';
 
 @Component({
   selector: 'app-minhas-reservas',

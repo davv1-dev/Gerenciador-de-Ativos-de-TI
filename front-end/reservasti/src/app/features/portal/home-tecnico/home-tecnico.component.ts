@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ChamadoService } from '../../../core/service/chamado.service';
-import { ResumoChamadoDTO } from '../../../core/models/chamado';
-import { ToastService } from 'src/app/core/service/toast.service';
+import { ChamadoService } from '../../../core/api/service/chamado.service';
+import { ResumoChamadoDTO } from '../../../core/api/models/chamado';
+import { ToastService } from 'src/app/core/api/service/toast.service';
 
 @Component({
   selector: 'app-home-tecnico',

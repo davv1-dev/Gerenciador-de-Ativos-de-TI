@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FuncionarioService } from 'src/app/core/service/funcionario.service';
-import { FuncionarioRetornoDTO } from 'src/app/core/models/funcionario';
-import { ToastService } from 'src/app/core/service/toast.service';
-import { Page } from 'src/app/core/models/chamado';
+import { FuncionarioService } from 'src/app/core/api/service/funcionario.service';
+import { FuncionarioRetornoDTO } from 'src/app/core/api/models/funcionario';
+import { ToastService } from 'src/app/core/api/service/toast.service';
+import { Page } from 'src/app/core/api/models/chamado';
 import { Router } from '@angular/router';
-import { ConfirmDialogService } from 'src/app/core/service/confirm-dialog.service';
+import { ConfirmDialogService } from 'src/app/core/api/service/confirm-dialog.service';
 
 @Component({
   selector: 'app-gestao-usuarios',

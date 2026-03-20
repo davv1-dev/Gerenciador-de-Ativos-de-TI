@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { RelatorioService } from '../../../core/service/relatorio.service';
-import { RelatorioGeralDTO } from '../../../core/models/relatorio';
-import { ToastService } from 'src/app/core/service/toast.service';
-import { FuncionarioRetornoDTO } from 'src/app/core/models/funcionario';
-import { FuncionarioService } from 'src/app/core/service/funcionario.service';
-import { Page } from 'src/app/core/models/chamado';
-import { ConfirmDialogService } from 'src/app/core/service/confirm-dialog.service';
+import { RelatorioService } from '../../../core/api/service/relatorio.service';
+import { RelatorioGeralDTO } from '../../../core/api/models/relatorio';
+import { ToastService } from 'src/app/core/api/service/toast.service';
+import { FuncionarioRetornoDTO } from 'src/app/core/api/models/funcionario';
+import { FuncionarioService } from 'src/app/core/api/service/funcionario.service';
+import { Page } from 'src/app/core/api/models/chamado';
+import { ConfirmDialogService } from 'src/app/core/api/service/confirm-dialog.service';
 
 @Component({
   selector: 'app-home-admin',

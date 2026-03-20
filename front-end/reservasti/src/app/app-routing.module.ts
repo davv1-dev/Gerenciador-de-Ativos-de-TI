@@ -15,7 +15,7 @@ import { AlocacaoAtivosComponent } from './features/departamentos/alocacao-ativo
 import { DepartamentoComponent } from './features/departamentos/departamento/departamento.component';
 import { RelatoriosComponent } from './features/relatorios/relatorios/relatorios.component';
 import { GestaoUsuariosComponent } from './features/funcionarios/gestao-usuarios/gestao-usuarios.component';
-import { AuthGuard } from './core/guards/auth.guard';
+import { AuthGuard } from './core/auth/guards/auth.guard';
 import { LandingPageComponent } from './features/pagina-boas-vindas/landing-page/landing-page.component';
 import { EsqueciSenhaComponent } from './features/pagina-suporte/esqueci-senha/esqueci-senha.component';
 import { MinhasReservasComponent } from './features/reservas/minhas-reservas/minhas-reservas.component';

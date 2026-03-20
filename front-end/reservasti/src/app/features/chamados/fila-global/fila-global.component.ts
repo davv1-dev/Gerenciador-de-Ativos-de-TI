@@ -1,7 +1,7 @@
-import { ToastService } from './../../../core/service/toast.service';
+import { ToastService } from './../../../core/api/service/toast.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ChamadoService } from '../../../core/service/chamado.service';
-import { Page, ResumoChamadoDTO } from '../../../core/models/chamado';
+import { ChamadoService } from '../../../core/api/service/chamado.service';
+import { Page, ResumoChamadoDTO } from '../../../core/api/models/chamado';
 import { Subscription, interval } from 'rxjs';
 import { Router } from '@angular/router';
 

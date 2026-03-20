@@ -1,10 +1,10 @@
-import { Page } from 'src/app/core/models/chamado';
-import { ToastService } from './../../../core/service/toast.service';
+import { Page } from 'src/app/core/api/models/chamado';
+import { ToastService } from './../../../core/api/service/toast.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { FuncionarioService } from '../../../core/service/funcionario.service';
-import { DepartamentoRetornoDTO } from '../../../core/models/departamento';
-import { DepartamentoService } from 'src/app/core/service/departamento.service';
+import { FuncionarioService } from '../../../core/api/service/funcionario.service';
+import { DepartamentoRetornoDTO } from '../../../core/api/models/departamento';
+import { DepartamentoService } from 'src/app/core/api/service/departamento.service';
 import { Router } from '@angular/router';
 
 @Component({

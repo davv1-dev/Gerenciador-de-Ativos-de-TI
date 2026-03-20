@@ -11,11 +11,11 @@ import { FuncionarioCadastroComponent } from './features/funcionarios/funcionari
 import { HomeFuncionarioComponent } from './features/portal/home-funcionario/home-funcionario.component';
 import { AberturaChamadoComponent } from './features/chamados/abertura-chamado/abertura-chamado.component';
 import { NovaReservaComponent } from './features/reservas/nova-reserva/nova-reserva.component';
-import { HeaderComponent } from './core/components/header/header.component';
+import { HeaderComponent } from './core/layout/components/header/header.component';
 import { HomeTecnicoComponent } from './features/portal/home-tecnico/home-tecnico.component';
 import { ChamadoAtualComponent } from './features/chamados/chamado-atual/chamado-atual.component';
-import { ToastComponent } from './core/components/toast/toast.component';
-import { ConfirmDialogComponent } from './core/components/confirm-dialog/confirm-dialog.component';
+import { ToastComponent } from './core/layout/components/toast/toast.component';
+import { ConfirmDialogComponent } from './core/layout/components/confirm-dialog/confirm-dialog.component';
 import { MinhaFilaComponent } from './features/chamados/minha-fila/minha-fila.component';
 import { HomeAdminComponent } from './features/portal/home-admin/home-admin.component';
 import { EquipamentoAdminComponent } from './features/equipamento/equipamento-admin/equipamento-admin.component';
@@ -24,7 +24,7 @@ import { DepartamentoComponent } from './features/departamentos/departamento/dep
 import { RelatoriosComponent } from './features/relatorios/relatorios/relatorios.component';
 import { GestaoUsuariosComponent } from './features/funcionarios/gestao-usuarios/gestao-usuarios.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AuthInterceptor } from './core/interceptors/auth.interceptor';
+import { AuthInterceptor } from './core/auth/interceptors/auth.interceptor';
 import { LandingPageComponent } from './features/pagina-boas-vindas/landing-page/landing-page.component';
 import { EsqueciSenhaComponent } from './features/pagina-suporte/esqueci-senha/esqueci-senha.component';
 import { MinhasReservasComponent } from './features/reservas/minhas-reservas/minhas-reservas.component';

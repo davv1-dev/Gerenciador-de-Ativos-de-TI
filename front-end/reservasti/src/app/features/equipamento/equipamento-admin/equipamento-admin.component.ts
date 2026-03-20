@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ToastService } from 'src/app/core/service/toast.service';
-import { EquipamentoService } from '../../../core/service/equipamento.service';
-import { EquipamentoDTO, EditarEquipamentoDTO, EquipamentoRetornoDTO,AlterarStatusDTO } from '../../../core/models/equipamento';
-import { CategoriariaRetornoDTO } from '../../../core/models/categoria';
+import { ToastService } from 'src/app/core/api/service/toast.service';
+import { EquipamentoService } from '../../../core/api/service/equipamento.service';
+import { EquipamentoDTO, EditarEquipamentoDTO, EquipamentoRetornoDTO,AlterarStatusDTO } from '../../../core/api/models/equipamento';
+import { CategoriariaRetornoDTO } from '../../../core/api/models/categoria';
 import { Router } from '@angular/router';
 
 @Component({

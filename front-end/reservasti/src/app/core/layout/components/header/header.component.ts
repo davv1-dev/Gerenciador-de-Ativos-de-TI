@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router, NavigationEnd,NavigationStart } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { AuthService } from '../../../core/service/auth.service';
+import { AuthService } from '../../../api/service/auth.service';
 import { Location } from '@angular/common';
 
 @Component({
