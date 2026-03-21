@@ -50,15 +50,9 @@ public class ChamadoService {
             chamado.setEquipamento(equipamento);
         }
 
-        if (dto.tecnicoId() != null) {
-            Funcionario tecnico = funcionarioRepository.findById(dto.tecnicoId())
-                    .orElseThrow(() -> new IdNaoEncontradoException("Técnico não encontrado"));
-
-            alocarParaTecnico(chamado, tecnico);
-        } else {
             chamado.setStatus(StatusChamado.NA_FILA);
             chamadoRepository.save(chamado);
-        }
+
         Long posicaoFila = chamadoRepository.countByStatus(StatusChamado.NA_FILA);
 
 
